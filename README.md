@@ -51,9 +51,12 @@ Open `index.html` in a browser. No build step, no server, no tracking. Your inpu
 
 ```
 index.html                           the whole app, data included
+og-image.png                         social preview image
 LICENSE                              GNU AGPL-3.0
 tools/template.html                  the page with __CATALOG__ / __RW__ placeholders
 tools/build.py                       rebuilds index.html from the data
+tools/og-image.html                  source for the preview image
+tools/render_og.py                   renders og-image.png (needs playwright)
 data/catalog.json                    588 car models
 data/realworld.json                  measured consumption per brand
 data/eea_obfcm_2024_aggregated.csv   EEA measured-consumption table (source data)
