@@ -1,0 +1,624 @@
+<!--
+  CarFootprint - compare car costs and CO2 emissions per year
+  Copyright (C) 2026 Tapio T
+
+  This program is free software: you can redistribute it and/or modify it
+  under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or (at your
+  option) any later version. It is distributed WITHOUT ANY WARRANTY; see the
+  GNU Affero General Public License for more details:
+  https://www.gnu.org/licenses/
+
+  Source code and data: https://github.com/TapioT1986/CarFootprint
+-->
+<title>CarFootprint</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: tienvarsi – syötteet vasemmalla kapeana sarakkeena, tulokset leveänä oikealla; puhelimella pinossa */
+:root{
+  --bg:#eef1f3; --surface:#ffffff; --ink:#16202a; --muted:#5b6873; --line:#d3dadf;
+  --accent:#0b5cad;            /* tienviittojen sininen */
+  --accent-ink:#ffffff;
+  --input:#f6f8f9;
+  --c1:#0b5cad; --c2:#d9822b; --c3:#2e8b57; --c4:#8a4fbf;
+  --seg-dep:#16202a; --seg-cap:#6c7a86; --seg-en:#d9822b; --seg-oth:#b8c2ca;
+  --seg-drive:#5a6b2f; --seg-make:#a9b98a;
+  --good:#2e8b57;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f151b; --surface:#18212a; --ink:#e7edf2; --muted:#9aa8b4; --line:#2b3742;
+  --accent:#4d9be6; --accent-ink:#06121e; --input:#121a21;
+  --c1:#4d9be6; --c2:#f0a050; --c3:#4cc28a; --c4:#b78ae6;
+  --seg-dep:#e7edf2; --seg-cap:#8b99a5; --seg-en:#f0a050; --seg-oth:#4a5966;
+  --seg-drive:#a9c46a; --seg-make:#5d6d3c; --good:#4cc28a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f151b; --surface:#18212a; --ink:#e7edf2; --muted:#9aa8b4; --line:#2b3742;
+  --accent:#4d9be6; --accent-ink:#06121e; --input:#121a21;
+  --c1:#4d9be6; --c2:#f0a050; --c3:#4cc28a; --c4:#b78ae6;
+  --seg-dep:#e7edf2; --seg-cap:#8b99a5; --seg-en:#f0a050; --seg-oth:#4a5966;
+  --seg-drive:#a9c46a; --seg-make:#5d6d3c; --good:#4cc28a; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.5 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:1240px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:.01em;text-wrap:balance;margin:0}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-block:28px 20px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:12px}
+.sign{width:44px;height:44px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 22px/1 var(--display);flex:none}
+.brand h1{font-size:34px;line-height:1}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.top .meta{color:var(--muted);font-size:13px;max-width:46ch}
+
+.grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.panel+.panel{margin-top:16px}
+.panel h2{font-size:20px;margin-bottom:12px}
+.label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600}
+.field{display:flex;flex-direction:column;gap:2px;min-width:0}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fields .full{grid-column:1/-1}
+input,select{font:inherit;color:var(--ink);background:var(--input);border:1px solid var(--line);border-radius:6px;padding:7px 9px;width:100%;min-width:0}
+input[type=number]{font-family:var(--mono);font-variant-numeric:tabular-nums}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.unit{font-size:12px;color:var(--muted)}
+
+.km{display:flex;flex-direction:column;gap:6px}
+.km .read{display:flex;align-items:baseline;gap:8px}
+.odo{font-family:var(--mono);font-size:30px;font-weight:500;letter-spacing:.04em}
+input[type=range]{padding:0;background:none;border:0;accent-color:var(--accent)}
+.hint{font-size:12.5px;color:var(--muted);margin:4px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{font:500 12.5px/1 var(--body);border:1px solid var(--line);background:var(--input);color:var(--ink);padding:6px 9px;border-radius:999px;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+
+details.adv{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+details.adv summary{cursor:pointer;font-weight:600;font-size:14px}
+details.adv .fields{margin-top:10px}
+
+/* autot */
+.cars{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.car{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0;border-top:4px solid var(--cc)}
+.car .head{display:flex;align-items:center;gap:8px}
+.car .head input{font-weight:600}
+.car .x{border:0;background:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px}
+.car .x:hover{color:var(--ink);background:var(--input)}
+.car .fields{gap:9px}
+.addcar{border:1.5px dashed var(--line);border-radius:10px;background:transparent;color:var(--muted);font:600 15px var(--body);cursor:pointer;min-height:120px}
+.addcar:hover{border-color:var(--accent);color:var(--accent)}
+.tag{font-size:11.5px;color:var(--muted)}
+
+/* tulokset */
+section.results{margin-top:24px}
+.sumrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.sum{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.sum .nm{display:flex;align-items:center;gap:8px;font-weight:600;min-width:0}
+.sum .nm span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--cc);flex:none}
+.big{font:500 28px/1.1 var(--mono);font-variant-numeric:tabular-nums}
+.sub{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.badges{display:flex;flex-wrap:wrap;gap:6px}
+.badge{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:999px;border:1px solid var(--line)}
+.badge.win{border-color:var(--good);color:var(--good)}
+
+.charts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-top:16px}
+@media (max-width:760px){.charts{grid-template-columns:minmax(0,1fr)}}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+.chart.wide{grid-column:1/-1}
+.chart h3{font-size:19px}
+.chart p.lead{margin:2px 0 10px;color:var(--muted);font-size:13.5px;max-width:70ch}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+svg text{font-family:var(--body)}
+.svgbox{overflow-x:auto}
+
+.notes{margin-top:24px;color:var(--muted);font-size:13px;max-width:90ch}
+.notes h3{color:var(--ink);font-size:18px;margin-bottom:6px}
+.notes ul{padding-left:18px;margin:6px 0}
+.notes a{color:var(--accent)}
+.rowbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{font:600 13.5px var(--body);border:1px solid var(--line);background:var(--input);color:var(--ink);padding:8px 12px;border-radius:6px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+@media (prefers-reduced-motion:no-preference){.bar{transition:width .25s ease}}
+.foot{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+.foot a{color:var(--accent)}
+.topright{display:flex;flex-direction:column;gap:10px;align-items:flex-end;max-width:46ch}
+.langs{display:flex;gap:6px}
+.lang{padding:5px 10px;font-size:13px}
+.lang[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+@media (max-width:700px){.topright{align-items:flex-start}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="sign" aria-hidden="true">€</div>
+      <div>
+        <h1>CarFootprint</h1>
+        <p data-i="tagline"></p>
+      </div>
+    </div>
+    <div class="topright">
+      <div class="meta" data-i="meta"></div>
+      <div class="langs" role="group" aria-label="Kieli / Language">
+        <button class="btn lang" id="langFi" type="button" data-lang="fi">Suomi</button>
+        <button class="btn lang" id="langEn" type="button" data-lang="en">English</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="grid">
+    <aside>
+      <div class="panel">
+        <h2 data-i="drive_h"></h2>
+        <div class="km">
+          <span class="label" id="kmLabel" data-i="km_label"></span>
+          <div class="read"><span class="odo" id="kmOut">15 000</span><span class="unit" data-i="km_unit"></span></div>
+          <input type="range" id="km" min="2000" max="50000" step="500" value="15000" aria-labelledby="kmLabel">
+          <div class="chips">
+            <button class="chip" data-km="11800" type="button" data-i="chipB"></button>
+            <button class="chip" data-km="14500" type="button" data-i="chipAll"></button>
+            <button class="chip" data-km="20800" type="button" data-i="chipD"></button>
+          </div>
+          <p class="hint" data-i="km_hint"></p>
+        </div>
+        <div class="fields" style="margin-top:14px">
+          <div class="field"><label class="label" for="years" data-i="years_l"></label><input type="number" id="years" min="1" max="20" step="1" value="5"><span class="unit" data-i="years_u"></span></div>
+          <div class="field"><label class="label" for="rate" data-i="rate_l"></label><input type="number" id="rate" min="0" max="20" step="0.5" value="4"><span class="unit" data-i="rate_u"></span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 data-i="energy_h"></h2>
+        <div class="fields">
+          <div class="field"><label class="label" for="pBens" data-i="petrol"></label><input type="number" id="pBens" step="0.01" value="1.85"><span class="unit">€ / l</span></div>
+          <div class="field"><label class="label" for="pDies" data-i="diesel"></label><input type="number" id="pDies" step="0.01" value="1.75"><span class="unit">€ / l</span></div>
+          <div class="field"><label class="label" for="pEl" data-i="el_home"></label><input type="number" id="pEl" step="0.01" value="0.15"><span class="unit" data-i="el_home_u"></span></div>
+          <div class="field"><label class="label" for="loss" data-i="loss"></label><input type="number" id="loss" step="1" value="10"><span class="unit">%</span></div>
+          <div class="field full"><label class="label" for="elSrc" data-i="elsrc"></label>
+            <select id="elSrc">
+              <option value="42" data-i="el1"></option>
+              <option value="12" data-i="el2"></option>
+              <option value="12" data-i="el3"></option>
+              <option value="24" data-i="el4"></option>
+              <option value="48" data-i="el5"></option>
+            </select>
+            <span class="unit" data-i="el_note"></span>
+          </div>
+        </div>
+        <details class="adv">
+          <summary data-i="ef_sum"></summary>
+          <div class="fields">
+            <div class="field"><label class="label" for="eBens" data-i="petrol"></label><input type="number" id="eBens" step="0.05" value="2.8"><span class="unit">kg CO₂e / l</span></div>
+            <div class="field"><label class="label" for="eDies" data-i="diesel"></label><input type="number" id="eDies" step="0.05" value="3.2"><span class="unit">kg CO₂e / l</span></div>
+          </div>
+          <p class="hint" data-i="ef_hint"></p>
+        </details>
+      </div>
+    </aside>
+
+    <main style="min-width:0">
+      <div class="cars" id="cars"></div>
+      <datalist id="models"></datalist>
+
+      <section class="results" aria-live="polite">
+        <div class="sumrow" id="sums"></div>
+        <div class="charts">
+          <div class="chart">
+            <h3 data-i="cost_h"></h3>
+            <p class="lead" data-i="cost_lead"></p>
+            <div class="legend"><span><i style="background:var(--seg-dep)"></i><span data-i="lg_dep"></span></span><span><i style="background:var(--seg-cap)"></i><span data-i="lg_cap"></span></span><span><i style="background:var(--seg-en)"></i><span data-i="lg_en"></span></span><span><i style="background:var(--seg-oth)"></i><span data-i="lg_oth"></span></span></div>
+            <div class="svgbox" id="costChart"></div>
+          </div>
+          <div class="chart">
+            <h3 data-i="em_h"></h3>
+            <p class="lead" data-i="em_lead"></p>
+            <div class="legend"><span><i style="background:var(--seg-drive)"></i><span data-i="lg_drive"></span></span><span><i style="background:var(--seg-make)"></i><span data-i="lg_make"></span></span></div>
+            <div class="svgbox" id="emChart"></div>
+          </div>
+          <div class="chart wide">
+            <h3 id="beTitle"></h3>
+            <p class="lead" id="beLead"></p>
+            <div class="svgbox" id="beChart"></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="notes">
+        <h3 data-i="notes_h"></h3>
+        <ul data-i="notes"></ul>
+        <div class="rowbtns"><button class="btn" id="reset" type="button" data-i="reset"></button></div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="foot">
+    <span data-i="foot"></span>
+    <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">github.com/TapioT1986/CarFootprint</a>
+  </footer>
+</div>
+
+<script>
+const CATALOG = [["Audi","A1 SPORTBACK","B",5.7,1077,"2012–2022",10000,null,0],["Audi","A3 40 TFSIE","P",null,480,"2021–2025",12300,16.0,75],["Audi","A3 LIMOUSINE","B",6.1,2730,"2014–2020",12600,null,0],["Audi","A3 LIMOUSINE","D",5.2,747,"2014–2019",18100,null,0],["Audi","A3 LIMOUSINE","H",5.1,553,"2020–2025",11000,null,0],["Audi","A3 SPORTBACK","B",6.2,4685,"2012–2021",12200,null,0],["Audi","A3 SPORTBACK","D",5.3,1637,"2012–2019",17400,null,0],["Audi","A3 SPORTBACK","H",5.2,1093,"2020–2026",11500,null,0],["Audi","A3 SPORTBACK E-TRON","P",null,759,"2015–2022",19100,16.0,75],["Audi","A4","D",7.4,5467,"2008–2018",21900,null,0],["Audi","A4 ALLROAD QUATTRO","B",7.7,325,"2009–2018",15000,null,0],["Audi","A4 ALLROAD QUATTRO","D",6.3,2020,"2010–2021",20400,null,0],["Audi","A4 AVANT","B",7.3,2375,"2012–2019",15400,null,0],["Audi","A4 AVANT","D",5.9,4969,"2012–2021",23100,null,0],["Audi","A4 AVANT","H",6.4,1884,"2018–2024",16200,null,0],["Audi","A4 LIMOUSINE","D",6.0,1637,"2012–2020",18900,null,0],["Audi","A4 LIMOUSINE","H",6.3,1479,"2018–2024",12800,null,0],["Audi","A5 SPORTBACK","B",7.5,1058,"2012–2021",14900,null,0],["Audi","A5 SPORTBACK","D",6.2,945,"2012–2021",20900,null,0],["Audi","A5 SPORTBACK","H",6.4,722,"2018–2023",14400,null,0],["Audi","A6 50 TFSI E","P",null,335,"2020–2024",14100,20.9,2],["Audi","A6 AVANT","D",6.3,4190,"2012–2021",24900,null,0],["Audi","A6 AVANT","H",6.7,984,"2018–2024",20600,null,0],["Audi","A6 AVANT 50 TFSI E","P",null,311,"2021–2026",18400,25.3,3],["Audi","A6 AVANT 55 TFSI E","P",null,692,"2021–2025",29100,21.8,3],["Audi","A6 LIMOUSINE","H",6.5,525,"2018–2023",16000,null,0],["Audi","E-TRON","E",null,576,"2019–2025",22100,null,0],["Audi","E-TRON 50","E",null,578,"2021–2026",25700,null,0],["Audi","E-TRON 55","E",null,1185,"2021–2026",29500,null,0],["Audi","E-TRON SPORTBACK 55","E",null,539,"2021–2026",23400,null,0],["Audi","Q2","B",6.3,1580,"2017–2024",11100,null,0],["Audi","Q2","D",5.9,327,"2017–2021",15400,null,0],["Audi","Q3","B",7.5,1083,"2012–2022",11900,null,0],["Audi","Q3","D",7.0,1804,"2012–2021",16300,null,0],["Audi","Q3 E-TRON","P",null,340,"2021–2024",12500,19.9,29],["Audi","Q4 40 E-TRON","E",null,836,"2021–2026",22700,21.2,643],["Audi","Q4 45 E-TRON","E",null,1941,"2023–2026",17300,21.2,471],["Audi","Q4 50 E-TRON","E",null,642,"2021–2026",22800,21.2,643],["Audi","Q4 SPORTBACK 40 E-TRON","E",null,343,"2022–2025",19300,21.2,643],["Audi","Q4 SPORTBACK 45 E-TRON","E",null,699,"2023–2026",6800,21.2,143],["Audi","Q4 SPORTBACK 50 E-TRON","E",null,451,"2022–2026",23300,21.2,643],["Audi","Q5","D",7.3,1083,"2017–2021",16900,null,0],["Audi","Q5 50 TFSI E","P",null,481,"2022–2025",17800,23.0,1],["Audi","Q6 SUV E-TRON QUATTRO","E",null,1094,"2024–2026",5500,21.0,287],["Audi","TT","B",6.6,933,"2008–2020",15600,null,0],["BMW","116D","D",5.6,1366,"2009–2018",16100,null,0],["BMW","116I","B",5.8,2015,"2008–2018",11900,null,0],["BMW","118D","D",4.9,771,"2008–2020",18200,null,0],["BMW","118I","B",5.8,2577,"2012–2023",12000,null,0],["BMW","120D","D",5.7,503,"2008–2020",19400,null,0],["BMW","120D XDRIVE","D",5.4,364,"2013–2021",15900,null,0],["BMW","218I ACTIVE TOURER","B",6.7,425,"2014–2020",12500,null,0],["BMW","225E XDRIVE ACTIVE TOURER","P",null,706,"2022–2025",13300,16.4,30],["BMW","225XE IPERFORMANCE","P",null,2005,"2017–2023",14800,null,0],["BMW","316D","D",5.6,672,"2011–2018",20100,null,0],["BMW","318D","D",5.2,2712,"2008–2020",21400,null,0],["BMW","318I","B",7.2,1589,"2008–2020",14300,null,0],["BMW","320D","D",5.3,3748,"2008–2020",25700,null,0],["BMW","320D XDRIVE","D",5.7,3772,"2011–2022",22100,null,0],["BMW","320D XDRIVE","H",5.9,424,"2020–2025",20400,null,0],["BMW","320E XDRIVE","P",null,326,"2021–2022",16100,null,0],["BMW","320I","B",6.3,2245,"2008–2021",15500,null,0],["BMW","320I XDRIVE","B",6.8,4008,"2013–2020",13900,null,0],["BMW","330D","D",6.0,1233,"2008–2023",32000,null,0],["BMW","330D XDRIVE","D",6.4,625,"2010–2025",33000,null,0],["BMW","330E","P",null,1826,"2018–2024",21100,23.3,162],["BMW","330E IPERFORMANCE","P",null,1233,"2017–2023",23100,23.3,162],["BMW","330E XDRIVE","P",null,3291,"2020–2025",16800,23.3,160],["BMW","330I","B",6.5,429,"2008–2023",20200,null,0],["BMW","420D XDRIVE","D",6.2,421,"2014–2021",21300,null,0],["BMW","420I XDRIVE","B",7.8,389,"2015–2020",12900,null,0],["BMW","518D","D",5.7,1174,"2014–2020",20600,null,0],["BMW","520D","D",6.1,6081,"2008–2020",22100,null,0],["BMW","520D XDRIVE","D",6.2,5102,"2014–2021",21600,null,0],["BMW","520D XDRIVE","H",6.1,610,"2020–2025",22200,null,0],["BMW","520I","B",7.3,493,"2008–2022",15800,null,0],["BMW","530D","D",6.4,2205,"2008–2021",28100,null,0],["BMW","530D XDRIVE","D",7.2,2590,"2011–2022",27300,null,0],["BMW","530E IPERFORMANCE","P",null,1890,"2017–2023",16600,23.4,186],["BMW","530E XDRIVE","P",null,2778,"2021–2025",18600,23.4,184],["BMW","530E XDRIVE IPERFORMANCE","P",null,754,"2019–2023",15100,23.4,186],["BMW","545E XDRIVE","P",null,319,"2021–2025",16200,null,0],["BMW","I4 EDRIVE40","E",null,1067,"2022–2026",17600,19.2,34],["BMW","I4 M50","E",null,2668,"2022–2026",17600,22.4,234],["BMW","I4 M50 XDRIVE","E",null,447,"2024–2025",4900,22.4,234],["BMW","I4 M60 XDRIVE","E",null,702,"2025–2026",9800,17.4,253],["BMW","I5 XDRIVE40","E",null,302,"2024–2026",5700,20.3,68],["BMW","IX XDRIVE40","E",null,992,"2022–2026",15900,22.7,3],["BMW","IX XDRIVE50","E",null,545,"2022–2026",22000,23.1,2],["BMW","IX1 XDRIVE30","E",null,1604,"2023–2026",7600,17.7,372],["BMW","IX2 XDRIVE30","E",null,412,"2024–2026",4600,17.8,122],["BMW","IX3","E",null,578,"2021–2026",20400,17.9,2],["BMW","X1 SDRIVE18D","D",5.6,318,"2011–2021",17300,null,0],["BMW","X1 SDRIVE18I","B",6.7,548,"2016–2022",11600,null,0],["BMW","X1 XDRIVE18D","D",5.9,1599,"2012–2020",16700,null,0],["BMW","X1 XDRIVE20D","D",5.9,743,"2011–2022",20400,null,0],["BMW","X1 XDRIVE25E","P",null,3569,"2020–2026",16000,19.5,431],["BMW","X1 XDRIVE30E","P",null,326,"2023–2026",11100,19.6,39],["BMW","X3 30E XDRIVE","P",null,372,"2025–2026",8800,22.6,194],["BMW","X3 XDRIVE20D","D",6.8,3064,"2011–2021",21000,null,0],["BMW i","I3","E",null,544,"2017–2024",13600,null,0],["BMW i","I3","P",null,330,"2016–2022",15400,null,0],["BYD","ATTO 3","E",null,700,"2023–2026",5200,16.0,23],["BYD","SEAL","E",null,501,"2024–2026",8300,17.4,129],["BYD","SEALION 7","E",null,361,"2025–2026",16900,21.9,157],["Chevrolet","Corvette","B",11.9,718,"2008–2024",8500,null,0],["Citroen","Berlingo","B",6.8,682,"2008–2021",11900,null,0],["Citroen","Berlingo","D",5.7,1303,"2009–2020",15500,null,0],["Citroen","C1","B",4.8,1110,"2009–2016",8300,null,0],["Citroen","C3","B",5.7,8897,"2008–2023",8700,null,0],["Citroen","C3 AIRCROSS","B",6.1,823,"2018–2023",9100,null,0],["Citroen","C4","B",5.6,4292,"2008–2024",10500,null,0],["Citroen","C4","D",4.5,1185,"2008–2015",16100,null,0],["Citroen","C4 CACTUS","B",6.1,1022,"2014–2020",9900,null,0],["Citroen","C5 AIRCROSS","B",6.6,475,"2019–2023",10900,null,0],["Citroen","C5 AIRCROSS","P",null,556,"2020–2025",12800,null,0],["Citroen","E-C4","E",null,668,"2021–2025",14900,16.7,4],["Cupra","BORN 150 KW 58/62 KWH","E",null,350,"2022–2026",12200,19.2,102],["Cupra","BORN 170 KW 77/82 KWH","E",null,337,"2022–2025",13400,19.2,102],["Cupra","FORMENTOR E-HYBRID","P",null,323,"2021–2025",15300,19.2,5],["Cupra","Formentor","B",8.2,366,"2021–2026",12800,null,0],["Cupra","Tavascan","E",null,459,"2024–2026",6400,20.1,84],["Dacia","Bigster","H",4.5,311,"2025–2026",24100,null,0],["Dacia","Duster","B",6.8,4199,"2013–2023",10800,null,0],["Dacia","Duster","D",5.6,2885,"2011–2022",15700,null,0],["Dacia","Duster","H",5.8,563,"2024–2026",7500,null,0],["Dacia","Jogger","B",5.5,425,"2022–2025",14900,null,0],["Dacia","Lodgy","B",6.9,308,"2013–2021",13400,null,0],["Dacia","Logan","B",6.3,1495,"2010–2020",11900,null,0],["Dacia","Sandero","B",5.5,2590,"2013–2025",9600,null,0],["FORD-CNG-TECHNIK","Mondeo","H",5.6,1013,"2018–2023",15400,null,0],["Fiat","500","B",6.0,1962,"2008–2021",8400,null,0],["Fiat","500","E",null,482,"2021–2025",9500,null,0],["Fiat","500","H",4.8,493,"2020–2024",6600,null,0],["Fiat","Ducato","D",9.6,465,"2008–2023",18200,null,0],["Ford","C-MAX","B",6.6,1995,"2010–2018",12000,null,0],["Ford","C-MAX","D",6.1,811,"2008–2018",18000,null,0],["Ford","Capri","E",null,595,"2025–2026",8100,19.1,304],["Ford","EDGE","D",7.7,494,"2016–2021",18400,null,0],["Ford","Ecosport","B",7.1,1281,"2016–2019",9600,null,0],["Ford","Explorer","E",null,1058,"2024–2026",6200,19.1,408],["Ford","Explorer","P",null,536,"2020–2025",20300,null,0],["Ford","Fiesta","B",5.5,25828,"2009–2020",9700,null,0],["Ford","Fiesta","D",4.8,510,"2009–2018",16200,null,0],["Ford","Fiesta","H",5.1,935,"2020–2023",9400,null,0],["Ford","Focus","B",6.0,31004,"2008–2020",12600,null,0],["Ford","Focus","D",5.2,5185,"2008–2020",19000,null,0],["Ford","Focus","H",5.3,2672,"2020–2025",11500,null,0],["Ford","GRAND C-MAX","B",6.9,638,"2011–2019",14500,null,0],["Ford","GRAND C-MAX","D",6.4,985,"2011–2017",19300,null,0],["Ford","Galaxy","D",6.6,928,"2008–2021",24200,null,0],["Ford","KUGA","B",6.5,1143,"2013–2022",13000,null,0],["Ford","KUGA","D",5.9,3525,"2009–2021",18700,null,0],["Ford","KUGA","H",5.6,1357,"2021–2026",14200,null,0],["Ford","KUGA","P",null,3858,"2020–2025",15300,17.4,76],["Ford","MUSTANG MACH-E","E",null,1853,"2021–2026",17800,19.3,79],["Ford","Mondeo","B",8.5,6403,"2008–2018",14500,null,0],["Ford","Mondeo","D",5.9,9821,"2008–2020",21500,null,0],["Ford","Mustang","B",11.1,1229,"2009–2024",9600,null,0],["Ford","PUMA","B",5.9,624,"2020–2021",9000,null,0],["Ford","PUMA","H",5.5,2559,"2020–2026",10500,null,0],["Ford","S-MAX","D",6.6,2699,"2008–2021",23000,null,0],["Ford","Tourneo Connect","D",5.7,941,"2010–2025",24000,null,0],["Ford","Tourneo Custom","D",8.7,537,"2013–2025",19700,null,0],["Ford","Tourneo Custom","P",null,455,"2024–2026",17300,31.5,203],["Ford","Transit","D",9.2,1841,"2010–2025",24000,null,0],["Ford","Transit Custom","D",8.6,465,"2014–2024",35800,null,0],["Honda","CIVIC 4DR","B",6.3,1709,"2008–2020",11500,null,0],["Honda","CIVIC 5DR","B",6.3,5100,"2009–2020",11200,null,0],["Honda","CIVIC 5DR","D",4.6,345,"2013–2017",18800,null,0],["Honda","CR-V","B",8.4,6725,"2008–2020",14000,null,0],["Honda","CR-V","H",6.9,765,"2019–2025",13000,null,0],["Honda","HR-V","B",6.4,1803,"2016–2020",11200,null,0],["Honda","JAZZ","B",5.8,3131,"2008–2019",9300,null,0],["Honda","JAZZ","H",4.5,641,"2011–2024",9900,null,0],["Hyundai","Bayon","B",5.3,540,"2021–2026",10600,null,0],["Hyundai","Bayon","H",5.2,406,"2021–2024",7700,null,0],["Hyundai","I 30","B",5.9,10037,"2009–2024",11500,null,0],["Hyundai","I 30","D",4.6,1680,"2008–2018",17700,null,0],["Hyundai","I 30","H",5.3,766,"2021–2024",11000,null,0],["Hyundai","I10","B",4.8,1277,"2015–2025",8700,null,0],["Hyundai","I20","B",5.4,13864,"2010–2023",9400,null,0],["Hyundai","I20","H",5.0,555,"2021–2024",8500,null,0],["Hyundai","I20 ACTIVE","B",5.8,644,"2016–2020",8600,null,0],["Hyundai","IONIQ5","E",null,3142,"2021–2026",20700,16.7,96],["Hyundai","IONIQ6","E",null,535,"2023–2026",10900,16.4,2],["Hyundai","Inster","E",null,545,"2025–2026",1700,14.9,303],["Hyundai","Ioniq","E",null,1075,"2017–2024",16900,20.6,11],["Hyundai","Ioniq","H",4.4,1166,"2017–2021",12400,null,0],["Hyundai","Ioniq","P",null,1348,"2018–2023",14900,null,0],["Hyundai","KONA","B",6.1,971,"2018–2022",10000,null,0],["Hyundai","KONA","E",null,3385,"2019–2025",17300,16.6,96],["Hyundai","KONA","H",4.5,841,"2020–2026",11300,null,0],["Hyundai","Santa Fe","D",7.0,388,"2011–2020",20300,null,0],["Hyundai","Santa Fe","P",null,311,"2021–2026",17400,19.1,48],["Hyundai","Tucson","B",7.9,1002,"2009–2022",12400,null,0],["Hyundai","Tucson","D",6.3,589,"2010–2019",17800,null,0],["Hyundai","Tucson","H",6.1,826,"2021–2026",12500,null,0],["Hyundai","Tucson","P",null,1327,"2021–2025",18400,19.3,15],["Jaguar","I-PACE","E",null,555,"2019–2025",21400,null,0],["Jaguar","XF","D",6.0,802,"2008–2020",17400,null,0],["Kia","CEED","B",5.8,23283,"2008–2023",11900,null,0],["Kia","CEED","D",5.2,5203,"2008–2017",17900,null,0],["Kia","CEED","H",5.4,3176,"2021–2026",12400,null,0],["Kia","CEED","P",null,2241,"2020–2025",19400,null,0],["Kia","EV3","E",null,1597,"2024–2026",9500,16.2,765],["Kia","EV6","E",null,3128,"2022–2026",20200,17.0,216],["Kia","EV9","E",null,720,"2024–2026",9800,22.0,42],["Kia","NIRO","E",null,2758,"2020–2025",21800,null,0],["Kia","NIRO","H",4.7,5498,"2017–2025",12500,null,0],["Kia","NIRO","P",null,2274,"2018–2025",18000,14.0,2],["Kia","Optima","D",5.3,1355,"2013–2019",18500,null,0],["Kia","Optima","P",null,2123,"2018–2024",26900,null,0],["Kia","Picanto","B",5.1,5150,"2011–2025",7800,null,0],["Kia","Proceed","B",6.1,1420,"2019–2024",12400,null,0],["Kia","RIO","B",5.5,19034,"2012–2023",9500,null,0],["Kia","RIO","H",5.2,327,"2020–2024",8200,null,0],["Kia","SOUL","E",null,316,"2018–2025",16300,null,0],["Kia","Sorento","D",7.1,2255,"2010–2021",19500,null,0],["Kia","Sorento","P",null,1082,"2021–2025",18800,18.2,23],["Kia","Sportage","B",7.6,5372,"2009–2021",12500,null,0],["Kia","Sportage","D",6.4,2093,"2011–2019",17500,null,0],["Kia","Sportage","H",5.7,941,"2022–2026",14200,null,0],["Kia","Sportage","P",null,1882,"2022–2025",15900,18.8,57],["Kia","Stonic","B",5.5,6766,"2018–2026",9500,null,0],["Kia","Stonic","H",5.2,624,"2021–2024",9100,null,0],["Kia","Xceed","B",6.0,1036,"2020–2026",11300,null,0],["Kia","Xceed","P",null,1168,"2020–2025",14900,null,0],["Lexus","CT200H","H",4.9,1056,"2011–2022",15700,null,0],["Lexus","ES300H","H",5.2,398,"2019–2025",15100,null,0],["Lexus","IS300H","H",5.7,1107,"2013–2023",18900,null,0],["Lexus","LBX","H",4.4,416,"2024–2026",5600,null,0],["Lexus","NX300H","H",7.0,1144,"2015–2023",17900,null,0],["Lexus","NX450H+","P",null,644,"2022–2026",13500,18.3,97],["Lexus","RX450H","H",7.6,816,"2011–2022",19700,null,0],["Lexus","UX250H","H",5.3,638,"2019–2024",11600,null,0],["MG","MG4 ELECTRIC","E",null,1203,"2023–2026",8200,16.7,130],["MG","MG5 ELECTRIC","E",null,383,"2023–2026",23200,null,0],["MG","Marvel R Electric","E",null,495,"2023–2026",24000,null,0],["Mazda","3","B",5.5,3397,"2008–2014",11500,null,0],["Mazda","CX-3","B",6.9,1861,"2015–2021",10500,null,0],["Mazda","CX-30","H",6.2,1590,"2019–2025",10400,null,0],["Mazda","CX-5","B",7.4,1870,"2012–2022",13800,null,0],["Mazda","CX-5","D",6.6,622,"2012–2018",18300,null,0],["Mazda","CX-60","P",null,755,"2022–2026",12300,24.4,91],["Mazda","MAZDA2","B",5.7,1257,"2015–2020",9200,null,0],["Mazda","MAZDA2","H",3.7,904,"2020–2025",7700,null,0],["Mazda","MAZDA3","H",5.9,1583,"2019–2025",10100,null,0],["Mazda","MAZDA6","B",7.0,2798,"2013–2022",13800,null,0],["Mazda","MAZDA6","D",6.7,383,"2013–2020",20500,null,0],["Mazda","MX-5","B",6.6,533,"2008–2025",11500,null,0],["Mercedes-Benz","A 160","B",6.0,1398,"2009–2017",9300,null,0],["Mercedes-Benz","A 180","B",6.0,6616,"2013–2022",11500,null,0],["Mercedes-Benz","A 180 D","D",4.7,674,"2016–2021",15400,null,0],["Mercedes-Benz","A 200","B",6.1,1025,"2012–2021",11400,null,0],["Mercedes-Benz","A 220 4MATIC","B",7.1,341,"2015–2020",11100,null,0],["Mercedes-Benz","A 250 E","P",null,2217,"2020–2024",12500,18.9,3],["Mercedes-Benz","B 180","B",6.1,2714,"2010–2020",10300,null,0],["Mercedes-Benz","B 200","B",6.3,460,"2011–2021",13400,null,0],["Mercedes-Benz","B 250 E","P",null,442,"2020–2025",11200,18.9,1],["Mercedes-Benz","C 180","B",7.2,3949,"2011–2021",13500,null,0],["Mercedes-Benz","C 180","H",6.3,309,"2021–2024",11700,null,0],["Mercedes-Benz","C 180 D","D",5.3,419,"2015–2021",18900,null,0],["Mercedes-Benz","C 200","B",6.6,1182,"2011–2021",14200,null,0],["Mercedes-Benz","C 200 4MATIC","H",7.1,1182,"2018–2022",11900,null,0],["Mercedes-Benz","C 200 D","D",5.6,1160,"2015–2022",23100,null,0],["Mercedes-Benz","C 220 D","D",5.6,1311,"2016–2023",32300,null,0],["Mercedes-Benz","C 220 D 4MATIC","D",6.2,1672,"2016–2023",27000,null,0],["Mercedes-Benz","C 300 DE","P",null,369,"2019–2024",30400,21.4,5],["Mercedes-Benz","C 300 E","P",null,1751,"2020–2025",18000,21.9,60],["Mercedes-Benz","C 300 E 4MATIC","P",null,630,"2020–2026",11800,21.9,48],["Mercedes-Benz","C 350 E","P",null,1766,"2017–2022",26800,null,0],["Mercedes-Benz","CLA 180","B",6.1,3085,"2014–2022",12900,null,0],["Mercedes-Benz","CLA 200","B",6.1,896,"2013–2023",15300,null,0],["Mercedes-Benz","CLA 250 E","P",null,2087,"2021–2025",13100,18.9,115],["Mercedes-Benz","CLA 250+","E",null,889,"2025–2026",null,15.4,241],["Mercedes-Benz","CLA 350 4MATIC","E",null,332,"2025–2026",null,16.2,87],["Mercedes-Benz","E 200","B",7.8,502,"2011–2022",16700,null,0],["Mercedes-Benz","E 200 D","D",5.5,2248,"2017–2023",29600,null,0],["Mercedes-Benz","E 220 CDI","D",6.2,6244,"2008–2020",25900,null,0],["Mercedes-Benz","E 220 D","D",5.7,2971,"2016–2022",24000,null,0],["Mercedes-Benz","E 220 D 4MATIC","D",6.0,1965,"2017–2023",22700,null,0],["Mercedes-Benz","E 220 D 4MATIC","H",5.9,409,"2022–2026",39800,null,0],["Mercedes-Benz","E 220 D 4MATIC ALLTERRAIN","D",6.7,516,"2017–2024",26400,null,0],["Mercedes-Benz","E 300 DE","P",null,1044,"2019–2025",30500,22.8,7],["Mercedes-Benz","E 300 DE 4MATIC","P",null,1119,"2021–2026",31600,22.8,7],["Mercedes-Benz","E 300 E","P",null,631,"2019–2025",14400,22.1,37],["Mercedes-Benz","E 300 E 4MATIC","P",null,628,"2021–2025",12400,22.1,33],["Mercedes-Benz","E 350 E","P",null,591,"2017–2022",20200,null,0],["Mercedes-Benz","EQA 250","E",null,985,"2021–2026",14600,18.4,23],["Mercedes-Benz","EQA 250+","E",null,441,"2023–2026",9400,18.4,87],["Mercedes-Benz","EQA 300 4MATIC","E",null,1137,"2022–2026",10000,20.0,97],["Mercedes-Benz","EQB 300 4MATIC","E",null,1770,"2022–2026",18400,20.0,175],["Mercedes-Benz","EQB 350 4MATIC","E",null,369,"2022–2026",16400,20.0,24],["Mercedes-Benz","EQC 400 4MATIC","E",null,2180,"2020–2026",20500,null,0],["Mercedes-Benz","EQE 300","E",null,621,"2023–2026",14800,20.1,8],["Mercedes-Benz","EQE 350 4MATIC","E",null,1247,"2023–2026",7900,23.4,59],["Mercedes-Benz","EQE 350+","E",null,354,"2022–2026",23300,23.4,89],["Mercedes-Benz","EQE 500 4MATIC","E",null,526,"2023–2026",7300,23.4,21],["Mercedes-Benz","EQS 580 4MATIC","E",null,434,"2022–2026",13700,22.1,1],["Mercedes-Benz","GLA 180","B",7.2,757,"2015–2021",10400,null,0],["Mercedes-Benz","GLA 200","B",6.6,319,"2014–2022",11900,null,0],["Mercedes-Benz","GLA 250 E","P",null,722,"2021–2025",12300,21.6,116],["Mercedes-Benz","GLC 220 D 4MATIC","D",6.7,1978,"2016–2025",22000,null,0],["Mercedes-Benz","GLC 250 D 4MATIC","D",6.9,1131,"2016–2021",20300,null,0],["Mercedes-Benz","GLC 300 DE 4MATIC","P",null,835,"2020–2025",19300,23.9,23],["Mercedes-Benz","GLC 300 E 4MATIC","P",null,4696,"2020–2025",14100,23.7,334],["Mercedes-Benz","GLC 350 E 4MATIC","P",null,2319,"2017–2022",18500,23.7,380],["Mercedes-Benz","GLE 350 DE 4MATIC","P",null,411,"2020–2025",19300,26.5,21],["Mercedes-Benz","NAN","B",7.0,354,"2008–2023",14900,null,0],["Mercedes-Benz","NAN","D",10.2,473,"2008–2023",27300,null,0],["Mercedes-Benz","Sprinter","D",10.7,6096,"2012–2025",34500,null,0],["Mercedes-Benz","V-KLASSE","D",8.3,849,"2015–2025",30500,null,0],["Mercedes-Benz","VITO","D",7.8,804,"2011–2025",33400,null,0],["Mercedes-Benz","Vito Tourer","D",7.7,1340,"2015–2025",26000,null,0],["Mini","COUNTRYMAN COOPER SE ALL4","P",null,1479,"2018–2024",13200,null,0],["Mini","Cooper","B",5.8,1320,"2008–2022",11300,null,0],["Mini","Cooper S","B",6.3,624,"2008–2024",12000,null,0],["Mini","Cooper Se","E",null,722,"2020–2026",8400,14.5,26],["Mitsubishi","ASX","B",6.9,6217,"2011–2020",12500,null,0],["Mitsubishi","ASX","H",5.7,334,"2023–2026",12100,null,0],["Mitsubishi","COLT","B",5.0,913,"2008–2025",9400,null,0],["Mitsubishi","Eclipse Cross","B",7.9,859,"2018–2021",10900,null,0],["Mitsubishi","Eclipse Cross","P",null,2762,"2021–2025",13500,null,0],["Mitsubishi","Outlander","B",7.9,1566,"2008–2022",15300,null,0],["Mitsubishi","Outlander","P",null,10502,"2017–2024",24900,23.4,188],["Mitsubishi","Space Star","B",5.4,928,"2014–2023",7900,null,0],["Nissan","Ariya","E",null,1163,"2022–2026",9700,17.3,186],["Nissan","JUKE","B",5.9,4772,"2011–2025",10800,null,0],["Nissan","JUKE","H",4.8,420,"2023–2025",6300,null,0],["Nissan","LEAF","E",null,338,"2012–2023",12300,null,0],["Nissan","LEAF 40KWH","E",null,3117,"2018–2024",14600,null,0],["Nissan","LEAF 62KWH","E",null,874,"2020–2025",18200,null,0],["Nissan","Micra","B",5.9,6911,"2008–2021",8500,null,0],["Nissan","Qashqai","B",6.8,39336,"2009–2020",11700,null,0],["Nissan","Qashqai","D",5.5,5517,"2008–2018",17900,null,0],["Nissan","Qashqai","H",6.1,7198,"2021–2026",12300,null,0],["Nissan","X-TRAIL","B",7.9,497,"2015–2021",13800,null,0],["Nissan","X-TRAIL","D",6.9,888,"2014–2019",18400,null,0],["Nissan","X-TRAIL","H",6.3,440,"2023–2025",25700,null,0],["Opel","Ampera","P",null,738,"2012–2021",24700,null,0],["Opel","Astra","B",5.5,6527,"2008–2021",10900,null,0],["Opel","Astra","D",4.3,414,"2008–2017",16900,null,0],["Opel","Astra Sports Tourer","B",5.5,7180,"2011–2024",13400,null,0],["Opel","Astra Sports Tourer","D",4.4,835,"2011–2018",20200,null,0],["Opel","Astra Sports Tourer","H",4.6,391,"2024–2026",null,null,0],["Opel","Astra Sports Tourer+","B",5.8,4725,"2016–2022",13200,null,0],["Opel","Astra Sports Tourer+","D",5.2,458,"2016–2020",19800,null,0],["Opel","Astra+","B",5.8,2549,"2016–2020",10800,null,0],["Opel","CORSA-E","B",6.3,4744,"2015–2019",9400,null,0],["Opel","Corsa","B",5.2,4657,"2008–2022",9100,null,0],["Opel","Corsa","E",null,639,"2020–2025",13000,null,0],["Opel","Crossland","B",5.9,777,"2021–2024",9400,null,0],["Opel","Crossland X","B",6.2,1460,"2017–2020",9400,null,0],["Opel","Grandland X","B",6.7,1600,"2018–2021",11800,null,0],["Opel","Grandland X","P",null,567,"2020–2025",14300,null,0],["Opel","Insignia Grand Sport","B",7.1,1414,"2017–2022",12400,null,0],["Opel","Insignia Grand Sport","D",5.2,304,"2017–2022",17100,null,0],["Opel","Insignia Sports Tourer","B",7.2,1245,"2017–2022",13700,null,0],["Opel","Insignia Sports Tourer","D",6.0,595,"2011–2022",21100,null,0],["Opel","KARL","B",5.8,855,"2015–2019",8500,null,0],["Opel","Mokka","B",5.7,4117,"2013–2022",11300,null,0],["Opel","Mokka","E",null,1133,"2021–2025",14500,null,0],["Opel","Mokka X","B",7.6,2220,"2017–2019",10100,null,0],["Opel","Zafira Tourer","B",8.1,492,"2012–2018",14600,null,0],["Opel","Zafira Tourer","D",7.1,452,"2012–2018",20100,null,0],["Peugeot","2008","B",5.8,4287,"2014–2024",9600,null,0],["Peugeot","2008","E",null,1903,"2021–2025",14700,16.7,13],["Peugeot","2008","H",4.7,301,"2024–2026",null,null,0],["Peugeot","208","B",5.2,6067,"2012–2022",8800,null,0],["Peugeot","208","E",null,737,"2021–2025",13400,15.8,2],["Peugeot","3008","B",6.6,3862,"2010–2021",11600,null,0],["Peugeot","3008","D",5.5,1629,"2009–2020",16300,null,0],["Peugeot","3008","H",5.3,301,"2013–2026",16500,null,0],["Peugeot","3008","P",null,1119,"2020–2025",15700,24.0,8],["Peugeot","308","B",5.8,5967,"2008–2022",11300,null,0],["Peugeot","308","D",4.9,1861,"2008–2019",17100,null,0],["Peugeot","308","P",null,301,"2022–2025",14100,20.7,38],["Peugeot","5008","B",6.7,1070,"2010–2022",13800,null,0],["Peugeot","5008","D",5.4,1014,"2010–2021",18800,null,0],["Peugeot","508","B",6.6,1364,"2011–2020",12600,null,0],["Peugeot","508","D",4.8,1714,"2011–2019",19800,null,0],["Peugeot","Boxer","D",9.1,350,"2009–2023",18900,null,0],["Polestar","2","E",null,9927,"2022–2026",26000,16.2,448],["Polestar","3","E",null,392,"2024–2026",10500,19.6,67],["Polestar","4","E",null,1777,"2024–2026",6000,18.7,582],["Porsche","MACAN 4","E",null,408,"2024–2026",6700,21.2,118],["Porsche","PANAMERA 4 E-HYBRID","P",null,531,"2017–2024",14600,26.8,1],["Porsche","TAYCAN 4S","E",null,560,"2020–2025",13000,22.3,7],["Renault","5 E-TECH ELECTRIC","E",null,458,"2025–2026",4400,16.7,272],["Renault","ARKANA E-TECH","H",4.6,637,"2021–2024",12200,null,0],["Renault","CAPTUR (E-TECH PLUG-IN HYBRID)","P",null,742,"2020–2023",9900,null,0],["Renault","CLIO","B",5.5,12071,"2010–2025",9300,null,0],["Renault","Captur","B",6.1,4471,"2014–2021",9200,null,0],["Renault","Captur","H",5.8,384,"2021–2023",9200,null,0],["Renault","Kadjar","B",6.4,2243,"2015–2021",11200,null,0],["Renault","Kadjar","D",5.1,659,"2015–2019",16500,null,0],["Renault","MEGANE E-TECH ELECTRIC","E",null,518,"2022–2026",13700,15.9,15],["Renault","Megane","B",6.2,4289,"2009–2020",12000,null,0],["Renault","Megane","D",4.9,677,"2008–2019",18300,null,0],["Renault","SCENIC E-TECH ELECTRIC","E",null,386,"2024–2026",25600,18.8,100],["Renault","Symbioz","H",4.5,383,"2024–2026",null,null,0],["Renault","Twingo","B",5.3,772,"2008–2018",8100,null,0],["Renault","ZOE","E",null,798,"2017–2024",13400,null,0],["Saab","9-3","B",8.5,1660,"2008–2023",20800,null,0],["Seat","Alhambra","D",6.8,652,"2011–2018",20200,null,0],["Seat","Arona","B",5.8,1498,"2018–2025",9600,null,0],["Seat","Ateca","B",6.7,1252,"2016–2022",12700,null,0],["Seat","Ateca","D",5.9,364,"2016–2022",19400,null,0],["Seat","Ibiza","B",5.7,3342,"2009–2020",10600,null,0],["Seat","LEON","B",5.8,2674,"2008–2019",12700,null,0],["Seat","LEON","D",5.2,601,"2008–2016",18300,null,0],["Seat","LEON SP E-HYBRID150","P",null,756,"2021–2026",15100,16.0,120],["Seat","Leon Sp","H",5.5,332,"2021–2024",13400,null,0],["Seat","Leon Sportstourer","P",null,311,"2020–2024",14700,16.0,124],["Seat","Leon St","B",5.8,2675,"2014–2019",14500,null,0],["Seat","Leon St","D",5.2,698,"2014–2019",20300,null,0],["Seat","MII","E",null,678,"2020–2021",10100,null,0],["Seat","Tarraco","D",7.1,316,"2019–2023",19900,null,0],["Seat","Toledo","B",5.3,1756,"2013–2018",12400,null,0],["Skoda","Citigo","B",5.0,1517,"2012–2018",9300,null,0],["Skoda","ELROQ 60","E",null,799,"2025–2026",null,21.0,537],["Skoda","ELROQ 85","E",null,728,"2025–2026",6300,20.3,558],["Skoda","ELROQ 85X","E",null,311,"2025–2026",null,20.1,72],["Skoda","ENYAQ 60","E",null,1253,"2021–2025",17500,21.0,15],["Skoda","ENYAQ 80","E",null,2577,"2021–2026",24400,20.0,1433],["Skoda","ENYAQ 80X","E",null,2522,"2022–2026",26500,20.0,1433],["Skoda","ENYAQ 85","E",null,647,"2024–2026",12100,18.6,262],["Skoda","ENYAQ 85X","E",null,2444,"2024–2026",10900,20.0,889],["Skoda","Elroq Rs","E",null,320,"2025–2026",null,20.6,157],["Skoda","Enyaq Rs","E",null,1708,"2023–2026",13300,20.6,267],["Skoda","Fabia","B",5.3,15057,"2009–2024",10700,null,0],["Skoda","Kamiq","B",5.7,5267,"2020–2025",10200,null,0],["Skoda","Karoq","B",6.3,4529,"2018–2025",12000,null,0],["Skoda","Karoq","D",5.7,1246,"2018–2025",18100,null,0],["Skoda","Kodiaq","B",7.4,2926,"2017–2025",16100,null,0],["Skoda","Kodiaq","D",6.1,2649,"2017–2026",22500,null,0],["Skoda","Kodiaq","P",null,701,"2024–2026",15800,19.4,222],["Skoda","Octavia","B",6.0,35702,"2009–2020",14300,null,0],["Skoda","Octavia","D",5.2,23122,"2008–2021",21000,null,0],["Skoda","Octavia","H",5.1,4835,"2021–2026",13600,null,0],["Skoda","Octavia","P",null,3947,"2021–2024",16400,null,0],["Skoda","Octavia Rs","P",null,675,"2020–2025",16100,null,0],["Skoda","Rapid","B",5.5,5081,"2013–2019",12200,null,0],["Skoda","Scala","B",5.4,3246,"2019–2025",11400,null,0],["Skoda","Superb","B",6.7,5105,"2009–2023",15600,null,0],["Skoda","Superb","D",5.8,10770,"2010–2022",22800,null,0],["Skoda","Superb","H",5.2,300,"2024–2026",14700,null,0],["Skoda","Superb","P",null,4204,"2020–2025",20500,17.4,173],["Smart","#5","E",null,721,"2025–2026",null,19.7,283],["Subaru","Forester","B",8.5,4256,"2009–2020",14000,null,0],["Subaru","Forester","H",7.9,448,"2020–2025",11900,null,0],["Subaru","Impreza","B",7.6,471,"2008–2022",12600,null,0],["Subaru","Outback","B",8.3,2190,"2017–2026",13800,null,0],["Subaru","Solterra","E",null,362,"2022–2026",13000,18.1,65],["Subaru","XV","B",7.7,1152,"2012–2021",11800,null,0],["Suzuki","S-CROSS","H",5.7,323,"2023–2026",12000,null,0],["Suzuki","SX4","B",7.0,3206,"2008–2018",11300,null,0],["Suzuki","SX4","H",5.7,394,"2022–2024",14100,null,0],["Suzuki","Swace","H",4.4,344,"2020–2024",11800,null,0],["Suzuki","Swift","B",5.5,1395,"2008–2020",9600,null,0],["Suzuki","Swift","H",5.2,1299,"2018–2025",9400,null,0],["Suzuki","Vitara","B",7.4,4408,"2015–2020",11800,null,0],["Suzuki","Vitara","H",5.7,2353,"2020–2026",12100,null,0],["Tesla","MODEL 3","E",null,14941,"2020–2026",22000,13.8,663],["Tesla","Model S","E",null,2389,"2018–2025",37700,18.0,4],["Tesla","Model X","E",null,1057,"2018–2026",35600,19.3,4],["Tesla","Model Y","E",null,16295,"2022–2026",19400,15.3,1725],["Tesla Motors","Model S","E",null,1244,"2014–2024",30900,18.0,4],["Tesla Motors","Model X","E",null,339,"2016–2025",31800,19.3,4],["Toyota","AYGO","B",4.9,3281,"2008–2021",8500,null,0],["Toyota","Auris","B",6.4,16848,"2008–2018",11100,null,0],["Toyota","Auris","H",5.0,15628,"2012–2021",14100,null,0],["Toyota","Aygo X","B",4.8,694,"2022–2025",6800,null,0],["Toyota","BZ4X","E",null,2667,"2022–2026",16900,16.8,373],["Toyota","C-HR","B",6.6,793,"2017–2020",11100,null,0],["Toyota","C-HR","E",null,367,"2026–2026",null,null,0],["Toyota","C-HR","H",4.7,15760,"2017–2025",12500,null,0],["Toyota","C-HR","P",null,775,"2024–2026",2900,15.4,386],["Toyota","Camry","H",5.4,1897,"2019–2024",13000,null,0],["Toyota","Corolla","B",6.2,12422,"2008–2020",11000,null,0],["Toyota","Corolla","H",4.4,33023,"2019–2025",12400,null,0],["Toyota","Prius","H",4.2,1331,"2011–2021",15000,null,0],["Toyota","Prius","P",null,321,"2023–2025",8900,13.3,4],["Toyota","Prius Phv","P",null,370,"2017–2023",14700,null,0],["Toyota","Prius Plus","H",5.6,1145,"2012–2022",21700,null,0],["Toyota","Proace","D",7.3,1094,"2017–2025",18000,null,0],["Toyota","Proace City Verso","B",6.6,311,"2020–2026",11700,null,0],["Toyota","RAV4","B",6.8,5679,"2008–2023",14200,null,0],["Toyota","RAV4","H",5.5,13826,"2017–2025",15500,null,0],["Toyota","RAV4","P",null,6572,"2021–2025",19600,17.1,1268],["Toyota","Yaris","B",5.8,28396,"2008–2021",8900,null,0],["Toyota","Yaris","H",3.7,25014,"2015–2025",9700,null,0],["Toyota","Yaris Cross","H",4.4,11413,"2022–2026",11600,null,0],["Volkswagen","Arteon","D",5.5,376,"2017–2022",18300,null,0],["Volkswagen","Arteon","P",null,579,"2021–2025",19300,null,0],["Volkswagen","Caddy","B",6.8,1523,"2011–2024",13400,null,0],["Volkswagen","Caddy","D",5.8,4412,"2010–2025",22900,null,0],["Volkswagen","Caddy","P",null,309,"2025–2026",30900,21.4,249],["Volkswagen","Crafter","D",10.6,1975,"2011–2025",26700,null,0],["Volkswagen","GOLF","B",6.0,41262,"2008–2020",12600,null,0],["Volkswagen","GOLF","D",5.3,11873,"2008–2020",19300,null,0],["Volkswagen","GOLF","E",null,1112,"2018–2024",16000,null,0],["Volkswagen","GOLF","H",5.4,4443,"2020–2026",11800,null,0],["Volkswagen","GOLF","P",null,1801,"2016–2026",18300,16.6,94],["Volkswagen","Golf Gte","P",null,412,"2021–2025",15900,16.6,94],["Volkswagen","Golf Sportsvan","B",6.3,4301,"2014–2020",10100,null,0],["Volkswagen","Golf Sportsvan","D",5.5,480,"2014–2019",16800,null,0],["Volkswagen","ID. BUZZ PRO 150 KW","E",null,367,"2022–2025",11800,23.3,175],["Volkswagen","ID.3 PRO 107 KW","E",null,524,"2021–2025",14100,19.2,161],["Volkswagen","ID.3 PRO 150 KW","E",null,3268,"2020–2026",16400,19.2,48],["Volkswagen","ID.3 PRO S 150 KW","E",null,593,"2021–2026",21200,19.2,37],["Volkswagen","ID.4 GTX 220 KW","E",null,2233,"2021–2026",31000,21.2,1510],["Volkswagen","ID.4 GTX 250KW","E",null,550,"2024–2026",9500,21.2,224],["Volkswagen","ID.4 PRO 128 KW","E",null,708,"2022–2023",19200,21.2,1510],["Volkswagen","ID.4 PRO 150 KW","E",null,3945,"2021–2026",21800,21.2,1510],["Volkswagen","ID.4 PRO 210KW","E",null,468,"2024–2026",18100,21.3,93],["Volkswagen","ID.4 PRO 4MOTION 210KW","E",null,2962,"2024–2026",18200,21.2,1186],["Volkswagen","ID.5 GTX 220 KW","E",null,678,"2022–2026",21700,21.3,11],["Volkswagen","ID.5 PRO 150 KW","E",null,679,"2022–2026",19200,21.3,11],["Volkswagen","ID.7 GTX","E",null,368,"2024–2026",13300,20.3,180],["Volkswagen","ID.7 PRO 210KW","E",null,533,"2023–2026",19100,20.3,1203],["Volkswagen","ID.7 TOURER GTX","E",null,1489,"2024–2026",12200,20.3,807],["Volkswagen","ID.7 TOURER PRO","E",null,374,"2024–2026",12400,18.3,162],["Volkswagen","Kombi","D",8.3,2174,"2010–2023",21200,null,0],["Volkswagen","Multivan","D",9.0,360,"2008–2025",27600,null,0],["Volkswagen","Multivan","P",null,338,"2022–2026",19000,24.3,74],["Volkswagen","POLO","B",5.5,21921,"2009–2021",9600,null,0],["Volkswagen","POLO","D",4.9,1229,"2008–2017",16300,null,0],["Volkswagen","Passat","B",6.5,9281,"2009–2022",14900,null,0],["Volkswagen","Passat","D",5.5,19942,"2008–2022",22200,null,0],["Volkswagen","Passat","H",5.4,300,"2024–2026",17000,null,0],["Volkswagen","Passat","P",null,9676,"2018–2025",26300,16.6,226],["Volkswagen","Sharan","D",6.9,1426,"2011–2021",21200,null,0],["Volkswagen","T-CROSS","B",5.8,4611,"2019–2026",9400,null,0],["Volkswagen","T-ROC","B",6.3,5934,"2018–2025",10900,null,0],["Volkswagen","T-ROC","D",5.7,515,"2018–2023",15900,null,0],["Volkswagen","T-ROC","H",5.5,814,"2026–2026",null,null,0],["Volkswagen","Taigo","B",5.7,2248,"2022–2026",11000,null,0],["Volkswagen","Tiguan","B",6.8,3409,"2008–2024",13700,null,0],["Volkswagen","Tiguan","D",6.3,3503,"2008–2024",18500,null,0],["Volkswagen","Tiguan","H",6.1,518,"2024–2026",7700,null,0],["Volkswagen","Tiguan","P",null,2751,"2021–2026",13200,19.4,493],["Volkswagen","Touran","B",6.7,3799,"2008–2022",14900,null,0],["Volkswagen","Touran","D",5.6,2878,"2008–2020",20700,null,0],["Volkswagen","Transporter","D",8.4,406,"2008–2021",26600,null,0],["Volkswagen","UP!","B",5.0,1682,"2012–2019",8800,null,0],["Volkswagen","UP!","E",null,906,"2020–2023",9800,null,0],["Volvo","C40","E",null,2909,"2022–2026",17900,null,0],["Volvo","EC40","E",null,946,"2024–2026",12900,17.4,338],["Volvo","EX30","E",null,3094,"2024–2026",7400,17.1,176],["Volvo","EX40","E",null,2074,"2024–2026",15800,17.7,775],["Volvo","EX90","E",null,456,"2025–2026",7100,20.9,243],["Volvo","S60","B",7.2,3244,"2008–2021",13700,null,0],["Volvo","S60","H",6.6,472,"2020–2023",11800,null,0],["Volvo","S60","P",null,892,"2020–2025",14100,null,0],["Volvo","S60 T8 TWIN ENGINE","P",null,347,"2019–2024",14700,null,0],["Volvo","S90","D",5.7,2244,"2016–2021",20800,null,0],["Volvo","S90","P",null,441,"2018–2025",16600,null,0],["Volvo","S90 T8 TWIN ENGINE","P",null,424,"2018–2023",17100,null,0],["Volvo","V40","B",6.7,4886,"2013–2020",11100,null,0],["Volvo","V40","D",5.4,6551,"2012–2019",17100,null,0],["Volvo","V40 CROSS COUNTRY","B",7.0,541,"2014–2021",10600,null,0],["Volvo","V40 CROSS COUNTRY","D",5.5,1585,"2013–2019",16600,null,0],["Volvo","V60","B",7.4,2567,"2011–2022",14700,null,0],["Volvo","V60","D",5.6,12294,"2011–2023",22300,null,0],["Volvo","V60","H",6.6,1932,"2020–2023",14500,null,0],["Volvo","V60","P",null,6403,"2021–2026",26000,16.6,228],["Volvo","V60 CROSS COUNTRY","D",6.0,2910,"2015–2024",21000,null,0],["Volvo","V60 CROSS COUNTRY","H",6.8,622,"2020–2024",18700,null,0],["Volvo","V60 PLUG IN","P",null,1120,"2013–2020",34400,16.6,228],["Volvo","V60 T6 TWIN ENGINE","P",null,1115,"2020–2024",33700,16.6,228],["Volvo","V60 T8 TWIN ENGINE","P",null,1964,"2019–2024",21300,16.6,228],["Volvo","V60 TWIN ENGINE","P",null,863,"2018–2022",30200,16.6,228],["Volvo","V90","D",6.1,7197,"2016–2023",28900,null,0],["Volvo","V90","H",6.7,316,"2020–2025",23600,null,0],["Volvo","V90","P",null,2199,"2020–2025",25300,17.8,39],["Volvo","V90 CROSS COUNTRY","D",6.6,1846,"2017–2025",27800,null,0],["Volvo","V90 CROSS COUNTRY","H",7.1,317,"2020–2025",20900,null,0],["Volvo","V90 T8 TWIN ENGINE","P",null,1648,"2018–2024",26100,17.8,39],["Volvo","XC40","B",7.1,1959,"2018–2022",11400,null,0],["Volvo","XC40","D",6.0,541,"2018–2023",16800,null,0],["Volvo","XC40","E",null,4804,"2021–2026",16500,null,0],["Volvo","XC40","H",6.5,1327,"2021–2026",11900,null,0],["Volvo","XC40","P",null,3062,"2020–2025",13500,null,0],["Volvo","XC40 T5 TWIN ENGINE","P",null,533,"2020–2024",17100,null,0],["Volvo","XC60","D",6.1,3613,"2010–2022",22600,null,0],["Weinsberg","R47","D",11.1,536,"2014–2026",10300,null,0]];
+const RW = {"fleet":{"P":{"n":5148720,"ob":7.21,"wl":5.98,"k":1.205},"D":{"n":2537606,"ob":6.7,"wl":5.66,"k":1.184},"PE":{"n":1289748,"ob":5.97,"wl":1.38,"k":4.318}},"brand":{"VOLKSWAGEN":{"P":[1.146,669589],"D":[1.171,472266],"PE":[5.81,51941]},"AUDI":{"P":[1.178,160397],"D":[1.183,197460],"PE":[6.62,49658]},"BMW":{"P":[1.226,281711],"D":[1.228,376548],"PE":[6.25,166691]},"MINI":{"P":[1.226,281711],"D":[1.228,376548],"PE":[6.25,166691]},"MERCEDES-BENZ":{"P":[1.212,332575],"D":[1.183,528400],"PE":[5.64,360832]},"SKODA":{"P":[1.154,34897],"D":[1.207,24021],"PE":[5.05,2813]},"SEAT":{"P":[1.172,196186],"D":[1.224,43256],"PE":[5.29,38019]},"CUPRA":{"P":[1.172,196186],"D":[1.224,43256],"PE":[5.29,38019]},"VOLVO":{"P":[1.166,180127],"D":[1.151,145146],"PE":[6.37,286939]},"TOYOTA":{"P":[1.101,138463],"D":[1.119,6414],"PE":[4.23,10685]},"LEXUS":{"P":[1.071,29573],"PE":[4.62,4038]},"KIA":{"P":[1.156,130934],"D":[1.096,5793],"PE":[4.63,23055]},"HYUNDAI":{"P":[1.144,64273],"D":[1.079,2609],"PE":[5.26,2234]},"FORD":{"P":[1.208,474369],"D":[1.157,149692],"PE":[4.9,101550]},"NISSAN":{"P":[1.22,63038],"D":[1.236,1790]},"PEUGEOT":{"P":[1.208,161411],"D":[1.154,122444],"PE":[5.45,32193]},"CITROEN":{"P":[1.199,178519],"D":[1.153,105933],"PE":[5.46,21328]},"DS":{"P":[1.209,142106],"D":[1.158,82595],"PE":[5.46,21328]},"OPEL":{"P":[1.207,115444],"D":[1.162,66456],"PE":[5.45,19483]},"FIAT":{"P":[1.27,191007],"D":[1.217,48820],"PE":[6.24,15665]},"JEEP":{"P":[1.278,160935],"D":[1.192,50272],"PE":[6.59,23027]},"ALFA ROMEO":{"P":[1.223,20986],"D":[1.223,26548],"PE":[6.18,4150]},"RENAULT":{"P":[1.263,1218894],"D":[1.183,276437],"PE":[4.47,42852]},"DACIA":{"P":[1.255,441938],"D":[1.194,7066]},"MAZDA":{"P":[1.188,91618],"D":[1.231,17487],"PE":[7.62,29527]},"HONDA":{"P":[1.042,42844]},"SUZUKI":{"P":[1.129,70672]},"MITSUBISHI":{"P":[1.126,2027]},"SUBARU":{"P":[1.06,1837]},"PORSCHE":{"P":[1.176,58086],"PE":[10.27,18636]},"LAND ROVER":{"P":[1.212,10031],"D":[1.186,33346],"PE":[8.45,22974]},"JAGUAR":{"P":[1.212,10031],"D":[1.186,33346],"PE":[8.45,22974]},"MG":{"P":[1.201,30308],"PE":[6.81,8991]},"BYD":{"PE":[4.66,3331]}},"evMedian":18.7,"phevMedian":19.1}; // EEA: mitattu kulutus (OBFCM) valmistajittain + Suomen 2025 sähkönkulutukset
+
+// ---------- kielet / languages ----------
+const I18N = {
+fi: {
+  locale:'fi-FI', yr:'v', mo:'kk', and:'ja',
+  pt:{B:'Bensiini',D:'Diesel',H:'Hybridi',P:'Ladattava hybridi',E:'Sähkö'},
+  tagline:'Mitä auto oikeasti maksaa vuodessa – ja paljonko se päästää',
+  meta:'Ensimmäinen toimiva versio. Laskee arvonaleneman, pääoman, energian ja muut kulut sekä elinkaaren päästöt omalla ajomäärälläsi. Esimerkkiautot ovat esimerkkejä – vaihda omasi.',
+  drive_h:'Oma ajosi', km_label:'Vuotuinen ajomäärä', km_unit:'km / vuosi',
+  chipB:'Bensa-auto 11 800', chipAll:'Kaikki 14 500', chipD:'Diesel 20 800',
+  km_hint:'Pikavalinnat ovat suomalaisten autojen toteutuneita ajomääriä (mediaani, Traficom 30.6.2026).',
+  years_l:'Omistusaika', years_u:'vuotta', rate_l:'Pääoman korko', rate_u:'% / vuosi',
+  energy_h:'Energia', petrol:'Bensiini', diesel:'Diesel', el_home:'Sähkö kotona', el_home_u:'€ / kWh, siirto ja verot mukana',
+  loss:'Lataushäviö', elsrc:'Sähkön alkuperä',
+  el1:'Verkkosähkö, Suomen keskiarvo – 42 g/kWh', el2:'Tuulisähkö – 12 g/kWh', el3:'Ydinsähkö – 12 g/kWh', el4:'Vesisähkö – 24 g/kWh', el5:'Aurinkosähkö – 48 g/kWh',
+  el_note:'Ei nollaa: rakentamisella ja polttoaineella on aina päästönsä.',
+  ef_sum:'Polttoaineiden päästökertoimet', ef_hint:'Arvio tuotantoketju mukaan lukien (well-to-wheel). Tarkistettava VTT LIPASTO -tietokannasta.',
+  cost_h:'Mistä vuosikustannus koostuu', cost_lead:'Euroa vuodessa omistusajan keskiarvona.',
+  lg_dep:'Arvonalenema', lg_cap:'Pääoma', lg_en:'Energia', lg_oth:'Vero, vakuutus, huolto, renkaat',
+  em_h:'Päästöt vuodessa', em_lead:'kg CO₂e vuodessa. Auton valmistus jaetaan sen koko käyttöiälle.',
+  lg_drive:'Ajo (polttoaine tai sähkö)', lg_make:'Valmistus',
+  notes_h:'Näin laskenta toimii', reset:'Palauta esimerkkiautot',
+  notes:`<li><b>Arvonalenema:</b> jäännösarvo = hinta × (1 − arvonalenema-%)<sup>vuodet</sup>. Jos jätät prosentin tyhjäksi, se valitaan auton keski-iän mukaan: alle 3 v 18 %, 3–5 v 14 %, 6–9 v 10 %, 10–14 v 7 %, 15 v tai yli 5 %. Keskimääräistä suurempi ajomäärä (yli 15 000 km/v) laskee jäännösarvoa 0,2 % per 1 000 km vuodessa.</li>
+<li><b>Pääoma:</b> autoon sitoutuneen rahan keskiarvo × korko.</li>
+<li><b>Todellinen kulutus:</b> WLTP-arvo kerrotaan merkkikohtaisella kertoimella, joka on mitattu autojen omista kulutusmittareista (luetaan mm. katsastuksissa). Aineistossa on noin 9 miljoonaa EU:ssa 2021–2024 rekisteröityä autoa. Bensiiniautot kuluttavat keskimäärin 20 % ja dieselit 18 % yli WLTP:n. Kerroin on merkin keskiarvo koko EU:sta. Se ei ole mallikohtainen eikä huomioi Suomen talvea.</li>
+<li><b>Lataushybridit:</b> oletuskulutus vastaa merkin lataushybridien mitattua keskiarvoa. Koko EU:ssa se on 6,0 l/100 km, kun WLTP lupaa 1,4. Oletuksena 25 % ajosta kulkee sähköllä. Nosta osuutta, jos lataat ahkerasti.</li>
+<li><b>Sähköautot:</b> kulutus on mallin WLTP-arvo EEA:n rekisteristä (Suomessa 2025 rekisteröidyt autot). Mitattua kulutusta ei kerätä täyssähköautoista, joten kerroin 1,20 on oletus.</li>
+<li><b>Sähkön päästöt:</b> Suomen tuotannon suorat päästöt 26 g/kWh (Energiateollisuus, 2025) + tuotantoketju 16 g/kWh (Ilmastopaneeli). Tuotantotapojen elinkaariarvot IPCC:n ja UNECE:n mukaan.</li>
+<li><b>Malliluettelo:</b> Traficomin ajoneuvojen avoin data 30.6.2026 (CC BY 4.0). Polttoaineen WLTP-kulutus on laskettu rekisterin CO₂-arvosta. Mitattu kulutus ja sähkönkulutus: Euroopan ympäristökeskus EEA (CC BY 4.0).</li>
+<li>Valmistuspäästöt, vakuutus ja huolto ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
+  ex1:'Toyota Corolla, uusi', ex2:'Škoda Octavia diesel, käytetty', ex3:'Tesla Model 3, käytetty',
+  new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
+  pick_l:'Hae malli rekisteristä', pick_ph:'esim. Volkswagen Golf', pt_l:'Käyttövoima',
+  price_l:'Ostohinta', age_l:'Ikä ostaessa', age_u:'v (0 = uusi)', odo_l:'Mittarilukema', odo_u:'km ostaessa',
+  dep_l:'Arvonalenema', dep_u:'% / v, tyhjä = iän mukaan',
+  fuel_l:'Polttoaine', fuel_u:'l / 100 km (WLTP)', fuel_u_p:'l / 100 km polttoaineella ajaessa',
+  el_l:'Sähkö', kwh_u:'kWh / 100 km (WLTP)', share_l:'Sähköllä ajettu', share_u:'% ajosta',
+  other_l:'Muut kulut', other_u:'€ / v: vero, vakuutus, huolto, renkaat', more:'Lisää oletuksia',
+  real_l:'Realismikerroin', real_u:'× WLTP, todellinen kulutus', make_l:'Valmistus', life_l:'Käyttöikä', life_u:'vuotta yhteensä',
+  add:'+ Lisää auto vertailuun', cheapest:'Edullisin', cleanest:'Vähäpäästöisin', your_km:'sinun ajosi',
+  be_aria:'Vuosikustannus ajomäärän mukaan',
+  tag:(p,a,o,r)=>`Arvonalenema ${p} %/v · myyt ${a} v, ${o} km, arvo ${r} €`,
+  reg:(n,y)=>` · rekisterissä ${n} kpl (${y})`,
+  rw_brand:(b,p,n)=>` · Mitattu kulutus: ${b}-autot kuluttavat keskimäärin ${p} % yli WLTP:n (${n} autoa, EEA)`,
+  rw_fleet:(p)=>` · Mitattu kulutus: käyttövoiman keskiarvo ${p} % yli WLTP:n (EEA), merkkikohtaista tietoa ei ole`,
+  rw_phev:(b,a,n)=>` · Mitattu kulutus: ${b?b+'-lataushybridit':'lataushybridit'} keskimäärin ${a} l/100 km (${n} autoa, EEA)`,
+  rw_phev_kwh:' · sähkönkulutus EEA:n rekisteristä',
+  rw_ev_reg:' · Sähkönkulutus EEA:n rekisteristä (WLTP); mitattua tietoa ei kerätä sähköautoista',
+  rw_ev_def:' · Sähkönkulutus on oletusarvo, mallia ei löytynyt EEA:n 2025 rekisteristä',
+  be_one_t:'Kustannus ajomäärän mukaan', be_one_l:'Lisää toinen auto nähdäksesi, missä kohdassa toinen tulee halvemmaksi.',
+  be_none_t:(b)=>`${b} on halvin koko välillä 2 000–50 000 km`, be_none_l:'Käyrät eivät leikkaa tällä ajomäärävälillä.',
+  be_x_t:(a,b,k)=>`${a} ja ${b} maksavat saman ${k} km:n vuosiajolla`, be_x_l:'Ympyrät näyttävät leikkauspisteet. Katkoviiva on oma ajomääräsi.',
+  foot:'CarFootprint on vapaata ohjelmistoa (AGPL-3.0). Lähdekoodi, data ja laskentamalli:'
+},
+en: {
+  locale:'en-GB', yr:'yr', mo:'mo', and:'and',
+  pt:{B:'Petrol',D:'Diesel',H:'Hybrid',P:'Plug-in hybrid',E:'Electric'},
+  tagline:'What a car really costs per year, and how much it emits',
+  meta:'First working version. Calculates depreciation, capital, energy and other costs plus lifecycle emissions at your own annual mileage. Prices, taxes and the model list are for Finland. The example cars are examples, so swap in your own.',
+  drive_h:'Your driving', km_label:'Annual mileage', km_unit:'km / year',
+  chipB:'Petrol car 11,800', chipAll:'All cars 14,500', chipD:'Diesel 20,800',
+  km_hint:'Shortcuts are actual annual mileages of cars in Finland (median, Traficom register, 30 June 2026).',
+  years_l:'Ownership period', years_u:'years', rate_l:'Cost of capital', rate_u:'% / year',
+  energy_h:'Energy', petrol:'Petrol', diesel:'Diesel', el_home:'Home electricity', el_home_u:'€ / kWh, incl. grid fees and taxes',
+  loss:'Charging losses', elsrc:'Electricity source',
+  el1:'Grid electricity, Finnish average – 42 g/kWh', el2:'Wind power – 12 g/kWh', el3:'Nuclear power – 12 g/kWh', el4:'Hydropower – 24 g/kWh', el5:'Solar power – 48 g/kWh',
+  el_note:'Never zero: construction and fuel always have emissions.',
+  ef_sum:'Fuel emission factors', ef_hint:'Estimate including the supply chain (well-to-wheel). To be verified against the VTT LIPASTO database.',
+  cost_h:'What the annual cost is made of', cost_lead:'Euros per year, averaged over the ownership period.',
+  lg_dep:'Depreciation', lg_cap:'Capital', lg_en:'Energy', lg_oth:'Tax, insurance, servicing, tyres',
+  em_h:'Emissions per year', em_lead:'kg CO₂e per year. Manufacturing is spread over the car\'s whole lifetime.',
+  lg_drive:'Driving (fuel or electricity)', lg_make:'Manufacturing',
+  notes_h:'How the calculation works', reset:'Restore example cars',
+  notes:`<li><b>Finland only, for now:</b> fuel and electricity prices, taxes, grid emissions and the model list describe Finland. The method works for any EU country once those inputs are changed.</li>
+<li><b>Depreciation:</b> residual value = price × (1 − depreciation %)<sup>years</sup>. If you leave the percentage blank, it is chosen by the car's average age during ownership: under 3 years 18%, 3–5 years 14%, 6–9 years 10%, 10–14 years 7%, 15 years or more 5%. Above-average mileage (over 15,000 km/yr) lowers the residual value by 0.2% per 1,000 km per year.</li>
+<li><b>Capital:</b> average money tied up in the car × interest rate.</li>
+<li><b>Real-world consumption:</b> the WLTP figure is multiplied by a brand-specific factor measured from the cars' own on-board fuel consumption meters (read at periodic inspections, among other ways). The dataset covers about 9 million cars registered in the EU in 2021–2024. On average petrol cars use 20% and diesels 18% more than WLTP. The factor is a brand average for the whole EU. It is not model-specific and does not account for Finnish winters.</li>
+<li><b>Plug-in hybrids:</b> the default consumption matches the measured average of the brand's plug-in hybrids. Across the EU that is 6.0 l/100 km, where WLTP promises 1.4. By default 25% of driving is electric. Raise the share if you charge diligently.</li>
+<li><b>Electric cars:</b> consumption is the model's WLTP figure from the EEA register (cars registered in Finland in 2025). Measured consumption is not collected from battery-electric cars, so the 1.20 factor is an assumption.</li>
+<li><b>Electricity emissions:</b> direct emissions of Finnish generation 26 g/kWh (Finnish Energy, 2025) + supply chain 16 g/kWh (Finnish Climate Change Panel). Lifecycle values per generation type follow IPCC and UNECE.</li>
+<li><b>Model list:</b> Traficom open vehicle data, 30 June 2026 (CC BY 4.0). WLTP fuel consumption is derived from the register's CO₂ value. Measured consumption and electricity consumption: European Environment Agency EEA (CC BY 4.0).</li>
+<li>Manufacturing emissions, insurance and servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
+  ex1:'Toyota Corolla, new', ex2:'Škoda Octavia diesel, used', ex3:'Tesla Model 3, used',
+  new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
+  pick_l:'Find a model in the register', pick_ph:'e.g. Volkswagen Golf', pt_l:'Powertrain',
+  price_l:'Purchase price', age_l:'Age at purchase', age_u:'years (0 = new)', odo_l:'Odometer', odo_u:'km at purchase',
+  dep_l:'Depreciation', dep_u:'% / yr, blank = by age',
+  fuel_l:'Fuel', fuel_u:'l / 100 km (WLTP)', fuel_u_p:'l / 100 km when running on fuel',
+  el_l:'Electricity', kwh_u:'kWh / 100 km (WLTP)', share_l:'Driven on electricity', share_u:'% of driving',
+  other_l:'Other costs', other_u:'€ / yr: tax, insurance, servicing, tyres', more:'More assumptions',
+  real_l:'Real-world factor', real_u:'× WLTP, real-world consumption', make_l:'Manufacturing', life_l:'Lifetime', life_u:'years in total',
+  add:'+ Add a car to compare', cheapest:'Cheapest', cleanest:'Lowest emissions', your_km:'your mileage',
+  be_aria:'Annual cost by mileage',
+  tag:(p,a,o,r)=>`Depreciation ${p}%/yr · sold at ${a} years, ${o} km, worth €${r}`,
+  reg:(n,y)=>` · ${n} in the Finnish register (${y})`,
+  rw_brand:(b,p,n)=>` · Measured consumption: ${b} cars use on average ${p}% more than WLTP (${n} cars, EEA)`,
+  rw_fleet:(p)=>` · Measured consumption: powertrain average ${p}% above WLTP (EEA), no brand-specific data`,
+  rw_phev:(b,a,n)=>` · Measured consumption: ${b?b+' plug-in hybrids':'plug-in hybrids'} average ${a} l/100 km (${n} cars, EEA)`,
+  rw_phev_kwh:' · electricity consumption from the EEA register',
+  rw_ev_reg:' · Electricity consumption from the EEA register (WLTP); measured data is not collected from electric cars',
+  rw_ev_def:' · Electricity consumption is a default, model not found in the 2025 EEA register',
+  be_one_t:'Cost by annual mileage', be_one_l:'Add a second car to see where one becomes cheaper than the other.',
+  be_none_t:(b)=>`${b} is cheapest across 2,000–50,000 km`, be_none_l:'The lines do not cross in this mileage range.',
+  be_x_t:(a,b,k)=>`${a} and ${b} cost the same at ${k} km per year`, be_x_l:'Circles mark the break-even points. The dashed line is your own mileage.',
+  foot:'CarFootprint is free software (AGPL-3.0). Source code, data and calculation model:'
+}};
+let LANG = 'fi';
+try { LANG = localStorage.getItem('carfootprint.lang') || ((navigator.language||'fi').toLowerCase().startsWith('fi') ? 'fi' : 'en'); } catch(e){}
+if (!I18N[LANG]) LANG = 'fi';
+const T = k => I18N[LANG][k];
+
+const PT_DEF = { // oletukset käyttövoiman mukaan
+  B:{fuel:6.0, kwh:0, share:0, tax:200, ins:600, serv:400, tyre:200, make:7, life:18, real:1.15},
+  D:{fuel:5.5, kwh:0, share:0, tax:600, ins:600, serv:550, tyre:250, make:8, life:20, real:1.15},
+  H:{fuel:4.5, kwh:0, share:0, tax:160, ins:600, serv:400, tyre:200, make:8, life:18, real:1.15},
+  P:{fuel:6.0, kwh:20, share:40, tax:180, ins:650, serv:450, tyre:250, make:10, life:18, real:1.20},
+  E:{fuel:0, kwh:17, share:100, tax:300, ins:700, serv:250, tyre:250, make:12, life:18, real:1.20}
+};
+PT_DEF.B.real = PT_DEF.H.real = RW.fleet.P.k; PT_DEF.D.real = RW.fleet.D.k;
+Object.assign(PT_DEF.P, {real:1, share:25, fuel:+(RW.fleet.PE.ob/0.75).toFixed(1), kwh:RW.phevMedian});
+PT_DEF.E.kwh = RW.evMedian;
+const normB = t => String(t).normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim();
+// Asettaa auton kulutusoletukset mitatun datan mukaan
+function applyRW(c, brandName, kwh){
+  const b = RW.brand[normB(brandName)] || {}, d = PT_DEF[c.pt];
+  c.rw = null;
+  if (c.pt==='B'||c.pt==='H'||c.pt==='D'){
+    const k = c.pt==='D'?'D':'P';
+    if (b[k]){ c.real = +b[k][0].toFixed(2); c.rw = {t:'brand', brand:brandName, n:b[k][1]}; }
+    else { c.real = +RW.fleet[k].k.toFixed(2); c.rw = {t:'fleet', n:RW.fleet[k].n}; }
+  } else if (c.pt==='P'){
+    const f = b.PE ? b.PE[0] : RW.fleet.PE.ob;
+    c.share = 25; c.real = 1; c.fuel = +(f/0.75).toFixed(1); c.kwh = kwh ?? d.kwh;
+    c.rw = {t:b.PE?'brand':'fleet', brand:brandName, n:b.PE?b.PE[1]:RW.fleet.PE.n, avg:f, kwhReg:kwh!=null};
+  } else { c.kwh = kwh ?? d.kwh; c.real = d.real; c.rw = {t:'ev', kwhReg:kwh!=null}; }
+}
+const AGE_DEP = [[0,.18],[3,.14],[6,.10],[10,.07],[15,.05]];
+const COLORS = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)'];
+const EXAMPLES = [
+  {exKey:'ex1', pt:'H', price:31000, age:0, odo:0, dep:'', fuel:4.4, brand:'Toyota'},
+  {exKey:'ex2', pt:'D', price:14000, age:7, odo:140000, dep:'', fuel:5.2, brand:'Skoda'},
+  {exKey:'ex3', pt:'E', price:27000, age:3, odo:60000, dep:'', brand:'Tesla', kwhReg:13.8},
+];
+const $ = id => document.getElementById(id);
+const fmt = (n,d=0) => (isFinite(n)?n:0).toLocaleString(T('locale'),{maximumFractionDigits:d,minimumFractionDigits:d});
+const num = (v,def=0) => { const x = parseFloat(String(v).replace(',','.')); return isFinite(x)?x:def; };
+
+let cars = [];
+function newCar(o={}){
+  const pt = o.pt||'B', d = PT_DEF[pt];
+  const c = {name:o.name||(o.exKey?T(o.exKey):T('new_car')), exKey:o.exKey||null, pt, price:o.price??20000, age:o.age??0, odo:o.odo??0, dep:o.dep??'',
+    fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??(d.tax+d.ins+d.serv+d.tyre),
+    make:o.make??d.make, life:o.life??d.life, real:o.real??d.real, rw:o.rw??null};
+  if (o.brand) applyRW(c, o.brand, o.kwhReg);
+  return c;
+}
+
+// --- malliluettelo ---
+const dl = $('models');
+const labelOf = r => `${r[0]} ${r[1]} – ${T('pt')[r[2]]}`;
+let byLabel = new Map();
+function buildModels(){
+  dl.innerHTML = CATALOG.map(r => `<option value="${labelOf(r).replace(/"/g,'&quot;')}"></option>`).join('');
+  byLabel = new Map(CATALOG.map(r => [labelOf(r), r]));
+}
+
+// --- tallennus (vain tämän selaimen mukavuus) ---
+function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw()})); }catch(e){} }
+function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
+const GIDS = ['km','years','rate','pBens','pDies','pEl','loss','elSrc','eBens','eDies'];
+function readGlobalsRaw(){ const o={}; GIDS.forEach(id=>o[id]=$(id).type==='select-one'?$(id).selectedIndex:$(id).value); return o; }
+function g(){
+  return {km:num($('km').value,15000), years:Math.max(1,num($('years').value,5)), rate:num($('rate').value,4)/100,
+    pB:num($('pBens').value), pD:num($('pDies').value), pE:num($('pEl').value), loss:num($('loss').value,10)/100,
+    eEl:num($('elSrc').value,42)/1000, eB:num($('eBens').value,2.8), eD:num($('eDies').value,3.2)};
+}
+
+// --- laskenta (sama malli kuin Excel-prototyypissä) ---
+function calc(c, G, km){
+  km = km ?? G.km;
+  const n = G.years;
+  const elShare = c.pt==='E'?1:(c.pt==='P'?Math.min(1,Math.max(0,c.share/100)):0);
+  let rate;
+  if (c.dep===''||c.dep===null||!isFinite(num(c.dep,NaN))){
+    const mid = c.age + n/2; rate = AGE_DEP[0][1];
+    for (const [a,r] of AGE_DEP) if (mid>=a) rate=r;
+  } else rate = num(c.dep)/100;
+  const kmAdj = Math.max(0, 1 - 0.002*Math.max(0,km-15000)/1000*n);
+  const resid = Math.max(0, c.price*Math.pow(1-rate,n)*kmAdj);
+  const dep = (c.price-resid)/n;
+  const cap = (c.price+resid)/2*G.rate;
+  const litres = km/100*c.fuel*c.real*(1-elShare);
+  const kwh = km/100*c.kwh*c.real*elShare*(1+G.loss);
+  const fuelPrice = c.pt==='D'?G.pD:G.pB, fuelEm = c.pt==='D'?G.eD:G.eB;
+  const energy = litres*fuelPrice + kwh*G.pE;
+  const other = c.other;
+  const total = dep+cap+energy+other;
+  const drive = litres*fuelEm + kwh*G.eEl;
+  const make = c.life>0 ? c.make*1000/c.life : 0;
+  return {rate,resid,dep,cap,energy,other,total,drive,make,em:drive+make,litres,kwh,
+    endAge:c.age+n, endOdo:c.odo+km*n};
+}
+
+// --- autokortit ---
+function carCard(c,i){
+  const showFuel = c.pt!=='E', showEl = c.pt==='E'||c.pt==='P';
+  return `<div class="car" style="--cc:${COLORS[i]}" data-i="${i}">
+    <div class="head"><span class="dot" style="--cc:${COLORS[i]}"></span>
+      <input aria-label="${T('car_name')}" id="name${i}" data-k="name" value="${c.name.replace(/"/g,'&quot;')}">
+      ${cars.length>1?`<button class="x" type="button" data-del="${i}" aria-label="${T('del')}">×</button>`:''}</div>
+    <div class="field"><label class="label" for="pick${i}">${T('pick_l')}</label>
+      <input id="pick${i}" list="models" data-pick="${i}" placeholder="${T('pick_ph')}" autocomplete="off"></div>
+    <div class="fields">
+      <div class="field full"><label class="label" for="pt${i}">${T('pt_l')}</label>
+        <select id="pt${i}" data-k="pt">${Object.entries(T('pt')).map(([k,v])=>`<option value="${k}" ${k===c.pt?'selected':''}>${v}</option>`).join('')}</select></div>
+      <div class="field"><label class="label" for="price${i}">${T('price_l')}</label><input type="number" id="price${i}" data-k="price" step="500" value="${c.price}"><span class="unit">€</span></div>
+      <div class="field"><label class="label" for="age${i}">${T('age_l')}</label><input type="number" id="age${i}" data-k="age" min="0" step="1" value="${c.age}"><span class="unit">${T('age_u')}</span></div>
+      <div class="field"><label class="label" for="odo${i}">${T('odo_l')}</label><input type="number" id="odo${i}" data-k="odo" step="1000" value="${c.odo}"><span class="unit">${T('odo_u')}</span></div>
+      <div class="field"><label class="label" for="dep${i}">${T('dep_l')}</label><input type="number" id="dep${i}" data-k="dep" step="1" value="${c.dep}" placeholder="auto"><span class="unit">${T('dep_u')}</span></div>
+      ${showFuel?`<div class="field"><label class="label" for="fuel${i}">${T('fuel_l')}</label><input type="number" id="fuel${i}" data-k="fuel" step="0.1" value="${c.fuel}"><span class="unit">${c.pt==='P'?T('fuel_u_p'):T('fuel_u')}</span></div>`:''}
+      ${showEl?`<div class="field"><label class="label" for="kwh${i}">${T('el_l')}</label><input type="number" id="kwh${i}" data-k="kwh" step="0.5" value="${c.kwh}"><span class="unit">${T('kwh_u')}</span></div>`:''}
+      ${c.pt==='P'?`<div class="field"><label class="label" for="share${i}">${T('share_l')}</label><input type="number" id="share${i}" data-k="share" step="5" value="${c.share}"><span class="unit">${T('share_u')}</span></div>`:''}
+      <div class="field"><label class="label" for="other${i}">${T('other_l')}</label><input type="number" id="other${i}" data-k="other" step="50" value="${c.other}"><span class="unit">${T('other_u')}</span></div>
+    </div>
+    <details class="adv"><summary>${T('more')}</summary>
+      <div class="fields">
+        <div class="field"><label class="label" for="real${i}">${T('real_l')}</label><input type="number" id="real${i}" data-k="real" step="0.05" value="${c.real}"><span class="unit">${T('real_u')}</span></div>
+        <div class="field"><label class="label" for="make${i}">${T('make_l')}</label><input type="number" id="make${i}" data-k="make" step="0.5" value="${c.make}"><span class="unit">t CO₂e</span></div>
+        <div class="field"><label class="label" for="life${i}">${T('life_l')}</label><input type="number" id="life${i}" data-k="life" step="1" value="${c.life}"><span class="unit">${T('life_u')}</span></div>
+      </div></details>
+    <span class="tag" id="tag${i}"></span>
+  </div>`;
+}
+function renderCars(){
+  $('cars').innerHTML = cars.map(carCard).join('') + (cars.length<4?`<button class="addcar" id="add" type="button">${T('add')}</button>`:'');
+  const add = $('add'); if (add) add.onclick = () => { cars.push(newCar({name:T('car_n')+' '+(cars.length+1)})); renderCars(); update(); };
+}
+$('cars').addEventListener('input', e => {
+  const el = e.target, card = el.closest('.car'); if (!card) return;
+  const i = +card.dataset.i, c = cars[i];
+  if (el.dataset.pick!==undefined){
+    const r = byLabel.get(el.value); if (!r) return;
+    const d = PT_DEF[r[2]];
+    Object.assign(c, {name:`${r[0]} ${r[1]}`, exKey:null, pt:r[2], fuel:r[3]??d.fuel, kwh:d.kwh, share:d.share,
+      other:d.tax+d.ins+d.serv+d.tyre, make:d.make, life:d.life, real:d.real});
+    applyRW(c, r[0], r[7]);
+    c.picked = r;
+    renderCars(); update(); return;
+  }
+  const k = el.dataset.k; if (!k) return;
+  if (k==='name'){ c.name = el.value; c.exKey = null; }
+  else if (k==='pt'){ const d=PT_DEF[el.value]; Object.assign(c,{pt:el.value,fuel:(el.value==='P'||!c.fuel)?d.fuel:c.fuel,kwh:c.kwh||d.kwh,share:d.share,make:d.make,real:d.real,rw:null}); renderCars(); }
+  else if (k==='dep') c.dep = el.value;
+  else c[k] = num(el.value);
+  update();
+});
+$('cars').addEventListener('click', e => {
+  const b = e.target.closest('[data-del]'); if (!b) return;
+  cars.splice(+b.dataset.del,1); renderCars(); update();
+});
+
+// --- kaaviot ---
+function hbars(el, rows, segs, unit){
+  const W = 400, rowH = 40, top = 4, left = 128, right = 58;
+  const H = top + rows.length*rowH + 4;
+  const max = Math.max(1, ...rows.map(r => segs.reduce((s,k)=>s+r[k],0)));
+  const sx = v => v/max*(W-left-right);
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${unit}">`;
+  rows.forEach((r,i) => {
+    const y = top + i*rowH; let x = left;
+    s += `<circle cx="10" cy="${y+16}" r="5" fill="${r.color}"/><text x="22" y="${y+20}" font-size="13" fill="var(--ink)">${esc(trunc(r.name,15))}</text>`;
+    segs.forEach(k => { const w = sx(r[k]); if (w>0) s += `<rect x="${x}" y="${y+4}" width="${w}" height="24" fill="var(--seg-${k})" rx="2"><title>${esc(r.name)}: ${fmt(r[k])} ${unit}</title></rect>`; x += w; });
+    const tot = segs.reduce((a,k)=>a+r[k],0);
+    s += `<text x="${x+6}" y="${y+21}" font-size="13" font-family="var(--mono)" fill="var(--ink)">${fmt(tot)}</text>`;
+  });
+  el.innerHTML = s + '</svg>';
+}
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function trunc(t,n){return t.length>n?t.slice(0,n-1)+'…':t;}
+
+function breakEven(el, G){
+  const W = 900, H = 320, L = 64, R = 20, T0 = 14, B = 40;
+  const kms = []; for (let k=2000;k<=50000;k+=1000) kms.push(k);
+  const series = cars.map((c,i) => ({c, color:COLORS[i], pts:kms.map(k=>calc(c,G,k).total)}));
+  const all = series.flatMap(s=>s.pts);
+  const ymax = Math.ceil(Math.max(...all)*1.05/1000)*1000, ymin = Math.max(0, Math.floor(Math.min(...all)*0.9/1000)*1000);
+  const X = k => L + (k-2000)/(48000)*(W-L-R), Y = v => T0 + (1-(v-ymin)/(ymax-ymin||1))*(H-T0-B);
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:520px" role="img" aria-label="${T('be_aria')}">`;
+  const step = (ymax-ymin)/5 >= 2000 ? 2000 : 1000;
+  for (let v=Math.ceil(ymin/step)*step; v<=ymax; v+=step){
+    s += `<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${L-8}" y="${Y(v)+4}" font-size="12" text-anchor="end" fill="var(--muted)" font-family="var(--mono)">${fmt(v)}</text>`;
+  }
+  for (let k=5000;k<=50000;k+=5000) s += `<text x="${X(k)}" y="${H-B+18}" font-size="12" text-anchor="middle" fill="var(--muted)" font-family="var(--mono)">${k/1000}k</text>`;
+  s += `<text x="${(L+W-R)/2}" y="${H-4}" font-size="12" text-anchor="middle" fill="var(--muted)">${T('km_unit')}</text>`;
+  s += `<text x="12" y="${T0+8}" font-size="12" fill="var(--muted)">€/${T('yr')}</text>`;
+  s += `<line x1="${X(G.km)}" x2="${X(G.km)}" y1="${T0}" y2="${H-B}" stroke="var(--ink)" stroke-dasharray="4 4" opacity=".6"/><text x="${X(G.km)+6}" y="${T0+12}" font-size="12" fill="var(--ink)">${T('your_km')}</text>`;
+  series.forEach(sr => {
+    s += `<polyline fill="none" stroke="${sr.color}" stroke-width="2.5" points="${sr.pts.map((v,j)=>X(kms[j])+','+Y(v)).join(' ')}"/>`;
+  });
+  const cross = [];
+  for (let a=0;a<series.length;a++) for (let b=a+1;b<series.length;b++){
+    for (let j=1;j<kms.length;j++){
+      const d0 = series[a].pts[j-1]-series[b].pts[j-1], d1 = series[a].pts[j]-series[b].pts[j];
+      if (d0===0 || d0*d1<0){
+        const t = d0/(d0-d1), k = kms[j-1]+t*1000, v = series[a].pts[j-1]+t*(series[a].pts[j]-series[a].pts[j-1]);
+        cross.push({a,b,k,v}); s += `<circle cx="${X(k)}" cy="${Y(v)}" r="5" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"><title>${esc(cars[a].name)} ${T('and')} ${esc(cars[b].name)}: ${fmt(Math.round(k/100)*100)} km/${T('yr')}</title></circle>`;
+      }
+    }
+  }
+  el.innerHTML = s + '</svg>';
+  return cross;
+}
+
+function rwText(c){
+  const w = c.rw; if (!w) return '';
+  if (w.t==='brand' && c.pt!=='P') return T('rw_brand')(w.brand, fmt((c.real-1)*100), fmt(w.n));
+  if (w.t==='fleet' && c.pt!=='P') return T('rw_fleet')(fmt((c.real-1)*100));
+  if (c.pt==='P') return T('rw_phev')(w.t==='brand'?w.brand:'', fmt(w.avg,1), fmt(w.n)) + (w.kwhReg?T('rw_phev_kwh'):'');
+  return w.kwhReg ? T('rw_ev_reg') : T('rw_ev_def');
+}
+function update(){
+  const G = g(), yr = T('yr');
+  $('kmOut').textContent = fmt(G.km);
+  const R = cars.map(c => calc(c,G));
+  const minCost = Math.min(...R.map(r=>r.total)), minEm = Math.min(...R.map(r=>r.em));
+  $('sums').innerHTML = cars.map((c,i)=>{ const r=R[i];
+    return `<div class="sum" style="--cc:${COLORS[i]}">
+      <div class="nm"><span class="dot"></span><span title="${esc(c.name)}">${esc(c.name)}</span></div>
+      <div><span class="big">${fmt(r.total)}</span> <span class="sub">€ / ${yr}</span></div>
+      <div class="sub">${fmt(r.total/12)} €/${T('mo')} · ${fmt(r.total/G.km,2)} €/km</div>
+      <div class="sub">${fmt(r.em)} kg CO₂e/${yr} · ${fmt(r.em*1000/G.km)} g/km</div>
+      <div class="badges">${cars.length>1&&r.total===minCost?`<span class="badge win">${T('cheapest')}</span>`:''}${cars.length>1&&r.em===minEm?`<span class="badge win">${T('cleanest')}</span>`:''}</div>
+    </div>`;}).join('');
+  cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];
+    t.textContent = T('tag')(fmt(r.rate*100,0), fmt(r.endAge), fmt(r.endOdo), fmt(r.resid)) + (c.picked?T('reg')(fmt(c.picked[4]), c.picked[5]):'') + rwText(c); });
+  const rows = cars.map((c,i)=>({name:c.name,color:COLORS[i],...R[i]}));
+  hbars($('costChart'), rows.map(r=>({...r,en:r.energy,oth:r.other})), ['dep','cap','en','oth'], '€/'+yr);
+  hbars($('emChart'), rows, ['drive','make'], 'kg CO₂e/'+yr);
+  const cross = breakEven($('beChart'), G);
+  if (cars.length<2){ $('beTitle').textContent=T('be_one_t'); $('beLead').textContent=T('be_one_l'); }
+  else if (!cross.length){ const best = cars[R.indexOf(R.reduce((a,b)=>a.total<b.total?a:b))].name;
+    $('beTitle').textContent = T('be_none_t')(best); $('beLead').textContent=T('be_none_l'); }
+  else { const c0 = cross.sort((x,y)=>Math.abs(x.k-G.km)-Math.abs(y.k-G.km))[0];
+    $('beTitle').textContent = T('be_x_t')(cars[c0.a].name, cars[c0.b].name, fmt(Math.round(c0.k/500)*500));
+    $('beLead').textContent = T('be_x_l'); }
+  save();
+}
+
+// --- kielen vaihto ---
+function applyLang(lang){
+  const prev = LANG; LANG = I18N[lang] ? lang : 'fi';
+  try { localStorage.setItem('carfootprint.lang', LANG); } catch(e){}
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-i]').forEach(el => { const v = T(el.dataset.i); if (typeof v === 'string') el.innerHTML = v; });
+  document.querySelectorAll('.lang').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang===LANG)));
+  cars.forEach(c => { if (c.exKey && c.name===I18N[prev][c.exKey]) c.name = T(c.exKey); });
+  buildModels(); renderCars(); update();
+}
+document.querySelectorAll('.lang').forEach(b => b.onclick = () => applyLang(b.dataset.lang));
+
+GIDS.forEach(id => $(id).addEventListener('input', update));
+document.querySelectorAll('.chip').forEach(b => b.onclick = () => { $('km').value = b.dataset.km; update(); });
+$('reset').onclick = () => { cars = EXAMPLES.map(newCar); renderCars(); update(); };
+
+const saved = load();
+if (saved && Array.isArray(saved.cars) && saved.cars.length){
+  cars = saved.cars.map(c=>newCar({...c,brand:undefined})).map((c,i)=>Object.assign(c,{picked:saved.cars[i].picked}));
+  try{ GIDS.forEach(id=>{ const v=saved.g?.[id]; if(v===undefined) return; if($(id).type==='select-one') $(id).selectedIndex=v; else $(id).value=v; }); }catch(e){}
+} else cars = EXAMPLES.map(newCar);
+applyLang(LANG);
+</script>
