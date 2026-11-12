@@ -644,6 +644,9 @@ GIDS.forEach(id => $(id).addEventListener('input', update));
 document.querySelectorAll('.chip').forEach(b => b.onclick = () => { $('km').value = b.dataset.km; update(); });
 $('reset').onclick = () => { cars = EXAMPLES.map(newCar); renderCars(); update(); };
 
+// Kirjoita oletushinnat kenttiin aina itse: selain voi muuten palauttaa
+// päivitettäessä edellisen käynnin arvot lomakkeeseen.
+Object.entries(PRICE_DEF).forEach(([id,v])=>{ const el=$(id); el.value=v; el.autocomplete='off'; });
 const saved = load();
 if (saved && Array.isArray(saved.cars) && saved.cars.length){
   cars = saved.cars.map(c=>newCar({...c,brand:undefined})).map((c,i)=>Object.assign(c,{picked:saved.cars[i].picked}));
