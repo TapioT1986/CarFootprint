@@ -1,0 +1,69 @@
+<!-- Source for og-image.png (1200x630 social preview).
+     Render: python3 tools/render_og.py   (needs playwright) -->
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#eef1f3; --surface:#ffffff; --ink:#16202a; --muted:#5b6873; --line:#d3dadf;
+    --accent:#0b5cad; --c1:#0b5cad; --c2:#d9822b; --c3:#2e8b57;
+    --display:"DejaVu Sans Condensed","Arial Narrow",sans-serif;
+    --body:"DejaVu Sans",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{width:1200px;height:630px;background:var(--bg);font-family:var(--body);color:var(--ink);
+       display:flex;align-items:center;gap:56px;padding:64px 72px}
+  .left{display:flex;flex-direction:column;gap:22px;width:520px;flex:none}
+  .brand{display:flex;align-items:center;gap:18px}
+  .sign{width:68px;height:68px;border-radius:14px;background:var(--accent);color:#fff;
+        display:flex;align-items:center;justify-content:center;font:700 38px/1 var(--display);flex:none}
+  h1{font:700 64px/1 var(--display);letter-spacing:.005em}
+  .tag{font-size:25px;line-height:1.3;font-weight:600}
+  .tag.en{color:var(--muted);font-weight:400;font-size:23px}
+  .foot{margin-top:6px;font-size:19px;color:var(--muted);display:flex;align-items:center;gap:10px}
+  .pill{border:2px solid var(--line);border-radius:999px;padding:5px 14px;font-weight:600;color:var(--ink)}
+  .card{flex:1;background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:26px 28px;
+        height:100%;display:flex;flex-direction:column;gap:10px}
+  .ct{font:700 25px/1.1 var(--display)}
+  .cs{font-size:17px;color:var(--muted)}
+</style>
+<body>
+  <div class="left">
+    <div class="brand">
+      <div class="sign">€</div>
+      <h1>CarFootprint</h1>
+    </div>
+    <div class="tag">Mitä auto oikeasti maksaa vuodessa – ja paljonko se päästää</div>
+    <div class="tag en">What a car really costs per year, and how much it emits</div>
+    <div class="foot"><span class="pill">Avoin data</span><span class="pill">AGPL-3.0</span></div>
+  </div>
+
+  <div class="card">
+    <div class="ct">Kustannus ajomäärän mukaan</div>
+    <div class="cs">Missä kohdassa toinen auto tulee halvemmaksi</div>
+    <svg viewBox="0 0 470 338" style="width:100%;flex:1">
+      <g stroke="var(--line)" stroke-width="1.5">
+        <line x1="58" x2="458" y1="30" y2="30"/><line x1="58" x2="458" y1="100" y2="100"/>
+        <line x1="58" x2="458" y1="170" y2="170"/><line x1="58" x2="458" y1="240" y2="240"/>
+        <line x1="58" x2="458" y1="310" y2="310"/>
+      </g>
+      <g font-size="13" fill="var(--muted)" font-family="DejaVu Sans Mono, monospace" text-anchor="end">
+        <text x="50" y="35">9 000</text><text x="50" y="105">8 000</text>
+        <text x="50" y="175">7 000</text><text x="50" y="245">6 000</text><text x="50" y="315">5 000</text>
+      </g>
+      <!-- oma ajomäärä, 15 000 km -->
+      <line x1="207" x2="207" y1="22" y2="310" stroke="var(--ink)" stroke-width="2" stroke-dasharray="6 6" opacity=".55"/>
+      <!-- uusi hybridi: kallein koko matkalla -->
+      <polyline fill="none" stroke="var(--c1)" stroke-width="4.5" points="58,235 458,120"/>
+      <!-- kaytetty diesel: halpa aluksi, kallistuu nopeasti -->
+      <polyline fill="none" stroke="var(--c2)" stroke-width="4.5" points="58,306 458,145"/>
+      <!-- kaytetty sahkoauto: tasaisin -->
+      <polyline fill="none" stroke="var(--c3)" stroke-width="4.5" points="58,250 458,179"/>
+      <!-- leikkauspiste, 20 000 km -->
+      <circle cx="307" cy="206" r="9" fill="var(--surface)" stroke="var(--ink)" stroke-width="3.5"/>
+      <g font-size="14" fill="var(--muted)" font-family="DejaVu Sans Mono, monospace" text-anchor="middle">
+        <text x="107" y="332">10k</text><text x="207" y="332">15k</text>
+        <text x="307" y="332">20k</text><text x="407" y="332">25k</text>
+      </g>
+    </svg>
+    <div class="cs" style="font-size:15px">Uudet ja käytetyt · arvonalenema · mitattu kulutus</div>
+  </div>
+</body>

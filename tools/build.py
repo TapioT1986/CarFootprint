@@ -264,6 +264,123 @@ def add_electricity(catalog, sources):
     return out, ev_default, phev_default
 
 
+# --- model-level real-world consumption -------------------------------------
+
+MIN_VEHICLES_PER_MODEL = 50     # below this the model average is too noisy
+FACTOR_RANGE = (0.85, 2.0)      # a factor outside this means we matched the wrong car
+PT_TO_EEA = {"B": "p", "H": "p", "D": "d"}
+
+
+def attach_model_realworld(catalog, root):
+    """Append each model's measured consumption to its catalogue row.
+
+    data/eea_obfcm_2024_models.csv holds litres per 100 km measured from the
+    cars' own fuel meters, pooled per make + model + fuel. For petrol, diesel
+    and hybrids we store the ratio measured/WLTP, because the page multiplies a
+    model's WLTP figure by it. For plug-in hybrids we store the measured litres
+    themselves, since their WLTP figure assumes a full battery and means little.
+
+    Rows keep two extra fields: the value and the number of vehicles behind it,
+    or None and 0 when no model-level match was good enough.
+    """
+    path = root / "data" / "eea_obfcm_2024_models.csv"
+    if not path.exists():
+        return [r + [None, 0] for r in catalog]
+
+    measured = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("#") or line.startswith("make|") or not line.strip():
+            continue
+        make, model, fuel, n, l100 = line.split("|")
+        measured[(norm(make), norm(model), fuel)] = (int(n), float(l100))
+
+    def look_up(brand, model, fuels):
+        """Exact model first, then the model family ("ID.4 PRO" -> "ID.4")."""
+        for f in fuels:
+            hit = measured.get((brand, model, f))
+            if hit and hit[0] >= MIN_VEHICLES_PER_MODEL:
+                return hit
+        family = model.split(" ")[0]
+        if len(family) < 2:
+            return None
+        pooled_n, pooled_sum = 0, 0.0
+        for (mk, cn, f), (n, l100) in measured.items():
+            if mk == brand and f in fuels and (cn == family or cn.startswith(family + " ")):
+                pooled_n += n
+                pooled_sum += l100 * n
+        if pooled_n >= MIN_VEHICLES_PER_MODEL:
+            return pooled_n, pooled_sum / pooled_n
+        return None
+
+    out, exact = [], 0
+    for r in catalog:
+        brand, model, pt, wltp = norm(EEA_BRAND_ALIASES.get(norm(r[0]), r[0])), norm(r[1]), r[2], r[3]
+        value, n = None, 0
+        if pt == "P":
+            hit = look_up(brand, model, ("pe", "de"))
+            if hit:
+                n, value = hit[0], round(hit[1], 2)
+        elif pt in PT_TO_EEA:
+            hit = look_up(brand, model, (PT_TO_EEA[pt],))
+            if hit and wltp:
+                factor = hit[1] / wltp
+                if FACTOR_RANGE[0] <= factor <= FACTOR_RANGE[1]:
+                    n, value = hit[0], round(factor, 3)
+        exact += value is not None
+        out.append(r + [value, n])
+    print(f"   model-level consumption for {exact} of {len(catalog)} models", file=sys.stderr)
+    return out
+
+
+# --- prices -----------------------------------------------------------------
+
+MONTHS_FI = ["tammikuu", "helmikuu", "maaliskuu", "huhtikuu", "toukokuu", "kesäkuu",
+             "heinäkuu", "elokuu", "syyskuu", "lokakuu", "marraskuu", "joulukuu"]
+MONTHS_EN = ["January", "February", "March", "April", "May", "June",
+             "July", "August", "September", "October", "November", "December"]
+FALLBACK_PRICES = {"petrol": {"value": 1.85}, "diesel": {"value": 1.75},
+                   "electricity": {"value": 0.15}}
+
+
+def apply_prices(page, root):
+    """Put the latest official prices into the page as its default values."""
+    path = root / "data" / "prices.json"
+    prices = json.loads(path.read_text()) if path.exists() else dict(FALLBACK_PRICES)
+
+    def month_name(period, names):
+        # "2026M06" -> "kesäkuu 2026"
+        try:
+            y, m = period.split("M")
+            return f"{names[int(m) - 1]} {y}"
+        except (ValueError, IndexError, AttributeError):
+            return period
+
+    fuel, elec = prices.get("petrol", {}), prices.get("electricity", {})
+    fallback_url = prices.get("source", {}).get("url", "")
+
+    def a(item, text):
+        url = item.get("url") or fallback_url
+        return f'<a href="{url}" target="_blank" rel="noopener">{text}</a>'
+
+    if fuel.get("period") and elec.get("period") and fallback_url:
+        fi = (f'Oletushinnat Tilastokeskukselta: polttoaineet '
+              f'{a(fuel, month_name(fuel["period"], MONTHS_FI))}, sähkö '
+              f'{a(elec, month_name(elec["period"], MONTHS_FI))}. '
+              f'Vaihda omiin hintoihisi, jos ne poikkeavat.')
+        en = (f'Default prices from Statistics Finland: fuel '
+              f'{a(fuel, month_name(fuel["period"], MONTHS_EN))}, electricity '
+              f'{a(elec, month_name(elec["period"], MONTHS_EN))}. '
+              f'Change them to your own if they differ.')
+    else:
+        fi = "Oletushinnat ovat arvioita. Vaihda omiin hintoihisi."
+        en = "Default prices are estimates. Change them to your own."
+
+    for token, key in (("__P_PETROL__", "petrol"), ("__P_DIESEL__", "diesel"),
+                       ("__P_ELEC__", "electricity")):
+        page = page.replace(token, str(prices[key]["value"]))
+    return page.replace("__PRICES_NOTE_FI__", fi).replace("__PRICES_NOTE_EN__", en)
+
+
 # --- step 3: assemble the page ----------------------------------------------
 
 def main():
@@ -284,9 +401,11 @@ def main():
         if catalog is not None:
             catalog, ev_default, phev_default = add_electricity(catalog, sources)
             realworld["evMedian"], realworld["phevMedian"] = ev_default, phev_default
+            catalog = attach_model_realworld(catalog, root)
     if catalog is None:
         print("   no source CSVs found, keeping data/catalog.json", file=sys.stderr)
         catalog = json.loads((root / "data" / "catalog.json").read_text())
+        catalog = attach_model_realworld([r[:9] for r in catalog], root)
         old = json.loads((root / "data" / "realworld.json").read_text())
         realworld["evMedian"], realworld["phevMedian"] = old["evMedian"], old["phevMedian"]
 
@@ -295,6 +414,7 @@ def main():
 
     print("3. index.html", file=sys.stderr)
     page = (root / "tools" / "template.html").read_text()
+    page = apply_prices(page, root)
     page = page.replace("__CATALOG__", json.dumps(catalog, ensure_ascii=False, separators=(",", ":")))
     page = page.replace("__RW__", json.dumps(realworld, ensure_ascii=False, separators=(",", ":")))
     (root / "index.html").write_text(page)
