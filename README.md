@@ -19,14 +19,15 @@ Every assumption is visible and editable.
 ## How it works
 
 - **Depreciation:** residual value = price × (1 − rate)^years. If no rate is given, it is chosen by the car's average age during ownership (18% per year for a new car, down to 5% for a car of 15 years or more). Above-average mileage lowers the residual value further.
-- **Real-world consumption:** the WLTP figure is multiplied by a brand-specific factor measured from cars' on-board fuel consumption meters (EEA data, about 9 million cars registered in the EU in 2021–2024). On average petrol cars use 20% and diesels 18% more than WLTP.
+- **Real-world consumption:** the WLTP figure is multiplied by a factor measured from cars' on-board fuel consumption meters (EEA data, cars registered in the EU 2021–2024). The factor is model-specific for 367 of the 588 models; the rest fall back to a brand or powertrain average, and the page says which one it used. On average petrol cars use 20% and diesels 18% more than WLTP, but individual models range from about 5% to over 40%.
 - **Plug-in hybrids:** default consumption matches the measured brand average (6.0 l/100 km across the EU, against a WLTP figure of 1.4).
 - **Electric cars:** WLTP electricity consumption per model from the EEA register. Measured consumption is not collected from battery-electric cars, so the real-world factor of 1.20 is an assumption.
 - **Electricity:** no source counts as zero-emission. Lifecycle values per generation type follow IPCC and UNECE.
 
 ## Known limitations
 
-- Real-world factors are EU-wide brand averages. They are not model-specific and do not account for Finnish winters.
+- Real-world factors are EU-wide and do not account for Finnish winters.
+- Model-level consumption comes from a 13.7% sample of the 2.1 GB per-vehicle file (12 evenly spaced slices), not the whole of it. Models below 50 sampled vehicles fall back to a brand average.
 - The same factor is applied to cars registered before 2021, which the measurements do not cover.
 - Manufacturing emissions, insurance and servicing costs are rough assumptions.
 - The depreciation model is generic, not calibrated against used-car prices.
@@ -38,8 +39,9 @@ Every assumption is visible and editable.
 | Data | Source | Licence |
 | --- | --- | --- |
 | Model list, CO₂ values, actual mileages | [Traficom open vehicle data](https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data), 30 June 2026 | CC BY 4.0 |
-| Measured real-world fuel consumption | [EEA, Real-world CO₂ emissions from new cars and vans](https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information), reporting year 2024 | CC BY 4.0 |
+| Measured real-world fuel consumption, per brand and per model | [EEA, Real-world CO₂ emissions from new cars and vans](https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information), reporting year 2024 | CC BY 4.0 |
 | Electricity consumption of EVs and plug-in hybrids | [EEA, CO₂ emissions from new passenger cars](https://co2cars.apps.eea.europa.eu/), Finland 2025 | CC BY 4.0 |
+| Fuel and electricity prices | [Statistics Finland, StatFin tables 12ge and 13rb](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/) | CC BY 4.0 |
 | Grid emission factor | Finnish Energy (Energiateollisuus), 2025; Finnish Climate Change Panel | |
 | Lifecycle emissions by generation type | IPCC AR5 (2014), UNECE (2021) | |
 
@@ -55,12 +57,28 @@ og-image.png                         social preview image
 LICENSE                              GNU AGPL-3.0
 tools/template.html                  the page with __CATALOG__ / __RW__ placeholders
 tools/build.py                       rebuilds index.html from the data
+tools/update_prices.py               fetches prices from Statistics Finland
 tools/og-image.html                  source for the preview image
 tools/render_og.py                   renders og-image.png (needs playwright)
+.github/workflows/update-prices.yml  monthly price refresh
 data/catalog.json                    588 car models
+data/prices.json                     latest fuel and electricity prices
+data/eea_obfcm_2024_models.csv       measured consumption per model
 data/realworld.json                  measured consumption per brand
 data/eea_obfcm_2024_aggregated.csv   EEA measured-consumption table (source data)
 ```
+
+## Price updates
+
+`tools/update_prices.py` pulls the current consumer prices of petrol, diesel and household
+electricity from [Statistics Finland's StatFin API](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/)
+(tables 12ge and 13rb) into `data/prices.json`, and `tools/build.py` bakes them into the page
+as its default values. A GitHub Action runs both on the 5th of each month and commits the
+result if anything changed.
+
+These series are official but published a few months in arrears, so the page always shows
+which month the prices describe. The electricity figure is the total price including network
+charges and taxes, for a household using 5 000-15 000 kWh a year.
 
 ## Rebuilding the data
 
