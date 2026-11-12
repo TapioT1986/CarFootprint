@@ -41,7 +41,8 @@ Every assumption is visible and editable.
 | Model list, CO₂ values, actual mileages | [Traficom open vehicle data](https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data), 30 June 2026 | CC BY 4.0 |
 | Measured real-world fuel consumption, per brand and per model | [EEA, Real-world CO₂ emissions from new cars and vans](https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information), reporting year 2024 | CC BY 4.0 |
 | Electricity consumption of EVs and plug-in hybrids | [EEA, CO₂ emissions from new passenger cars](https://co2cars.apps.eea.europa.eu/), Finland 2025 | CC BY 4.0 |
-| Fuel and electricity prices | [Statistics Finland, StatFin tables 12ge and 13rb](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/) | CC BY 4.0 |
+| Fuel prices | [Statistics Finland, StatFin table 11xx](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/), monthly | CC BY 4.0 |
+| Electricity prices | [Statistics Finland, StatFin table 13rb](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/), monthly | CC BY 4.0 |
 | Grid emission factor | Finnish Energy (Energiateollisuus), 2025; Finnish Climate Change Panel | |
 | Lifecycle emissions by generation type | IPCC AR5 (2014), UNECE (2021) | |
 
@@ -71,14 +72,18 @@ data/eea_obfcm_2024_aggregated.csv   EEA measured-consumption table (source data
 ## Price updates
 
 `tools/update_prices.py` pulls the current consumer prices of petrol, diesel and household
-electricity from [Statistics Finland's StatFin API](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/)
-(tables 12ge and 13rb) into `data/prices.json`, and `tools/build.py` bakes them into the page
-as its default values. A GitHub Action runs both on the 5th of each month and commits the
-result if anything changed.
+electricity from Statistics Finland's StatFin API into `data/prices.json`, and
+`tools/build.py` bakes them into the page as its default values. A GitHub Action runs both
+on the 5th of each month and commits the result if anything changed.
 
-These series are official but published a few months in arrears, so the page always shows
-which month the prices describe. The electricity figure is the total price including network
-charges and taxes, for a household using 5 000-15 000 kWh a year.
+- **Fuel:** [table 11xx](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/),
+  average prices of 95 E10 petrol and diesel, published with the monthly consumer price
+  index, a few weeks after the month ends.
+- **Electricity:** [table 13rb](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/),
+  the total price including network charges and taxes for a household using
+  5 000-15 000 kWh a year. Updated quarterly, so it runs a few months behind.
+
+The page shows which month each price describes.
 
 ## Rebuilding the data
 

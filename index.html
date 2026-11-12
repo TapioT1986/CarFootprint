@@ -195,8 +195,8 @@ svg text{font-family:var(--body)}
       <div class="panel">
         <h2 data-i="energy_h"></h2>
         <div class="fields">
-          <div class="field"><label class="label" for="pBens" data-i="petrol"></label><input type="number" id="pBens" step="0.01" value="2.09"><span class="unit">€ / l</span></div>
-          <div class="field"><label class="label" for="pDies" data-i="diesel"></label><input type="number" id="pDies" step="0.01" value="2.15"><span class="unit">€ / l</span></div>
+          <div class="field"><label class="label" for="pBens" data-i="petrol"></label><input type="number" id="pBens" step="0.01" value="2.28"><span class="unit">€ / l</span></div>
+          <div class="field"><label class="label" for="pDies" data-i="diesel"></label><input type="number" id="pDies" step="0.01" value="2.49"><span class="unit">€ / l</span></div>
           <div class="field"><label class="label" for="pEl" data-i="el_home"></label><input type="number" id="pEl" step="0.001" value="0.1791"><span class="unit" data-i="el_home_u"></span></div>
           <div class="field"><label class="label" for="loss" data-i="loss"></label><input type="number" id="loss" step="1" value="10"><span class="unit">%</span></div>
           <div class="field full"><label class="label" for="elSrc" data-i="elsrc"></label>
@@ -321,7 +321,7 @@ fi: {
   be_none_t:(b)=>`${b} on halvin koko välillä 2 000–50 000 km`, be_none_l:'Käyrät eivät leikkaa tällä ajomäärävälillä.',
   be_x_t:(a,b,k)=>`${a} ja ${b} maksavat saman ${k} km:n vuosiajolla`, be_x_l:'Ympyrät näyttävät leikkauspisteet. Katkoviiva on oma ajomääräsi.',
   foot:'CarFootprint on vapaata ohjelmistoa (AGPL-3.0). Lähdekoodi, data ja laskentamalli:',
-  prices_src:'Oletushinnat: Tilastokeskus, kesäkuu 2026 (<a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/" target="_blank" rel="noopener">StatFin</a>). Vaihda omiin hintoihisi, jos ne poikkeavat.'
+  prices_src:'Oletushinnat Tilastokeskukselta: polttoaineet <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/" target="_blank" rel="noopener">lokakuu 2026</a>, sähkö <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/" target="_blank" rel="noopener">kesäkuu 2026</a>. Vaihda omiin hintoihisi, jos ne poikkeavat.'
 },
 en: {
   locale:'en-GB', yr:'yr', mo:'mo', and:'and',
@@ -376,7 +376,7 @@ en: {
   be_none_t:(b)=>`${b} is cheapest across 2,000–50,000 km`, be_none_l:'The lines do not cross in this mileage range.',
   be_x_t:(a,b,k)=>`${a} and ${b} cost the same at ${k} km per year`, be_x_l:'Circles mark the break-even points. The dashed line is your own mileage.',
   foot:'CarFootprint is free software (AGPL-3.0). Source code, data and calculation model:',
-  prices_src:'Default prices: Statistics Finland, June 2026 (<a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/" target="_blank" rel="noopener">StatFin</a>). Change them to your own if they differ.'
+  prices_src:'Default prices from Statistics Finland: fuel <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/" target="_blank" rel="noopener">October 2026</a>, electricity <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/" target="_blank" rel="noopener">June 2026</a>. Change them to your own if they differ.'
 }};
 let LANG = 'fi';
 try { LANG = localStorage.getItem('carfootprint.lang') || ((navigator.language||'fi').toLowerCase().startsWith('fi') ? 'fi' : 'en'); } catch(e){}
@@ -441,13 +441,17 @@ function buildModels(){
 }
 
 // --- tallennus (vain tämän selaimen mukavuus) ---
-function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw()})); }catch(e){} }
+// Hinnat, jotka sivu tarjosi oletuksena. Tallennetaan mukaan, jotta käyttäjän itse
+// muuttamat hinnat säilyvät mutta koskemattomat oletukset päivittyvät uusiin.
+const PRICE_DEF = {pBens:'2.28', pDies:'2.49', pEl:'0.1791'};
+const OLD_DEFS = ['1.85','1.75','0.15','2.09','2.15','0.1791']; // ennen tallennettuja oletuksia
+function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF})); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
 const GIDS = ['km','years','rate','pBens','pDies','pEl','loss','elSrc','eBens','eDies'];
 function readGlobalsRaw(){ const o={}; GIDS.forEach(id=>o[id]=$(id).type==='select-one'?$(id).selectedIndex:$(id).value); return o; }
 function g(){
   return {km:num($('km').value,15000), years:Math.max(1,num($('years').value,5)), rate:num($('rate').value,4)/100,
-    pB:num($('pBens').value,2.09), pD:num($('pDies').value,2.15), pE:num($('pEl').value,0.1791), loss:num($('loss').value,10)/100,
+    pB:num($('pBens').value,2.28), pD:num($('pDies').value,2.49), pE:num($('pEl').value,0.1791), loss:num($('loss').value,10)/100,
     eEl:num($('elSrc').value,42)/1000, eB:num($('eBens').value,2.8), eD:num($('eDies').value,3.2)};
 }
 
@@ -643,7 +647,11 @@ $('reset').onclick = () => { cars = EXAMPLES.map(newCar); renderCars(); update()
 const saved = load();
 if (saved && Array.isArray(saved.cars) && saved.cars.length){
   cars = saved.cars.map(c=>newCar({...c,brand:undefined})).map((c,i)=>Object.assign(c,{picked:saved.cars[i].picked}));
-  try{ GIDS.forEach(id=>{ const v=saved.g?.[id]; if(v===undefined) return; if($(id).type==='select-one') $(id).selectedIndex=v; else $(id).value=v; }); }catch(e){}
+  try{ GIDS.forEach(id=>{ const v=saved.g?.[id]; if(v===undefined) return;
+    if (id in PRICE_DEF){ // oletushinta, jota ei ole muutettu -> käytä uusinta
+      const wasDefault = saved.d ? String(v)===String(saved.d[id]) : OLD_DEFS.includes(String(v));
+      if (wasDefault || v==='') return; }
+    if($(id).type==='select-one') $(id).selectedIndex=v; else $(id).value=v; }); }catch(e){}
 } else cars = EXAMPLES.map(newCar);
 applyLang(LANG);
 </script>
