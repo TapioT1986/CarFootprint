@@ -652,7 +652,7 @@ if (saved && Array.isArray(saved.cars) && saved.cars.length){
   cars = saved.cars.map(c=>newCar({...c,brand:undefined})).map((c,i)=>Object.assign(c,{picked:saved.cars[i].picked}));
   try{ GIDS.forEach(id=>{ const v=saved.g?.[id]; if(v===undefined) return;
     if (id in PRICE_DEF){ // oletushinta, jota ei ole muutettu -> käytä uusinta
-      const wasDefault = saved.d ? String(v)===String(saved.d[id]) : OLD_DEFS.includes(String(v));
+      const wasDefault = (saved.d && String(v)===String(saved.d[id])) || OLD_DEFS.includes(String(v));
       if (wasDefault || v==='') return; }
     if($(id).type==='select-one') $(id).selectedIndex=v; else $(id).value=v; }); }catch(e){}
 } else cars = EXAMPLES.map(newCar);
