@@ -305,6 +305,7 @@ svg text{font-family:var(--body)}
 </div>
 
 <script>
+const BUILD = '__BUILD__'; // sivun versio (build.py), uuden version tunnistamiseen
 const CATALOG = __CATALOG__;
 const VTAX = __VTAX__; // ajoneuvoveron taulukot 2026 (Finlex 814/2024, data/vehicle_tax.json)
 const INSP = __INSP__; // Traficom: määräaikaiskatsastukset ja elinikä malleittain (tools/update_inspection.py)
@@ -1098,6 +1099,24 @@ $('share').onclick = async () => {
     msg.append(b); }
 })();
 applyLang(LANG);
+// Puhelimet näyttävät usein välimuistissa olevaa vanhaa sivua (esim. palautettu välilehti).
+// Haetaan sivu palvelimelta ohi välimuistin; jos versio on uudempi, ladataan sivu uudelleen.
+// Autot ja asetukset säilyvät, koska ne ovat localStoragessa.
+let freshAt = 0;
+async function checkFresh(){
+  if (!/^https?:$/.test(location.protocol) || Date.now() - freshAt < 60000) return;
+  freshAt = Date.now();
+  try {
+    const r = await fetch(location.pathname, {cache:'reload'});
+    const m = /const BUILD = '([0-9a-f]{12})'/.exec(await r.text());
+    if (!m || m[1] === BUILD) return;
+    let tried = null; try { tried = sessionStorage.getItem('carfootprint.reload'); sessionStorage.setItem('carfootprint.reload', m[1]); } catch(e){}
+    if (tried !== m[1]) location.reload();
+  } catch(e){}
+}
+checkFresh();
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkFresh(); });
+window.addEventListener('pageshow', e => { if (e.persisted) checkFresh(); });
 </script>
 </body>
 </html>

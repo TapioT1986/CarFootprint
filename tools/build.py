@@ -27,6 +27,7 @@ Usage
 """
 
 import argparse
+import hashlib
 import json
 import pathlib
 import re
@@ -549,6 +550,8 @@ def main():
         print(f"   inspection data for {sum(1 for n in insp['idx'] if n)} of {len(catalog)} models "
               f"({len(insp['m'])} model series, {insp['y']})", file=sys.stderr)
     page = page.replace("__INSP__", json.dumps(insp, ensure_ascii=False, separators=(",", ":")))
+    # Version id = hash of the page; the page compares it with the server copy to escape stale caches
+    page = page.replace("__BUILD__", hashlib.sha256(page.encode("utf-8")).hexdigest()[:12])
     (root / "index.html").write_text(page, encoding="utf-8", newline="\n")
     print(f"   {len(catalog)} models, {len(realworld['brand'])} brands, "
           f"{len(page) // 1024} KiB", file=sys.stderr)

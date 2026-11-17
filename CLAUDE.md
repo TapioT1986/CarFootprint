@@ -106,6 +106,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - On the owner's Windows PC Python runs as `py` (Python install manager), and Smart App Control
   blocks pandas DLLs. So the default build must stay free of third-party packages; do not ask him
   to turn Smart App Control off.
+- Phones show stale cached pages (restored tabs), while GitHub Pages only sends max-age=600. build.py puts a
+  hash of the page into `const BUILD`; checkFresh() fetches the page with cache:'reload' on load and when the tab
+  becomes visible, and reloads once (sessionStorage guard) if the BUILD differs. Keep the `const BUILD = '...'` form.
 - tests/smoke.py runs on GitHub after every push (.github/workflows/test.yml): build check + tests/smoke_checks.js
   in headless Chromium. The same checks can be run in the built-in browser by evaluating smoke_checks.js.
 - Test in a real browser (FI and EN, phone width 390 px) and check the numbers by hand for at
