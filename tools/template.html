@@ -119,7 +119,11 @@ section.results{margin-top:24px}
 .sum .nm{display:flex;align-items:center;gap:8px;font-weight:600;min-width:0}
 .sum .nm span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dot{width:10px;height:10px;border-radius:50%;background:var(--cc);flex:none}
-.big{font:500 28px/1.1 var(--mono);font-variant-numeric:tabular-nums}
+.big{font:500 28px/1.1 var(--mono);font-variant-numeric:tabular-nums;border-radius:4px}
+/* hetkellinen korostus, kun luku muuttuu */
+@keyframes flash{0%{background:color-mix(in srgb,var(--accent) 22%,transparent)}100%{background:transparent}}
+.big.flash{animation:flash 2.5s ease-out}
+@media (prefers-reduced-motion:reduce){.big.flash{animation:none}}
 .sub{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
 .badges{display:flex;flex-wrap:wrap;gap:6px}
 .badge{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:999px;border:1px solid var(--line)}
@@ -751,6 +755,7 @@ function update(){
   $('kmOut').textContent = fmt(G.km);
   const R = cars.map(c => calc(c,G));
   const minCost = Math.min(...R.map(r=>r.total)), minEm = Math.min(...R.map(r=>r.em));
+  const before = [...document.querySelectorAll('#sums .big')].map(e=>e.textContent);
   $('sums').innerHTML = cars.map((c,i)=>{ const r=R[i];
     return `<div class="sum" style="--cc:${COLORS[i]}">
       <div class="nm"><span class="dot"></span><span title="${esc(c.name)}">${esc(c.name)}</span></div>
@@ -759,6 +764,7 @@ function update(){
       <div class="sub">${fmt(r.em)} kg CO₂e/${yr} · ${fmt(r.em*1000/G.km)} g/km</div>
       <div class="badges">${G.budget>0&&c.price>G.budget?`<span class="badge warn">${T('over')}</span>`:''}${cars.length>1&&r.total===minCost?`<span class="badge win">${T('cheapest')}</span>`:''}${cars.length>1&&r.em===minEm?`<span class="badge win">${T('cleanest')}</span>`:''}</div>
     </div>`;}).join('');
+  document.querySelectorAll('#sums .big').forEach((e,i)=>{ if (before.length && before[i]!==undefined && before[i]!==e.textContent) e.classList.add('flash'); });
   cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];
     t.textContent = T('tag')(fmt(r.rate*100,0), fmt(r.endAge), fmt(r.endOdo), fmt(r.resid)) + (r.loan>0?T('loan_tag')(fmt(r.loan), fmt(r.pay)):'') + (c.picked?T('reg')(fmt(c.picked[4]), c.picked[5]):'') + rwText(c); });
   const rows = cars.map((c,i)=>({name:c.name,color:COLORS[i],...R[i]}));
