@@ -29,6 +29,7 @@ Every assumption is visible and editable.
 - **Older cars:** cars first registered up to 2017 were rated on the old NEDC test. For them the page uses the model's own NEDC figure for that year from the Finnish register, and adds the NEDC-to-real-world gap measured by the ICCT (8% for 2001 cars, 38% for 2014, 40% for 2016, linear in between).
 - **Plug-in hybrids:** default consumption matches the measured brand average (6.0 l/100 km across the EU, against a WLTP figure of 1.4).
 - **Electric cars:** WLTP electricity consumption per model from the EEA register (Finnish registrations 2025; 2020–2022 for models no longer sold new). Measured consumption is not collected from battery-electric cars, so the real-world factor of 1.20 is an assumption. Battery wear is not modelled; the page reminds users to check the battery of an older car.
+- **Manufacturing emissions** follow the ICCT's 2025 EU life-cycle study for a medium-size car: making and recycling the car without its battery is 8.2 t CO₂e for petrol, diesel and hybrid cars, 8.6 t for plug-in hybrids and 7.5 t for electric cars. The battery adds 72.8 kg CO₂e per kWh (NMC622 cells weighted by where they are made). Default battery sizes are the EU 2023 averages for medium-size cars (53.4 kWh electric, 13.3 kWh plug-in hybrid), or the size in the model name where the register gives one (e.g. Nissan Leaf 40 kWh); users can change it.
 - **Electricity:** no source counts as zero-emission. Lifecycle values per generation type follow IPCC and UNECE.
 
 ## Known limitations
@@ -36,7 +37,7 @@ Every assumption is visible and editable.
 - Real-world factors are EU-wide and do not account for Finnish winters.
 - Model-level consumption comes from a 13.7% sample of the 2.1 GB per-vehicle file (12 evenly spaced slices), not the whole of it. Models below 50 sampled vehicles fall back to a brand average.
 - The EEA measurements cover cars registered 2021–2024. WLTP cars from 2018–2020 get the same factor; NEDC cars get the ICCT gap instead, which is an EU average, not model-specific.
-- Manufacturing emissions, insurance and servicing costs are rough assumptions.
+- Manufacturing emissions are for a medium-size car; small cars take less to make and large ones more. Insurance and the starting level of servicing costs are rough assumptions.
 - The mileage factors for servicing and repairs come from US data. Battery wear adds no cost: it shortens the range but barely raises consumption.
 - Total mass for the propulsion tax is an assumption by powertrain, not the model's own mass. Pending government proposal HE 173/2026 (about €6 a year less base tax for combustion cars over 10 years old) is not included.
 - Depreciation is calibrated on imported used cars, which tend to be in better condition than the average car sold in Finland. It is one rate for all models.
@@ -55,6 +56,7 @@ Every assumption is visible and editable.
 | Periodic inspections by model and age, fault areas, lifetime estimate | [Traficom, Katsastuksen vikatilastot (PxWeb)](https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/), inspections 2017–2025 | CC BY 4.0 |
 | Rise of servicing and repair costs with mileage | [Consumer Reports, EV ownership cost, chapter 2 (2020)](https://advocacy.consumerreports.org/wp-content/uploads/2020/10/TCO-Fact-Sheet-Chapter-2-FINAL.pdf) |
 | Depreciation by age | [Finnish Tax Administration, applied taxation values of used cars](https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/), 2024–2026 | |
+| Manufacturing and battery emissions | [ICCT, Life-cycle GHG emissions from passenger cars in the EU, 2025 update](https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/) | |
 | NEDC-to-real-world gap | [ICCT, From laboratory to road: a 2018 update](https://theicct.org/publication/from-laboratory-to-road-a-2018-update/) | |
 | Fuel prices | [Statistics Finland, StatFin table 11xx](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/), monthly | CC BY 4.0 |
 | Electricity prices | [Statistics Finland, StatFin table 13rb](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/), monthly | CC BY 4.0 |

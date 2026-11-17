@@ -72,6 +72,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   Propulsion tax D 5.5 / E 1.9 / P 0.95 c/day per started 100 kg of total mass; mass is a per-powertrain
   assumption (c.mass, editable). Car field `tax` empty = automatic. "Other costs" no longer include tax
   (EX_VERSION 5 subtracts the old tax default from older saves).
+- Manufacturing (car fields `make` = car without battery, `batt` = kWh for E/P): ICCT 2025 Table 1 (8.2 t
+  B/D/H, 8.6 t P, 7.5 t E) + batt × 72.8 kg/kWh; default batt 53.4 / 13.3 kWh, or the kWh in the model name
+  (battFromName). Spread over `life` years. EX_VERSION 7 replaces old defaults (7/8/8/10/12 t) and keeps
+  custom values (batt 0).
 - Servicing and repairs (car field `serv`, level below 80 000 km): × servFactor() = average over the
   ownership km [odo, odo + km·years] of Consumer Reports 2020 band factors: ICE/hybrids 1 / 2.14 / 2.82,
   EV 1 / 2.33 / 3.58 (bands 0–80 467, –160 934, beyond). "Other costs" = insurance + tyres only

@@ -347,7 +347,8 @@ fi: {
 <li><b>Lähteet:</b> malliluettelo ja CO₂-arvot <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficomin avoimesta datasta</a> 30.6.2026, mitattu kulutus <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA:n OBFCM-aineistosta</a> ja sähkönkulutus <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA:n uusien autojen rekisteristä</a> (Suomessa 2020–2025 rekisteröidyt). Kaikki CC BY 4.0. Arvonalenema Verohallinnon verotusarvoista ja NEDC-korjaus ICCT:ltä. Koko laskentamalli ja käytetty data ovat <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">GitHubissa</a>.</li>
 <li><b>Ajoneuvovero</b> lasketaan vuoden 2026 verotaulukoista (<a href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814" target="_blank" rel="noopener">ajoneuvoverolaki, muutos 814/2024</a>). Perusvero määräytyy auton virallisen CO₂-päästön mukaan, ja se on 106–654 €/v. Päästö lasketaan mallin virallisesta kulutuksesta: vuosimallit 2017 ja vanhemmat NEDC-taulukolla 1, uudemmat WLTP-taulukolla 1 A. Sähköautoista, jotka on otettu käyttöön 1.10.2021 tai myöhemmin, perusvero on 171 €/v; laskuri pitää vuosimallia 2022 ja uudempia tällaisina. Lataushybridien perusvero on alin porras, koska niiden WLTP-päästö on lähes aina alle 103 g/km. Diesel-, sähkö- ja lataushybridiautoista maksetaan lisäksi käyttövoimaveroa: 5,5, 1,9 tai 0,95 senttiä päivässä jokaiselta kokonaismassan alkavalta 100 kg:lta. Kokonaismassa ei ole vielä malliluettelossa, joten se on oletus (diesel 2 000 kg, sähkö 2 200 kg, lataushybridi 2 300 kg). Oman auton kokonaismassa löytyy rekisteröintitodistuksesta, ja sen voi vaihtaa kohdassa Lisää oletuksia. Hallituksen esitys HE 173/2026 alentaisi yli 10-vuotiaiden polttomoottoriautojen perusveroa keskimäärin noin 6 €/v. Esitys on vielä eduskunnan käsittelyssä, eikä sitä ole otettu huomioon.</li>
 <li><b>Katsastus ja elinikä</b> (tietoa autokortilla, ei vaikuta laskelmaan) tulevat <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficomin katsastuksen vikatilastoista</a> (määräaikaiskatsastukset 2017–2025, avoin data CC BY 4.0). Traficom tilastoi mallisarjoittain, eli kaikki saman mallin käyttövoimat ja sukupolvet ovat yhdessä. Hylkäysprosentti on uusimmalta vuodelta auton ostoiän mukaan, tai lähimmältä iältä, josta on vähintään 50 katsastusta. Viat ovat hylkäykseen johtaneiden vikojen osuudet kaikista ikäluokista. Elinikä lasketaan katsastusmääristä: 10 vuoden iästä alkaen autot katsastetaan joka vuosi, joten saman vuoden autojen katsastusmäärä kertoo, montako on vielä liikenteessä. Ennen 10 vuoden ikää poistuneet autot (kolarit, vienti) eivät näy luvussa. Käytettynä tuodut autot kasvattavat lukuja, ja jos katsastusmäärät kasvavat iän mukana, elinikää ei arvioida. Kun yli puolet on vielä liikenteessä 20-vuotiaana, ikä, jossa puolet on poistunut, on arvio: vuosittainen poistumaosuus jatketaan suorana viivana iän 10–19 havainnoista. Kenttä Käyttöikä (päästöjen jakaminen) on edelleen oletus 18–20 vuotta.</li>
-<li>Valmistuspäästöt, vakuutus ja huollon lähtötaso ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
+<li><b>Valmistuspäästöt</b> ovat <a href="https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/" target="_blank" rel="noopener">ICCT:n</a> EU:n elinkaaritutkimuksesta (2025) keskikokoiselle autolle, kuten Golfille. Auton valmistus ja kierrätys ilman akkua: bensiini-, diesel- ja hybridiauto 8,2 t, lataushybridi 8,6 t ja sähköauto 7,5 t CO₂e. Akun valmistus on 72,8 kg CO₂e/kWh, kun painotetaan solujen valmistusmaita (30 % Eurooppa, 56 % Kiina). Oletusakku on EU:ssa 2023 myytyjen keskikokoisten autojen keskiarvo: sähköauto 53,4 kWh (3,9 t), lataushybridi 13,3 kWh (1,0 t). Akun koon voi vaihtaa oman auton mukaiseksi kohdassa Lisää oletuksia. Pienen auton valmistus tuottaa vähemmän ja ison enemmän päästöjä. Valmistuspäästöt jaetaan auton koko käyttöiälle. ICCT:n mukaan akut kestävät yleensä auton käyttöiän: alle 1 %:ssa vuoden 2016 jälkeen myydyistä sähköautoista akku on vaihdettu (Recurrent, 20 000 autoa).</li>
+<li>Vakuutus ja huollon lähtötaso ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
   pick_l:'Hae malli rekisteristä', pick_ph:'esim. Volkswagen Golf', pick_none:'Ei osumia', pt_l:'Käyttövoima',
@@ -359,7 +360,8 @@ fi: {
   serv_l:'Huolto ja korjaukset', serv_u:'€ / v vähän ajetulle (alle 80 000 km); kasvaa ajon mukaan',
   tax_l:'Ajoneuvovero', tax_u:'€ / v; tyhjä = laskettu CO₂:sta ja massasta',
   mass_l:'Kokonaismassa', mass_u:'kg, oletus; käyttövoimavero lasketaan tästä', more:'Lisää oletuksia',
-  real_l:'Realismikerroin', real_u:'× WLTP, todellinen kulutus', real_u_nedc:'× NEDC, todellinen kulutus', make_l:'Valmistus', life_l:'Käyttöikä', life_u:'vuotta yhteensä',
+  real_l:'Realismikerroin', real_u:'× WLTP, todellinen kulutus', real_u_nedc:'× NEDC, todellinen kulutus', make_l:'Valmistus ilman akkua', make_u:'t CO₂e (ICCT, keskikokoinen auto)',
+  batt_l:'Akun koko', batt_u:'kWh; valmistus 72,8 kg CO₂e/kWh', life_l:'Käyttöikä', life_u:'vuotta yhteensä',
   add:'+ Lisää auto vertailuun', cheapest:'Edullisin', cleanest:'Vähäpäästöisin', your_km:'sinun ajosi',
   be_aria:'Vuosikustannus ajomäärän mukaan',
   tag:(p,a,o,r)=>`Arvonalenema ${p} %/v · myyt ${a} v, ${o} km, arvo ${r} €`,
@@ -373,6 +375,7 @@ fi: {
   insp_imp:' <b>Elinikä:</b> käytettynä tuotuja autoja on tällä mallilla niin paljon, että katsastusmäärät kasvavat iän mukana; elinikää ei voi arvioida.',
   insp_series:(s)=>s,
   areas:['tunnistus ja asiapaperit','akselistot, pyörät ja jousitus','alusta ja kori','jarrut','kaasulaitteet','koeajo ja näkyvyys','lisätarkastukset','muut laitteet','ohjaus','sähkö- ja hybridijärjestelmät','valot ja sähkölaitteet','päästöt ja muut ympäristöhaitat'],
+  make_tag:(t,b)=>` · valmistus ${t} t CO₂e` + (b>0 ? ` (josta akku ${fmt(b,1)} t)` : ''),
   serv_tag:(e,k)=>` · huolto ja korjaukset keskimäärin ${e} €/v (× ${k})`,
   tax_tag:(t,b,p)=>` · ajoneuvovero ${t} €/v` + (p>0 ? ` (perusvero ${b} + käyttövoimavero ${p})` : ''),
   rw_model:(p,n)=>` · Mitattu kulutus tälle mallille: ${p} % yli WLTP:n (${n} autoa, EEA)`,
@@ -433,7 +436,8 @@ en: {
 <li><b>Sources:</b> model list and CO₂ values from <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficom open vehicle data</a> (30 June 2026), measured consumption from the <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA's OBFCM dataset</a> and electricity consumption from the <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA new-car register</a> (cars registered in Finland 2020–2025). All CC BY 4.0. Depreciation from the Finnish Tax Administration's taxation values and the NEDC correction from the ICCT. The full calculation model and the data behind it are <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">on GitHub</a>.</li>
 <li><b>Vehicle tax</b> follows the 2026 tax tables (<a href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814" target="_blank" rel="noopener">Vehicle Tax Act, amendment 814/2024</a>). The base tax depends on the car's official CO₂ emissions and is €106–654 a year. The emissions are worked out from the model's official consumption: model years 2017 and older use the NEDC table 1, newer cars the WLTP table 1 A. Electric cars first registered on or after 1 October 2021 pay €171 a year; the calculator treats model years 2022 and newer as such. Plug-in hybrids pay the lowest band, as their WLTP emissions are almost always below 103 g/km. Diesel, electric and plug-in hybrid cars also pay a propulsion tax: 5.5, 1.9 or 0.95 cents a day for every started 100 kg of total mass. Total mass is not yet in the model list, so it is an assumption (diesel 2,000 kg, electric 2,200 kg, plug-in hybrid 2,300 kg). Your own car's total mass is on its registration certificate; change it under More assumptions. Government proposal HE 173/2026 would lower the base tax of combustion cars over 10 years old by about €6 a year on average. It is still before Parliament and is not included.</li>
 <li><b>Inspections and lifetime</b> (information on the car card, not used in the calculation) come from <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficom's periodic inspection statistics</a> (inspections 2017–2025, open data CC BY 4.0). Traficom groups cars by model series, so all powertrains and generations of a model are together. The failure rate is for the latest year at the car's age at purchase, or the nearest age with at least 50 inspections. The faults are shares of the faults that caused a failure, all ages together. Lifetime is worked out from inspection counts: from 10 years on, cars are inspected every year, so the count for one model year shows how many are still on the road. Cars that left the road before 10 years (crashes, exports) do not show in the figure. Cars imported used raise the counts, and if the counts rise with age, no lifetime is estimated. When more than half are still on the road at 20, the age at which half have left is an estimate: the yearly drop-out rate is continued as a straight line from ages 10–19. The Lifetime field (spreading manufacturing emissions) is still the 18–20-year assumption.</li>
-<li>Manufacturing emissions, insurance and the starting level of servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
+<li><b>Manufacturing emissions</b> come from the <a href="https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/" target="_blank" rel="noopener">ICCT</a> EU life-cycle study (2025) for a medium-size car such as the Golf. Making and recycling the car without its battery: petrol, diesel and hybrid cars 8.2 t, plug-in hybrids 8.6 t and electric cars 7.5 t CO₂e. Battery production is 72.8 kg CO₂e per kWh, weighted by where the cells are made (30% Europe, 56% China). The default battery is the average of medium-size cars sold in the EU in 2023: 53.4 kWh for electric cars (3.9 t) and 13.3 kWh for plug-in hybrids (1.0 t). You can set your own car's battery size under More assumptions. A small car takes less to make and a large one more. Manufacturing emissions are spread over the car's whole lifetime. According to the ICCT, batteries usually outlast the car: fewer than 1% of electric cars sold after 2016 have had their battery replaced (Recurrent, 20,000 cars).</li>
+<li>Insurance and the starting level of servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
   new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
   pick_l:'Find a model in the register', pick_ph:'e.g. Volkswagen Golf', pick_none:'No matches', pt_l:'Powertrain',
@@ -445,7 +449,8 @@ en: {
   serv_l:'Servicing and repairs', serv_u:'€ / yr at low mileage (under 80,000 km); rises with mileage',
   tax_l:'Vehicle tax', tax_u:'€ / yr; empty = calculated from CO₂ and mass',
   mass_l:'Total mass', mass_u:'kg, assumed; the propulsion tax is based on it', more:'More assumptions',
-  real_l:'Real-world factor', real_u:'× WLTP, real-world consumption', real_u_nedc:'× NEDC, real-world consumption', make_l:'Manufacturing', life_l:'Lifetime', life_u:'years in total',
+  real_l:'Real-world factor', real_u:'× WLTP, real-world consumption', real_u_nedc:'× NEDC, real-world consumption', make_l:'Manufacturing without battery', make_u:'t CO₂e (ICCT, medium-size car)',
+  batt_l:'Battery size', batt_u:'kWh; production 72.8 kg CO₂e/kWh', life_l:'Lifetime', life_u:'years in total',
   add:'+ Add a car to compare', cheapest:'Cheapest', cleanest:'Lowest emissions', your_km:'your mileage',
   be_aria:'Annual cost by mileage',
   tag:(p,a,o,r)=>`Depreciation ${p}%/yr · sold at ${a} years, ${o} km, worth €${r}`,
@@ -459,6 +464,7 @@ en: {
   insp_imp:' <b>Lifetime:</b> so many of this model are imported used that inspection counts rise with age; no lifetime estimate is possible.',
   insp_series:(s)=>s.replace('-sarja',' Series'),
   areas:['identification and documents','axles, wheels and suspension','chassis and body','brakes','gas equipment','road test and visibility','additional checks','other equipment','steering','electric and hybrid systems','lights and electrics','emissions and other environmental'],
+  make_tag:(t,b)=>` · manufacturing ${t} t CO₂e` + (b>0 ? ` (battery ${fmt(b,1)} t)` : ''),
   serv_tag:(e,k)=>` · servicing and repairs €${e}/yr on average (× ${k})`,
   tax_tag:(t,b,p)=>` · vehicle tax €${t}/yr` + (p>0 ? ` (base tax ${b} + propulsion tax ${p})` : ''),
   rw_model:(p,n)=>` · Measured consumption for this model: ${p}% above WLTP (${n} cars, EEA)`,
@@ -485,16 +491,23 @@ if (!I18N[LANG]) LANG = 'fi';
 const T = k => I18N[LANG][k];
 
 const PT_DEF = { // oletukset käyttövoiman mukaan
-  B:{fuel:6.0, kwh:0, share:0, mass:1700, ins:600, serv:400, tyre:200, make:7, life:18, real:1.15},
-  D:{fuel:5.5, kwh:0, share:0, mass:2000, ins:600, serv:550, tyre:250, make:8, life:20, real:1.15},
-  H:{fuel:4.5, kwh:0, share:0, mass:1700, ins:600, serv:400, tyre:200, make:8, life:18, real:1.15},
-  P:{fuel:6.0, kwh:20, share:40, mass:2300, ins:650, serv:450, tyre:250, make:10, life:18, real:1.20},
-  E:{fuel:0, kwh:17, share:100, mass:2200, ins:700, serv:250, tyre:250, make:12, life:18, real:1.20}
+  B:{fuel:6.0, kwh:0, share:0, mass:1700, ins:600, serv:400, tyre:200, make:8.2, batt:0, life:18, real:1.15},
+  D:{fuel:5.5, kwh:0, share:0, mass:2000, ins:600, serv:550, tyre:250, make:8.2, batt:0, life:20, real:1.15},
+  H:{fuel:4.5, kwh:0, share:0, mass:1700, ins:600, serv:400, tyre:200, make:8.2, batt:0, life:18, real:1.15},
+  P:{fuel:6.0, kwh:20, share:40, mass:2300, ins:650, serv:450, tyre:250, make:8.6, batt:13.3, life:18, real:1.20},
+  E:{fuel:0, kwh:17, share:100, mass:2200, ins:700, serv:250, tyre:250, make:7.5, batt:53.4, life:18, real:1.20}
 };
 PT_DEF.B.real = PT_DEF.H.real = RW.fleet.P.k; PT_DEF.D.real = RW.fleet.D.k;
 Object.assign(PT_DEF.P, {real:1, share:25, fuel:+(RW.fleet.PE.ob/0.75).toFixed(1), kwh:RW.phevMedian});
 PT_DEF.E.kwh = RW.evMedian;
 const OLD_TAX = {B:200, D:600, H:160, P:180, E:300};
+// Valmistuspäästöt: ICCT 2025 (EU, keskikokoinen auto). Auto ilman akkua 8,2 t (bensiini, diesel, hybridi),
+// 8,6 t (lataushybridi), 7,5 t (sähkö); akku 72,8 kg CO2e/kWh (NMC622, solujen alkuperämaiden painotus).
+const BATT_T_PER_KWH = 0.0728;
+const OLD_MAKE = {B:7, D:8, H:8, P:10, E:12}; // ennen EX_VERSION 7 (akku sisältyi)
+// Akun koko mallin nimestä, jos se on siinä (esim. "LEAF 40KWH", "BORN 58/62 KWH" -> 62)
+const battFromName = r => { const m = /(\d+(?:[.,]\d+)?)\s*KWH/i.exec(r[1]); return m ? num(m[1]) : null; };
+const battT = c => (c.pt==='E'||c.pt==='P') ? Math.max(0, num(c.batt,0))*BATT_T_PER_KWH : 0;
 // Huollon ja korjausten kasvu mittarilukeman mukaan: Consumer Reports 2020 (USA),
 // $/maili 0–50k, 50–100k ja 100–200k mailia. Polttomoottori 0,028/0,060/0,079, sähkö 0,012/0,028/0,043.
 const SERV_KM = [80467, 160934]; // 50 000 ja 100 000 mailia
@@ -619,9 +632,9 @@ function newCar(o={}){
   const pt = o.pt || (o.pick && o.pick[2]) || 'B', d = PT_DEF[pt];
   const c = {name:o.name||T('new_car'), exKey:null, ex:o.ex??null, exAuto:o.exAuto??false, pt, price:o.price??20000, age:o.age??0, odo:o.odo??0, dep:o.dep??'',
     fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??(d.ins+d.tyre), serv:o.serv??d.serv, tax:o.tax??'', mass:o.mass??d.mass,
-    make:o.make??d.make, life:o.life??d.life, real:o.real??d.real, rw:o.rw??null};
+    make:o.make??d.make, batt:o.batt??d.batt, life:o.life??d.life, real:o.real??d.real, rw:o.rw??null};
   c.std = o.std ?? null; c.autoFuel = o.autoFuel ?? (o.fuel===undefined);
-  if (o.pick){ const r = findRow(o.pick); if (r){ c.picked = r; fromRow(c, r); } }
+  if (o.pick){ const r = findRow(o.pick); if (r){ c.picked = r; fromRow(c, r); if (o.batt===undefined) c.batt = battFromName(r) ?? c.batt; } }
   else if (o.brand) applyRW(c, o.brand, o.kwhReg);
   else if (o.std===undefined && o.real===undefined) refreshStd(c);
   return c;
@@ -658,7 +671,7 @@ function choose(inp, label){ inp.value = label; closeSugg(inp); inp.dispatchEven
 // muuttamat hinnat säilyvät mutta koskemattomat oletukset päivittyvät uusiin.
 const PRICE_DEF = {pBens:'__P_PETROL__', pDies:'__P_DIESEL__', pEl:'__P_ELEC__'};
 const OLD_DEFS = ['1.85','1.75','0.15','2.09','2.15','0.1791']; // ennen tallennettuja oletuksia
-const EX_VERSION = 6; // kasvata, kun esimerkkiautot vaihtuvat
+const EX_VERSION = 7; // kasvata, kun esimerkkiautot vaihtuvat
 function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF, ev:EX_VERSION})); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
 const GIDS = ['km','years','budget','monthly','own','loanRate','loanFee','loanYears','ownRate','pBens','pDies','pEl','loss','elSrc','eBens','eDies'];
@@ -713,11 +726,12 @@ function calc(c, G, km){
   const other = c.other + tax + serv;
   const total = dep+cap+energy+other;
   const drive = litres*fuelEm + kwh*G.eEl;
-  const make = c.life>0 ? c.make*1000/c.life : 0;
+  const makeT = num(c.make,0) + battT(c); // t CO2e: auto + akku
+  const make = c.life>0 ? makeT*1000/c.life : 0;
   // Kuukausimenot (kassavirta): lainaerä kuluineen + energia ja muut kulut kuukautta kohden.
   // Arvonalenema ja oman rahan tuotto eivät ole kuukausittaisia maksuja.
   const runMo = (energy+other)/12, cash = L.pay + runMo, cashAfter = (L.pay>0 && G.loanYears<n) ? runMo : null;
-  return {rate,resid,dep,cap,loan,pay:L.pay,cash,cashAfter,energy,other,tax,vt,autoTax,serv,servF,total,drive,make,em:drive+make,litres,kwh,
+  return {rate,resid,dep,cap,loan,pay:L.pay,cash,cashAfter,energy,other,tax,vt,autoTax,serv,servF,total,drive,make,makeT,em:drive+make,litres,kwh,
     endAge:c.age+n, endOdo:c.odo+km*n};
 }
 
@@ -748,7 +762,8 @@ function carCard(c,i){
     <details class="adv"><summary>${T('more')}</summary>
       <div class="fields">
         <div class="field"><label class="label" for="real${i}">${T('real_l')}</label><input type="number" id="real${i}" data-k="real" step="0.05" value="${c.real}"><span class="unit" id="realu${i}">${isNedc(c)?T('real_u_nedc'):T('real_u')}</span></div>
-        <div class="field"><label class="label" for="make${i}">${T('make_l')}</label><input type="number" id="make${i}" data-k="make" step="0.5" value="${c.make}"><span class="unit">t CO₂e</span></div>
+        <div class="field"><label class="label" for="make${i}">${T('make_l')}</label><input type="number" id="make${i}" data-k="make" step="0.1" value="${c.make}"><span class="unit">${T('make_u')}</span></div>
+        ${(c.pt==='E'||c.pt==='P')?`<div class="field"><label class="label" for="batt${i}">${T('batt_l')}</label><input type="number" id="batt${i}" data-k="batt" step="1" min="0" value="${c.batt}"><span class="unit">${T('batt_u')}</span></div>`:''}
         <div class="field"><label class="label" for="life${i}">${T('life_l')}</label><input type="number" id="life${i}" data-k="life" step="1" value="${c.life}"><span class="unit">${T('life_u')}</span></div>
         ${'DEP'.includes(c.pt)?`<div class="field"><label class="label" for="mass${i}">${T('mass_l')}</label><input type="number" id="mass${i}" data-k="mass" step="50" min="0" value="${c.mass}"><span class="unit">${T('mass_u')}</span></div>`:''}
       </div></details>
@@ -768,13 +783,13 @@ $('cars').addEventListener('input', e => {
     const r = byLabel.get(el.value); if (!r){ suggest(el); return; }
     const d = PT_DEF[r[2]];
     Object.assign(c, {name:`${r[0]} ${r[1]}`, exKey:null, pt:r[2], kwh:d.kwh, share:d.share,
-      other:d.ins+d.tyre, serv:d.serv, tax:'', mass:d.mass, make:d.make, life:d.life});
-    c.picked = r; fromRow(c, r);
+      other:d.ins+d.tyre, serv:d.serv, tax:'', mass:d.mass, make:d.make, batt:d.batt, life:d.life});
+    c.picked = r; fromRow(c, r); c.batt = battFromName(r) ?? d.batt;
     renderCars(); update(); return;
   }
   const k = el.dataset.k; if (!k) return;
   if (k==='name'){ c.name = el.value; c.exKey = null; }
-  else if (k==='pt'){ const d=PT_DEF[el.value]; Object.assign(c,{pt:el.value,mass:PT_DEF[el.value].mass,fuel:(el.value==='P'||!c.fuel)?d.fuel:c.fuel,kwh:c.kwh||d.kwh,share:d.share,make:d.make,real:d.real,rw:null,picked:null,autoFuel:true}); refreshStd(c); renderCars(); }
+  else if (k==='pt'){ const d=PT_DEF[el.value]; Object.assign(c,{pt:el.value,mass:PT_DEF[el.value].mass,fuel:(el.value==='P'||!c.fuel)?d.fuel:c.fuel,kwh:c.kwh||d.kwh,share:d.share,make:d.make,batt:d.batt,real:d.real,rw:null,picked:null,autoFuel:true}); refreshStd(c); renderCars(); }
   else if (k==='dep'||k==='tax') c[k] = el.value;
   else {
     c[k] = num(el.value);
@@ -936,7 +951,7 @@ function update(){
   document.querySelectorAll('#sums .big').forEach((e,i)=>{ if (before.length && before[i]!==undefined && before[i]!==e.textContent) e.classList.add('flash'); });
   cars.forEach((c,i)=>{ const e=$('insp'+i); if(e) e.innerHTML = inspText(c); });
   cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];
-    t.textContent = T('tag')(fmt(r.rate*100,0), fmt(r.endAge), fmt(r.endOdo), fmt(r.resid)) + (r.loan>0?T('loan_tag')(fmt(r.loan), fmt(r.pay)):'') + T('serv_tag')(fmt(r.serv), fmt(r.servF,1)) + (r.autoTax?T('tax_tag')(fmt(r.tax), fmt(r.vt.base), fmt(r.vt.prop)):'') + (c.picked?T('reg')(fmt(c.picked[4]), c.picked[5]):'') + rwText(c);
+    t.textContent = T('tag')(fmt(r.rate*100,0), fmt(r.endAge), fmt(r.endOdo), fmt(r.resid)) + (r.loan>0?T('loan_tag')(fmt(r.loan), fmt(r.pay)):'') + T('make_tag')(fmt(r.makeT,1), battT(c)) + T('serv_tag')(fmt(r.serv), fmt(r.servF,1)) + (r.autoTax?T('tax_tag')(fmt(r.tax), fmt(r.vt.base), fmt(r.vt.prop)):'') + (c.picked?T('reg')(fmt(c.picked[4]), c.picked[5]):'') + rwText(c);
     const tx=$('tax'+i); if (tx) tx.placeholder = fmt(r.vt.total); });
   const rows = cars.map((c,i)=>({name:c.name,color:COLORS[i],...R[i]}));
   hbars($('costChart'), rows.map(r=>({...r,en:r.energy,oth:r.other})), ['dep','cap','en','oth'], '€/'+yr);
@@ -1002,6 +1017,7 @@ if (saved){ // asetukset ensin, jotta esimerkkiautot osataan valita enimmäishin
 if (saved && Array.isArray(saved.cars) && saved.cars.length && !oldExamples)
   cars = saved.cars.map(c=>(saved.ev||0)<5 ? {...c, other:Math.max(0,num(c.other,0)-(OLD_TAX[c.pt]||0))} : c) // vero erotettiin muista kuluista
     .map(c=>(saved.ev||0)<6 && PT_DEF[c.pt] ? {...c, other:Math.max(0,num(c.other,0)-PT_DEF[c.pt].serv)} : c) // samoin huolto (EX_VERSION 6)
+    .map(c=>(saved.ev||0)<7 ? (num(c.make,NaN)===OLD_MAKE[c.pt] ? {...c, make:undefined} : {...c, batt:0}) : c) // valmistus: akku erikseen (EX_VERSION 7)
     .map(c=>newCar({...c,brand:undefined})).map((c,i)=>Object.assign(c,{picked:saved.cars[i].picked}));
 else cars = examples();
 applyLang(LANG);
