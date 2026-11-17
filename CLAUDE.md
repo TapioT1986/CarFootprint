@@ -116,6 +116,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   IntersectionObserver while `#sums` is on screen; its height goes to `--dockh` (body padding, scroll-padding).
   `#more` (<details>) holds the financing and energy panels: closed on phones, opened by JS above 900 px;
   moreCount() counts GIDS inside it that differ from their HTML defaults.
+- Payment choice (`[data-pay]`, payState/setPay/renderPay) is derived from `own` vs `budget` (0 = loan, ≥ budget = cash,
+  else part) and is not stored: saves and links keep only `own`. Cash follows budget changes (listener before update).
+  `own` counts as changed in moreCount() only in the 'part' state.
 - tests/smoke.py runs on GitHub after every push (.github/workflows/test.yml): build check + tests/smoke_checks.js
   in headless Chromium. The same checks can be run in the built-in browser by evaluating smoke_checks.js.
 - Test in a real browser (FI and EN, phone width 390 px) and check the numbers by hand for at

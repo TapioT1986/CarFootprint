@@ -177,6 +177,11 @@ svg text{font-family:var(--body)}
 .phead h2{margin-bottom:0}
 @media (prefers-reduced-motion:no-preference){.bar{transition:width .25s ease}}
 /* Lisäasetukset: rahoitus ja energia yhdessä taitettavassa osiossa */
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--input)}
+.seg button{font:600 13.5px/1.25 var(--body);color:var(--ink);background:none;border:0;border-left:1px solid var(--line);padding:9px 6px;cursor:pointer;min-width:0}
+.seg button:first-child{border-left:0}
+.seg button[aria-checked="true"]{background:var(--accent);color:var(--accent-ink)}
+#payNote{margin-top:4px}
 details.more>summary{cursor:pointer;list-style:none;display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;font:600 20px/1.2 var(--display)}
 details.more>summary::-webkit-details-marker{display:none}
 details.more>summary::before{content:'';width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);margin:0 2px 0 2px;flex:none}
@@ -251,14 +256,22 @@ details.more[open]>summary::before{transform:rotate(45deg)}
           <p class="hint" data-i="km_hint"></p>
         </div>
         <div class="fields" style="margin-top:14px">
-          <div class="field"><label class="label" for="years" data-i="years_l"></label><input type="number" id="years" min="1" max="20" step="1" value="5"><span class="unit" data-i="years_u"></span></div>
-          <div class="field"><label class="label" for="budget" data-i="budget_l"></label><input type="number" id="budget" min="0" step="500" value="12000"><span class="unit" data-i="budget_u"></span></div>
-          <div class="field full"><label class="label" for="monthly" data-i="monthly_l"></label><input type="number" id="monthly" min="0" step="50" value="" placeholder="–"><span class="unit" data-i="monthly_u"></span></div>
+          <div class="field full"><label class="label" for="budget" data-i="budget_l"></label><input type="number" id="budget" min="0" step="500" value="12000"><span class="unit" data-i="budget_u"></span></div>
+          <div class="field full"><span class="label" id="payLabel" data-i="pay_l"></span>
+            <div class="seg" role="radiogroup" aria-labelledby="payLabel"><button type="button" role="radio" data-pay="cash" data-i="pay_cash"></button><button type="button" role="radio" data-pay="part" data-i="pay_part"></button><button type="button" role="radio" data-pay="loan" data-i="pay_loan"></button></div>
+            <span class="unit" id="payNote"></span></div>
         </div>
       </div>
 
       <details class="panel more" id="more">
         <summary><span data-i="more_h"></span><span class="morecount" id="moreCount"></span></summary>
+        <div class="morepart">
+        <h2 data-i="own_h"></h2>
+        <div class="fields">
+          <div class="field full"><label class="label" for="years" data-i="years_l"></label><input type="number" id="years" min="1" max="20" step="1" value="5"><span class="unit" data-i="years_u"></span></div>
+          <div class="field full"><label class="label" for="monthly" data-i="monthly_l"></label><input type="number" id="monthly" min="0" step="50" value="" placeholder="–"><span class="unit" data-i="monthly_u"></span></div>
+        </div>
+        </div>
         <div class="morepart">
         <h2 data-i="fin_h"></h2>
         <div class="fields">
@@ -364,6 +377,9 @@ fi: {
   years_l:'Omistusaika', years_u:'vuotta', rate_u:'% / vuosi',
   budget_l:'Enimmäishinta', budget_u:'€; esimerkkiautot valitaan tämän mukaan',
   monthly_l:'Kuukausibudjetti (valinnainen)', monthly_u:'€ / kk autoon: lainaerä, energia ja muut kulut; tyhjä = ei käytössä',
+  pay_l:'Maksutapa', pay_cash:'Käteinen', pay_part:'Osittain lainalla', pay_loan:'Kokonaan lainalla',
+  pay_n_cash:'Koko hinta omalla rahalla ja vaihtohyvityksellä (enintään enimmäishinta).', pay_n_part:(o)=>`${o} € omaa rahaa tai vaihtohyvitystä, loput lainaa.`, pay_n_loan:'Koko hinta lainalla.',
+  pay_n_more:' Summan ja lainaehdot voi tarkentaa Lisäasetuksissa.', own_h:'Omistus ja kuukausibudjetti',
   more_h:'Lisäasetukset', more_n:(n)=>`· ${n} muutettu`, dock_aria:'Näytä tulokset', dock_cheap:'Halvin', dock_clean:'Vähin CO₂',
   fin_h:'Rahoitus', own_l:'Oma raha ja vaihtohyvitys', own_u:'€ käteistä + vanhasta autosta saatava hyvitys; loppu lainaa',
   loanRate_l:'Lainan korko', loanRate_u:'% / vuosi (nimellinen)', loanFee_l:'Lainan kulut', loanFee_u:'€ / kk, tilinhoito ja laskutus',
@@ -456,6 +472,9 @@ en: {
   years_l:'Ownership period', years_u:'years', rate_u:'% / year',
   budget_l:'Maximum price', budget_u:'€; the example cars follow it',
   monthly_l:'Monthly budget (optional)', monthly_u:'€ / month for the car: loan payment, energy and other costs; empty = off',
+  pay_l:'Payment', pay_cash:'Cash', pay_part:'Partly on loan', pay_loan:'Fully on loan',
+  pay_n_cash:'The whole price from own money and trade-in (up to the maximum price).', pay_n_part:(o)=>`€${o} own money or trade-in, the rest on loan.`, pay_n_loan:'The whole price on loan.',
+  pay_n_more:' The amount and loan terms can be fine-tuned under More settings.', own_h:'Ownership and monthly budget',
   more_h:'More settings', more_n:(n)=>`· ${n} changed`, dock_aria:'Show the results', dock_cheap:'Cheapest', dock_clean:'Lowest CO₂',
   fin_h:'Financing', own_l:'Own money and trade-in', own_u:'€ cash + what you get for your old car; the rest is a loan',
   loanRate_l:'Loan interest', loanRate_u:'% / year (nominal)', loanFee_l:'Loan fees', loanFee_u:'€ / month, account and billing',
@@ -1008,7 +1027,7 @@ function update(){
     if (cars.length>1 && r.total===minCost) b.push(T('dock_cheap'));
     if (cars.length>1 && r.em===minEm) b.push(T('dock_clean'));
     return `<span class="dc" style="--cc:${COLORS[i]}"><span class="dn">${esc(c.name)}</span><span class="dv">${fmt(r.total)} <small>€<span class="yr">/${yr}</span></small></span><span class="db">${b.join(' · ')}</span></span>`; }).join('');
-  moreCount();
+  moreCount(); renderPay();
   document.querySelectorAll('#sums .big').forEach((e,i)=>{ if (before.length && before[i]!==undefined && before[i]!==e.textContent) e.classList.add('flash'); });
   cars.forEach((c,i)=>{ const e=$('insp'+i); if(e) e.innerHTML = inspText(c); });
   cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];
@@ -1032,8 +1051,30 @@ function isChanged(el){
   if (el.type==='select-one'){ const k = [...el.options].findIndex(o=>o.defaultSelected); return el.selectedIndex !== (k<0?0:k); }
   return el.value !== el.defaultValue;
 }
+// Maksutapa johdetaan oman rahan ja enimmäishinnan suhteesta (ei omaa tallennettavaa kenttää)
+function payState(){
+  const own = num($('own').value, 0), budget = num($('budget').value, 0);
+  return own <= 0 ? 'loan' : (budget > 0 && own >= budget) ? 'cash' : 'part';
+}
+let payNow = 'part';
+function renderPay(){
+  payNow = payState();
+  document.querySelectorAll('[data-pay]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.pay===payNow)));
+  $('payNote').textContent = (payNow==='part' ? T('pay_n_part')(fmt(num($('own').value,0))) : T('pay_n_'+payNow)) + T('pay_n_more');
+}
+function setPay(mode){
+  const own = $('own'), budget = num($('budget').value, 0), def = num(own.defaultValue, 0);
+  if (mode==='cash') own.value = String(budget > 0 ? budget : Math.max(...cars.map(c => num(c.price, 0)), def));
+  else if (mode==='loan') own.value = '0';
+  else own.value = (def > 0 && (budget <= 0 || def < budget)) ? own.defaultValue : String(Math.round(budget/2/500)*500);
+  update();
+}
+document.querySelectorAll('[data-pay]').forEach(b => b.onclick = () => setPay(b.dataset.pay));
+// Käteinen seuraa enimmäishintaa (ajetaan ennen update():a)
+$('budget').addEventListener('input', () => { if (payNow==='cash') $('own').value = $('budget').value; });
 function moreCount(){
-  const n = GIDS.filter(id => $('more').contains($(id)) && isChanged($(id))).length;
+  // oma raha lasketaan muutetuksi vain, jos se ei ole maksutavan valinnan suora seuraus
+  const n = GIDS.filter(id => $('more').contains($(id)) && isChanged($(id)) && (id!=='own' || payState()==='part')).length;
   $('moreCount').textContent = n ? T('more_n')(n) : '';
 }
 // Tietokoneella osio on auki kuten ennenkin; puhelimella kiinni

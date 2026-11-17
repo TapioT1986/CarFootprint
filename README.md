@@ -33,6 +33,7 @@ Every assumption is visible and editable.
 - **Electricity:** no source counts as zero-emission. Lifecycle values per generation type follow IPCC and UNECE.
 - **Shareable link:** "Share comparison" puts the changed settings and the cars into the part of the link after `#`, in a short readable form (`y7~a22000~eB~pc771_P17500_A6`): untouched example cars are just their slot, register models are a row number with a checksum, and only values the user changed are stored; everything derived (real-world consumption, NEDC data) is recalculated. A typical link is 15–100 characters. Older compressed links (`z`/`j`) still open. Browsers never send that part to the server, and the page collects nothing. Opening a shared link keeps the opener's own saved cars so they can be restored.
 - **On phones:** a summary bar at the bottom shows each car's yearly cost (and which is cheapest and lowest-emission) until the result cards are on screen; tapping it scrolls to them. Financing and energy settings sit in one collapsed "More settings" section, whose heading says how many values differ from the defaults. On a computer the section is open, as before.
+- **Simple start:** "Your driving" asks only for annual mileage, maximum price and payment: cash (own money = maximum price), partly on loan (the default €6,000) or fully on loan (0). The choice only sets the own-money field, so it is worked out from that field and needs no saved value of its own; ownership period, monthly budget and the exact amount are under More settings.
 
 ## Known limitations
 
