@@ -337,11 +337,12 @@ fi: {
 <li><b>Todellinen kulutus:</b> WLTP-arvo kerrotaan kertoimella, joka on mitattu autojen omista kulutusmittareista (luetaan mm. katsastuksissa). Kerroin on <b>mallikohtainen</b> 367 mallille; muille käytetään merkin tai käyttövoiman keskiarvoa, ja auton kortti kertoo kumman. Bensiiniautot kuluttavat keskimäärin 20 % ja dieselit 18 % yli WLTP:n, mutta mallien väliset erot ovat suuria. Luvut ovat koko EU:sta eivätkä huomioi Suomen talvea.</li>
 <li><b>Vanhat autot (vuosimalli 2017 tai vanhempi):</b> niiden virallinen kulutus on mitattu vanhalla NEDC-testillä, joka aliarvioi kulutusta selvästi enemmän kuin WLTP. Laskuri käyttää mallin ja vuosimallin omaa NEDC-arvoa Traficomin rekisteristä ja lisää siihen <a href="https://theicct.org/publication/from-laboratory-to-road-a-2018-update/" target="_blank" rel="noopener">ICCT:n</a> mittaaman eron: 8 % vuoden 2001 autoissa, 38 % vuoden 2014 ja 40 % vuoden 2016 autoissa. Välivuodet on interpoloitu suoraviivaisesti.</li>
 <li><b>Lataushybridit:</b> oletuskulutus on mallin oma mitattu keskiarvo, tai jos sitä ei ole, merkin keskiarvo. Koko EU:ssa se on 6,0 l/100 km, kun WLTP lupaa 1,4. Oletuksena 25 % ajosta kulkee sähköllä. Nosta osuutta, jos lataat ahkerasti.</li>
-<li><b>Sähköautot:</b> kulutus on mallin WLTP-arvo EEA:n rekisteristä (Suomessa 2025 rekisteröidyt autot; jo myynnistä poistuneille malleille 2020–2022). Mitattua kulutusta ei kerätä täyssähköautoista, joten kerroin 1,20 on oletus. Akun kulumista laskuri ei huomioi: suuressa tutkimuksessa (Geotab, 22 700 autoa) kapasiteetti laski keskimäärin 2,3 % vuodessa. Kulunut akku lyhentää toimintamatkaa, mutta ei juuri lisää kulutusta.</li>
+<li><b>Sähköautot:</b> kulutus on mallin WLTP-arvo EEA:n rekisteristä (Suomessa 2025 rekisteröidyt autot; jo myynnistä poistuneille malleille 2020–2022). Mitattua kulutusta ei kerätä täyssähköautoista, joten kerroin 1,20 on oletus. Akun kulumisesta laskuri ei lisää kulua: <a href="https://www.geotab.com/blog/ev-battery-health/" target="_blank" rel="noopener">Geotabin tutkimuksessa</a> (22 700 autoa) kapasiteetti laski keskimäärin 2,3 % vuodessa, kotona ladatuissa noin 1,5 % ja paljon pikaladatuissa noin 3 %. Kulunut akku lyhentää toimintamatkaa, mutta ei juuri lisää kulutusta. Akun vaihdoista ei löytynyt luotettavaa yleisyyslukua.</li>
+<li><b>Huolto ja korjaukset</b> kasvavat ajokilometrien mukaan. Kentän arvo on vähän ajetun auton (alle 80 000 km) taso, ja se on karkea oletus. Kasvu perustuu <a href="https://advocacy.consumerreports.org/wp-content/uploads/2020/10/TCO-Fact-Sheet-Chapter-2-FINAL.pdf" target="_blank" rel="noopener">Consumer Reportsin</a> omistajakyselyihin (Yhdysvallat, 2020): 80 000–160 000 km ajetun polttomoottoriauton huolto ja korjaukset maksavat kilometriä kohden 2,1-kertaisesti ja sitä enemmän ajetun 2,8-kertaisesti. Sähköautoilla kertoimet ovat 2,3 ja 3,6, mutta lähtötaso on alle puolet polttomoottoriauton tasosta. Laskuri laskee kertoimen keskiarvona sille matkalle, jonka ajat omistusaikana; auton kortti näyttää sen. Lataushybrideille ja tavallisille hybrideille käytetään polttomoottoriauton kertoimia. Lähde on yhdysvaltalainen, joten euromäärät ovat laskurin omia ja vain kasvu on lähteestä. Saksalainen <a href="https://www.datgroup.com/fileadmin/at/DAT_Report/2025/DAT-Report-2025-Kurzbericht.pdf" target="_blank" rel="noopener">DAT-Report 2025</a> näyttää, että yli 6-vuotiaiden autojen omistajat käyttävät huoltoon jopa vähemmän kuin 3–6-vuotiaiden: vanhan auton omistaja usein säästää huolloista, mikä voi tulla myöhemmin kalliiksi.</li>
 <li><b>Sähkön päästöt:</b> Suomen tuotannon suorat päästöt 26 g/kWh (Energiateollisuus, 2025) + tuotantoketju 16 g/kWh (Ilmastopaneeli). Tuotantotapojen elinkaariarvot IPCC:n ja UNECE:n mukaan.</li>
 <li><b>Lähteet:</b> malliluettelo ja CO₂-arvot <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficomin avoimesta datasta</a> 30.6.2026, mitattu kulutus <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA:n OBFCM-aineistosta</a> ja sähkönkulutus <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA:n uusien autojen rekisteristä</a> (Suomessa 2020–2025 rekisteröidyt). Kaikki CC BY 4.0. Arvonalenema Verohallinnon verotusarvoista ja NEDC-korjaus ICCT:ltä. Koko laskentamalli ja käytetty data ovat <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">GitHubissa</a>.</li>
 <li><b>Ajoneuvovero</b> lasketaan vuoden 2026 verotaulukoista (<a href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814" target="_blank" rel="noopener">ajoneuvoverolaki, muutos 814/2024</a>). Perusvero määräytyy auton virallisen CO₂-päästön mukaan, ja se on 106–654 €/v. Päästö lasketaan mallin virallisesta kulutuksesta: vuosimallit 2017 ja vanhemmat NEDC-taulukolla 1, uudemmat WLTP-taulukolla 1 A. Sähköautoista, jotka on otettu käyttöön 1.10.2021 tai myöhemmin, perusvero on 171 €/v; laskuri pitää vuosimallia 2022 ja uudempia tällaisina. Lataushybridien perusvero on alin porras, koska niiden WLTP-päästö on lähes aina alle 103 g/km. Diesel-, sähkö- ja lataushybridiautoista maksetaan lisäksi käyttövoimaveroa: 5,5, 1,9 tai 0,95 senttiä päivässä jokaiselta kokonaismassan alkavalta 100 kg:lta. Kokonaismassa ei ole vielä malliluettelossa, joten se on oletus (diesel 2 000 kg, sähkö 2 200 kg, lataushybridi 2 300 kg). Oman auton kokonaismassa löytyy rekisteröintitodistuksesta, ja sen voi vaihtaa kohdassa Lisää oletuksia. Hallituksen esitys HE 173/2026 alentaisi yli 10-vuotiaiden polttomoottoriautojen perusveroa keskimäärin noin 6 €/v. Esitys on vielä eduskunnan käsittelyssä, eikä sitä ole otettu huomioon.</li>
-<li>Valmistuspäästöt, vakuutus ja huolto ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
+<li>Valmistuspäästöt, vakuutus ja huollon lähtötaso ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
   pick_l:'Hae malli rekisteristä', pick_ph:'esim. Volkswagen Golf', pick_none:'Ei osumia', pt_l:'Käyttövoima',
@@ -349,7 +350,8 @@ fi: {
   dep_l:'Arvonalenema', dep_u:'% / v, tyhjä = iän mukaan',
   fuel_l:'Polttoaine', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, vanha mittaus)', fuel_u_p:'l / 100 km polttoaineella ajaessa',
   el_l:'Sähkö', kwh_u:'kWh / 100 km (WLTP)', share_l:'Sähköllä ajettu', share_u:'% ajosta',
-  other_l:'Muut kulut', other_u:'€ / v: vakuutus, huolto, renkaat',
+  other_l:'Muut kulut', other_u:'€ / v: vakuutus ja renkaat',
+  serv_l:'Huolto ja korjaukset', serv_u:'€ / v vähän ajetulle (alle 80 000 km); kasvaa ajon mukaan',
   tax_l:'Ajoneuvovero', tax_u:'€ / v; tyhjä = laskettu CO₂:sta ja massasta',
   mass_l:'Kokonaismassa', mass_u:'kg, oletus; käyttövoimavero lasketaan tästä', more:'Lisää oletuksia',
   real_l:'Realismikerroin', real_u:'× WLTP, todellinen kulutus', real_u_nedc:'× NEDC, todellinen kulutus', make_l:'Valmistus', life_l:'Käyttöikä', life_u:'vuotta yhteensä',
@@ -357,6 +359,7 @@ fi: {
   be_aria:'Vuosikustannus ajomäärän mukaan',
   tag:(p,a,o,r)=>`Arvonalenema ${p} %/v · myyt ${a} v, ${o} km, arvo ${r} €`,
   reg:(n,y)=>` · rekisterissä ${n} kpl (${y})`,
+  serv_tag:(e,k)=>` · huolto ja korjaukset keskimäärin ${e} €/v (× ${k})`,
   tax_tag:(t,b,p)=>` · ajoneuvovero ${t} €/v` + (p>0 ? ` (perusvero ${b} + käyttövoimavero ${p})` : ''),
   rw_model:(p,n)=>` · Mitattu kulutus tälle mallille: ${p} % yli WLTP:n (${n} autoa, EEA)`,
   rw_model_phev:(a,n)=>` · Mitattu kulutus tälle mallille: ${a} l/100 km (${n} autoa, EEA)`,
@@ -410,11 +413,12 @@ en: {
 <li><b>Real-world consumption:</b> the WLTP figure is multiplied by a factor measured from the cars' own on-board fuel consumption meters (read at periodic inspections, among other ways). The factor is <b>model-specific</b> for 367 models; the rest fall back to a brand or powertrain average, and each car's card says which one is in use. On average petrol cars use 20% and diesels 18% more than WLTP, but models differ widely. The figures cover the whole EU and do not account for Finnish winters.</li>
 <li><b>Older cars (model year 2017 or earlier):</b> their official consumption was measured with the old NEDC test, which understates consumption far more than WLTP. The calculator uses the model's own NEDC figure for that model year from the Traficom register and adds the gap measured by the <a href="https://theicct.org/publication/from-laboratory-to-road-a-2018-update/" target="_blank" rel="noopener">ICCT</a>: 8% for 2001 cars, 38% for 2014 and 40% for 2016 cars, interpolated linearly in between.</li>
 <li><b>Plug-in hybrids:</b> the default consumption is the model's own measured average where there is one, otherwise the brand's. Across the EU that is 6.0 l/100 km, where WLTP promises 1.4. By default 25% of driving is electric. Raise the share if you charge diligently.</li>
-<li><b>Electric cars:</b> consumption is the model's WLTP figure from the EEA register (cars registered in Finland in 2025; 2020–2022 for models no longer sold). Measured consumption is not collected from battery-electric cars, so the 1.20 factor is an assumption. Battery wear is not modelled: in a large study (Geotab, 22,700 cars) capacity fell by 2.3% a year on average. A worn battery shortens the range but barely raises consumption.</li>
+<li><b>Electric cars:</b> consumption is the model's WLTP figure from the EEA register (cars registered in Finland in 2025; 2020–2022 for models no longer sold). Measured consumption is not collected from battery-electric cars, so the 1.20 factor is an assumption. Battery wear adds no cost in the calculator: in a <a href="https://www.geotab.com/blog/ev-battery-health/" target="_blank" rel="noopener">Geotab study</a> (22,700 cars) capacity fell by 2.3% a year on average, about 1.5% for cars charged mostly at home and about 3% for heavy fast-charger users. A worn battery shortens the range but barely raises consumption. No reliable figure was found for how often batteries are replaced.</li>
+<li><b>Servicing and repairs</b> rise with mileage. The value in the field is the level for a low-mileage car (under 80,000 km) and is a rough assumption. The rise follows <a href="https://advocacy.consumerreports.org/wp-content/uploads/2020/10/TCO-Fact-Sheet-Chapter-2-FINAL.pdf" target="_blank" rel="noopener">Consumer Reports</a> owner surveys (United States, 2020): per kilometre, a combustion car with 80,000–160,000 km costs 2.1 times as much to service and repair, and beyond that 2.8 times. For electric cars the factors are 2.3 and 3.6, but from a starting level under half that of a combustion car. The calculator averages the factor over the distance you drive during ownership; each car's card shows it. Plug-in and regular hybrids use the combustion factors. The source is American, so the euro amounts are the calculator's own and only the rise comes from the source. The German <a href="https://www.datgroup.com/fileadmin/at/DAT_Report/2025/DAT-Report-2025-Kurzbericht.pdf" target="_blank" rel="noopener">DAT Report 2025</a> shows owners of cars over 6 years old spending even less on servicing than owners of 3–6-year-old cars: owners of old cars often save on servicing, which can cost more later.</li>
 <li><b>Electricity emissions:</b> direct emissions of Finnish generation 26 g/kWh (Finnish Energy, 2025) + supply chain 16 g/kWh (Finnish Climate Change Panel). Lifecycle values per generation type follow IPCC and UNECE.</li>
 <li><b>Sources:</b> model list and CO₂ values from <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficom open vehicle data</a> (30 June 2026), measured consumption from the <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA's OBFCM dataset</a> and electricity consumption from the <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA new-car register</a> (cars registered in Finland 2020–2025). All CC BY 4.0. Depreciation from the Finnish Tax Administration's taxation values and the NEDC correction from the ICCT. The full calculation model and the data behind it are <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">on GitHub</a>.</li>
 <li><b>Vehicle tax</b> follows the 2026 tax tables (<a href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814" target="_blank" rel="noopener">Vehicle Tax Act, amendment 814/2024</a>). The base tax depends on the car's official CO₂ emissions and is €106–654 a year. The emissions are worked out from the model's official consumption: model years 2017 and older use the NEDC table 1, newer cars the WLTP table 1 A. Electric cars first registered on or after 1 October 2021 pay €171 a year; the calculator treats model years 2022 and newer as such. Plug-in hybrids pay the lowest band, as their WLTP emissions are almost always below 103 g/km. Diesel, electric and plug-in hybrid cars also pay a propulsion tax: 5.5, 1.9 or 0.95 cents a day for every started 100 kg of total mass. Total mass is not yet in the model list, so it is an assumption (diesel 2,000 kg, electric 2,200 kg, plug-in hybrid 2,300 kg). Your own car's total mass is on its registration certificate; change it under More assumptions. Government proposal HE 173/2026 would lower the base tax of combustion cars over 10 years old by about €6 a year on average. It is still before Parliament and is not included.</li>
-<li>Manufacturing emissions, insurance and servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
+<li>Manufacturing emissions, insurance and the starting level of servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
   new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
   pick_l:'Find a model in the register', pick_ph:'e.g. Volkswagen Golf', pick_none:'No matches', pt_l:'Powertrain',
@@ -422,7 +426,8 @@ en: {
   dep_l:'Depreciation', dep_u:'% / yr, blank = by age',
   fuel_l:'Fuel', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, old test)', fuel_u_p:'l / 100 km when running on fuel',
   el_l:'Electricity', kwh_u:'kWh / 100 km (WLTP)', share_l:'Driven on electricity', share_u:'% of driving',
-  other_l:'Other costs', other_u:'€ / yr: insurance, servicing, tyres',
+  other_l:'Other costs', other_u:'€ / yr: insurance and tyres',
+  serv_l:'Servicing and repairs', serv_u:'€ / yr at low mileage (under 80,000 km); rises with mileage',
   tax_l:'Vehicle tax', tax_u:'€ / yr; empty = calculated from CO₂ and mass',
   mass_l:'Total mass', mass_u:'kg, assumed; the propulsion tax is based on it', more:'More assumptions',
   real_l:'Real-world factor', real_u:'× WLTP, real-world consumption', real_u_nedc:'× NEDC, real-world consumption', make_l:'Manufacturing', life_l:'Lifetime', life_u:'years in total',
@@ -430,6 +435,7 @@ en: {
   be_aria:'Annual cost by mileage',
   tag:(p,a,o,r)=>`Depreciation ${p}%/yr · sold at ${a} years, ${o} km, worth €${r}`,
   reg:(n,y)=>` · ${n} in the Finnish register (${y})`,
+  serv_tag:(e,k)=>` · servicing and repairs €${e}/yr on average (× ${k})`,
   tax_tag:(t,b,p)=>` · vehicle tax €${t}/yr` + (p>0 ? ` (base tax ${b} + propulsion tax ${p})` : ''),
   rw_model:(p,n)=>` · Measured consumption for this model: ${p}% above WLTP (${n} cars, EEA)`,
   rw_model_phev:(a,n)=>` · Measured consumption for this model: ${a} l/100 km (${n} cars, EEA)`,
@@ -464,7 +470,19 @@ const PT_DEF = { // oletukset käyttövoiman mukaan
 PT_DEF.B.real = PT_DEF.H.real = RW.fleet.P.k; PT_DEF.D.real = RW.fleet.D.k;
 Object.assign(PT_DEF.P, {real:1, share:25, fuel:+(RW.fleet.PE.ob/0.75).toFixed(1), kwh:RW.phevMedian});
 PT_DEF.E.kwh = RW.evMedian;
-const OLD_TAX = {B:200, D:600, H:160, P:180, E:300}; // vero oli ennen osa muita kuluja (tallennukset ennen EX_VERSION 5)
+const OLD_TAX = {B:200, D:600, H:160, P:180, E:300};
+// Huollon ja korjausten kasvu mittarilukeman mukaan: Consumer Reports 2020 (USA),
+// $/maili 0–50k, 50–100k ja 100–200k mailia. Polttomoottori 0,028/0,060/0,079, sähkö 0,012/0,028/0,043.
+const SERV_KM = [80467, 160934]; // 50 000 ja 100 000 mailia
+const SERV_F = {ice:[1, .060/.028, .079/.028], ev:[1, .028/.012, .043/.012]};
+// Kertoimen keskiarvo omistusaikana ajetulle matkalle (mittarilukemasta a lukemaan b)
+function servFactor(pt, a, b){
+  const f = SERV_F[pt==='E'?'ev':'ice'], edges = [0, ...SERV_KM, Infinity];
+  if (!(b > a)) { let k = 0; while (a >= edges[k+1]) k++; return f[k]; }
+  let sum = 0;
+  for (let k=0; k<f.length; k++) sum += Math.max(0, Math.min(b, edges[k+1]) - Math.max(a, edges[k])) * f[k];
+  return sum/(b-a);
+} // vero oli ennen osa muita kuluja (tallennukset ennen EX_VERSION 5)
 // Ajoneuvovero 2026: perusvero CO2-päästön mukaan (taulukko 1 = NEDC, 1 A = WLTP)
 // + käyttövoimavero jokaiselta kokonaismassan alkavalta 100 kg:lta. Senttiä päivässä -> €/v.
 const CO2_L = {B:23.3, H:23.3, D:26.4}; // g/km litraa kohden, kuten tools/build.py
@@ -576,7 +594,7 @@ let cars = [];
 function newCar(o={}){
   const pt = o.pt || (o.pick && o.pick[2]) || 'B', d = PT_DEF[pt];
   const c = {name:o.name||T('new_car'), exKey:null, ex:o.ex??null, exAuto:o.exAuto??false, pt, price:o.price??20000, age:o.age??0, odo:o.odo??0, dep:o.dep??'',
-    fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??(d.ins+d.serv+d.tyre), tax:o.tax??'', mass:o.mass??d.mass,
+    fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??(d.ins+d.tyre), serv:o.serv??d.serv, tax:o.tax??'', mass:o.mass??d.mass,
     make:o.make??d.make, life:o.life??d.life, real:o.real??d.real, rw:o.rw??null};
   c.std = o.std ?? null; c.autoFuel = o.autoFuel ?? (o.fuel===undefined);
   if (o.pick){ const r = findRow(o.pick); if (r){ c.picked = r; fromRow(c, r); } }
@@ -616,7 +634,7 @@ function choose(inp, label){ inp.value = label; closeSugg(inp); inp.dispatchEven
 // muuttamat hinnat säilyvät mutta koskemattomat oletukset päivittyvät uusiin.
 const PRICE_DEF = {pBens:'__P_PETROL__', pDies:'__P_DIESEL__', pEl:'__P_ELEC__'};
 const OLD_DEFS = ['1.85','1.75','0.15','2.09','2.15','0.1791']; // ennen tallennettuja oletuksia
-const EX_VERSION = 5; // kasvata, kun esimerkkiautot vaihtuvat
+const EX_VERSION = 6; // kasvata, kun esimerkkiautot vaihtuvat
 function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF, ev:EX_VERSION})); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
 const GIDS = ['km','years','budget','monthly','own','loanRate','loanFee','loanYears','ownRate','pBens','pDies','pEl','loss','elSrc','eBens','eDies'];
@@ -667,14 +685,15 @@ function calc(c, G, km){
   const energy = litres*fuelPrice + kwh*G.pE;
   const vt = vehicleTax(c), autoTax = c.tax===''||c.tax==null||!isFinite(num(c.tax,NaN));
   const tax = autoTax ? vt.total : num(c.tax);
-  const other = c.other + tax;
+  const servF = servFactor(c.pt, Math.max(0,num(c.odo,0)), Math.max(0,num(c.odo,0)) + km*n), serv = num(c.serv,0)*servF;
+  const other = c.other + tax + serv;
   const total = dep+cap+energy+other;
   const drive = litres*fuelEm + kwh*G.eEl;
   const make = c.life>0 ? c.make*1000/c.life : 0;
   // Kuukausimenot (kassavirta): lainaerä kuluineen + energia ja muut kulut kuukautta kohden.
   // Arvonalenema ja oman rahan tuotto eivät ole kuukausittaisia maksuja.
   const runMo = (energy+other)/12, cash = L.pay + runMo, cashAfter = (L.pay>0 && G.loanYears<n) ? runMo : null;
-  return {rate,resid,dep,cap,loan,pay:L.pay,cash,cashAfter,energy,other,tax,vt,autoTax,total,drive,make,em:drive+make,litres,kwh,
+  return {rate,resid,dep,cap,loan,pay:L.pay,cash,cashAfter,energy,other,tax,vt,autoTax,serv,servF,total,drive,make,em:drive+make,litres,kwh,
     endAge:c.age+n, endOdo:c.odo+km*n};
 }
 
@@ -699,6 +718,7 @@ function carCard(c,i){
       ${showEl?`<div class="field"><label class="label" for="kwh${i}">${T('el_l')}</label><input type="number" id="kwh${i}" data-k="kwh" step="0.5" value="${c.kwh}"><span class="unit">${T('kwh_u')}</span></div>`:''}
       ${c.pt==='P'?`<div class="field"><label class="label" for="share${i}">${T('share_l')}</label><input type="number" id="share${i}" data-k="share" step="5" value="${c.share}"><span class="unit">${T('share_u')}</span></div>`:''}
       <div class="field"><label class="label" for="other${i}">${T('other_l')}</label><input type="number" id="other${i}" data-k="other" step="50" value="${c.other}"><span class="unit">${T('other_u')}</span></div>
+      <div class="field"><label class="label" for="serv${i}">${T('serv_l')}</label><input type="number" id="serv${i}" data-k="serv" step="50" min="0" value="${c.serv}"><span class="unit">${T('serv_u')}</span></div>
       <div class="field"><label class="label" for="tax${i}">${T('tax_l')}</label><input type="number" id="tax${i}" data-k="tax" step="10" min="0" value="${c.tax}" placeholder="auto"><span class="unit">${T('tax_u')}</span></div>
     </div>
     <details class="adv"><summary>${T('more')}</summary>
@@ -723,7 +743,7 @@ $('cars').addEventListener('input', e => {
     const r = byLabel.get(el.value); if (!r){ suggest(el); return; }
     const d = PT_DEF[r[2]];
     Object.assign(c, {name:`${r[0]} ${r[1]}`, exKey:null, pt:r[2], kwh:d.kwh, share:d.share,
-      other:d.ins+d.serv+d.tyre, tax:'', mass:d.mass, make:d.make, life:d.life});
+      other:d.ins+d.tyre, serv:d.serv, tax:'', mass:d.mass, make:d.make, life:d.life});
     c.picked = r; fromRow(c, r);
     renderCars(); update(); return;
   }
@@ -856,7 +876,7 @@ function update(){
     </div>`;}).join('');
   document.querySelectorAll('#sums .big').forEach((e,i)=>{ if (before.length && before[i]!==undefined && before[i]!==e.textContent) e.classList.add('flash'); });
   cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];
-    t.textContent = T('tag')(fmt(r.rate*100,0), fmt(r.endAge), fmt(r.endOdo), fmt(r.resid)) + (r.loan>0?T('loan_tag')(fmt(r.loan), fmt(r.pay)):'') + (r.autoTax?T('tax_tag')(fmt(r.tax), fmt(r.vt.base), fmt(r.vt.prop)):'') + (c.picked?T('reg')(fmt(c.picked[4]), c.picked[5]):'') + rwText(c);
+    t.textContent = T('tag')(fmt(r.rate*100,0), fmt(r.endAge), fmt(r.endOdo), fmt(r.resid)) + (r.loan>0?T('loan_tag')(fmt(r.loan), fmt(r.pay)):'') + T('serv_tag')(fmt(r.serv), fmt(r.servF,1)) + (r.autoTax?T('tax_tag')(fmt(r.tax), fmt(r.vt.base), fmt(r.vt.prop)):'') + (c.picked?T('reg')(fmt(c.picked[4]), c.picked[5]):'') + rwText(c);
     const tx=$('tax'+i); if (tx) tx.placeholder = fmt(r.vt.total); });
   const rows = cars.map((c,i)=>({name:c.name,color:COLORS[i],...R[i]}));
   hbars($('costChart'), rows.map(r=>({...r,en:r.energy,oth:r.other})), ['dep','cap','en','oth'], '€/'+yr);
@@ -921,6 +941,7 @@ if (saved){ // asetukset ensin, jotta esimerkkiautot osataan valita enimmäishin
 }
 if (saved && Array.isArray(saved.cars) && saved.cars.length && !oldExamples)
   cars = saved.cars.map(c=>(saved.ev||0)<5 ? {...c, other:Math.max(0,num(c.other,0)-(OLD_TAX[c.pt]||0))} : c) // vero erotettiin muista kuluista
+    .map(c=>(saved.ev||0)<6 && PT_DEF[c.pt] ? {...c, other:Math.max(0,num(c.other,0)-PT_DEF[c.pt].serv)} : c) // samoin huolto (EX_VERSION 6)
     .map(c=>newCar({...c,brand:undefined})).map((c,i)=>Object.assign(c,{picked:saved.cars[i].picked}));
 else cars = examples();
 applyLang(LANG);

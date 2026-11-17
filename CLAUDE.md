@@ -69,6 +69,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   Propulsion tax D 5.5 / E 1.9 / P 0.95 c/day per started 100 kg of total mass; mass is a per-powertrain
   assumption (c.mass, editable). Car field `tax` empty = automatic. "Other costs" no longer include tax
   (EX_VERSION 5 subtracts the old tax default from older saves).
+- Servicing and repairs (car field `serv`, level below 80 000 km): × servFactor() = average over the
+  ownership km [odo, odo + km·years] of Consumer Reports 2020 band factors: ICE/hybrids 1 / 2.14 / 2.82,
+  EV 1 / 2.33 / 3.58 (bands 0–80 467, –160 934, beyond). "Other costs" = insurance + tyres only
+  (EX_VERSION 6 subtracts the servicing default from older saves). Battery wear adds no cost.
 - Monthly budget (optional, field `monthly`): cash flow = loan payment incl. fees + (energy + other)/12
   while the loan runs; depreciation and return on own money are not cash. Shown on the summary
   card and flagged only when a budget is entered.
@@ -92,6 +96,6 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 ## Open ideas (not started)
 
 - Per-model total mass from the Traficom register (needs the ~200 MB source file) for the propulsion tax.
-- Age-dependent repair costs and EV battery health in the model.
+- A Finnish or European source for the servicing-and-repair rise (now US Consumer Reports factors).
 - A "what the same yearly money buys" view, once the above exist.
 - Golf mild-hybrids (2020+) as the petrol example for large budgets.

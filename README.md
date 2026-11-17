@@ -10,7 +10,7 @@ CarFootprint is a single-page calculator for people choosing between cars: new o
 
 For up to four cars side by side:
 
-- **Annual cost** (€/year, €/month, €/km): depreciation, financing, energy, and vehicle tax and other costs (insurance, servicing, tyres).
+- **Annual cost** (€/year, €/month, €/km): depreciation, financing, energy, and vehicle tax, servicing and repairs, and other costs (insurance, tyres).
 - **Annual emissions** (kg CO₂e/year, g/km): driving emissions plus manufacturing emissions spread over the car's lifetime.
 - **Break-even mileage:** the annual mileage at which one car becomes cheaper than another.
 
@@ -22,6 +22,7 @@ Every assumption is visible and editable.
 - **Real-world consumption:** the WLTP figure is multiplied by a factor measured from cars' on-board fuel consumption meters (EEA data, cars registered in the EU 2021–2024). The factor is model-specific for 367 of the 588 models; the rest fall back to a brand or powertrain average, and the page says which one it used. On average petrol cars use 20% and diesels 18% more than WLTP, but individual models range from about 5% to over 40%.
 - **Financing:** the part of the price not covered by your own money and trade-in is an annuity loan. Its cost is the interest and monthly fees paid during ownership; a loan still running when the car is sold is repaid from the sale. Own money tied up in the car is charged the return it would earn elsewhere. Defaults: 4.1% loan interest (Bank of Finland, new vehicle loans, May 2026), €12.50/month in fees, 2.5% return on own money (Bank of Finland, new term deposits, June 2026). Cars above your maximum price are flagged.
 - **Vehicle tax:** the 2026 tables of the Vehicle Tax Act (amendment 814/2024, fetched from Finlex open data by `tools/vehicle_tax.py`). The base tax follows the official CO₂ figure, worked out from the model's official consumption: NEDC table 1 for model years up to 2017, WLTP table 1 A after that. Electric cars from model year 2022 on are treated as first registered after 1 October 2021 and pay the higher EV base tax; plug-in hybrids pay the lowest band. Diesel, electric and plug-in hybrid cars also pay the propulsion tax per started 100 kg of total mass. Total mass is not in the model list yet, so it is an editable assumption by powertrain (diesel 2,000 kg, electric 2,200 kg, plug-in hybrid 2,300 kg).
+- **Servicing and repairs rise with mileage:** the car's value is the level below 80,000 km (a rough assumption). Per kilometre it is multiplied by 2.1 between 80,000 and 160,000 km and 2.8 beyond for combustion cars and hybrids, and by 2.3 and 3.6 for electric cars (from a lower starting level), averaged over the distance driven during ownership. The factors come from Consumer Reports owner surveys (US, 2020); only the rise is taken from them, not the dollar amounts.
 - **Monthly budget (optional):** monthly outgoings are what leaves your account each month while the loan runs: the loan payment with fees, plus energy and other costs spread over the months. Depreciation and the lost return on own money are not monthly bills, so they are left out; monthly outgoings therefore differ from the annual cost / 12. If the loan is shorter than the ownership period, the page also shows the outgoings after it. Cars over the monthly budget are flagged.
 - **Example cars follow the maximum price:** a Golf (Finland's typical car), a Toyota full hybrid and the most common electric model that fits the budget, each the youngest model year whose estimated price fits. Prices are estimated from the Tax Administration's taxation values (`data/budget_cars.json`).
 - **Older cars:** cars first registered up to 2017 were rated on the old NEDC test. For them the page uses the model's own NEDC figure for that year from the Finnish register, and adds the NEDC-to-real-world gap measured by the ICCT (8% for 2001 cars, 38% for 2014, 40% for 2016, linear in between).
@@ -35,6 +36,7 @@ Every assumption is visible and editable.
 - Model-level consumption comes from a 13.7% sample of the 2.1 GB per-vehicle file (12 evenly spaced slices), not the whole of it. Models below 50 sampled vehicles fall back to a brand average.
 - The EEA measurements cover cars registered 2021–2024. WLTP cars from 2018–2020 get the same factor; NEDC cars get the ICCT gap instead, which is an EU average, not model-specific.
 - Manufacturing emissions, insurance and servicing costs are rough assumptions.
+- The mileage factors for servicing and repairs come from US data. Battery wear adds no cost: it shortens the range but barely raises consumption.
 - Total mass for the propulsion tax is an assumption by powertrain, not the model's own mass. Pending government proposal HE 173/2026 (about €6 a year less base tax for combustion cars over 10 years old) is not included.
 - Depreciation is calibrated on imported used cars, which tend to be in better condition than the average car sold in Finland. It is one rate for all models.
 - 10 of the 216 electric and plug-in models have no model-specific electricity figure and fall back to a default.
@@ -49,6 +51,7 @@ Every assumption is visible and editable.
 | Measured real-world fuel consumption, per brand and per model | [EEA, Real-world CO₂ emissions from new cars and vans](https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information), reporting year 2024 | CC BY 4.0 |
 | Electricity consumption of EVs and plug-in hybrids | [EEA, CO₂ emissions from new passenger cars](https://co2cars.apps.eea.europa.eu/), Finland 2025, and 2020–2022 via [Discodata](https://discodata.eea.europa.eu/) | CC BY 4.0 |
 | Vehicle tax tables (2026) | [Vehicle Tax Act 1281/2003, amendment 814/2024 (Finlex)](https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814) |
+| Rise of servicing and repair costs with mileage | [Consumer Reports, EV ownership cost, chapter 2 (2020)](https://advocacy.consumerreports.org/wp-content/uploads/2020/10/TCO-Fact-Sheet-Chapter-2-FINAL.pdf) |
 | Depreciation by age | [Finnish Tax Administration, applied taxation values of used cars](https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/), 2024–2026 | |
 | NEDC-to-real-world gap | [ICCT, From laboratory to road: a 2018 update](https://theicct.org/publication/from-laboratory-to-road-a-2018-update/) | |
 | Fuel prices | [Statistics Finland, StatFin table 11xx](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/), monthly | CC BY 4.0 |
