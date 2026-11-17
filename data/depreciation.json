@@ -1,0 +1,21 @@
+{
+ "description": "Annual depreciation rate by car age, estimated from the Finnish Tax Administration's applied taxation values (general retail value in Finland) for used cars imported into Finland.",
+ "source": {
+  "name": "Verohallinto / Finnish Tax Administration: Taulukoita ajoneuvojen sovelletuista verotusarvoista, henkilöautot 2024, 2025 and 2026 (January-September)",
+  "url": "https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/",
+  "read": "2026-11-17"
+ },
+ "method": "113 970 tax decisions. log(value) regressed on age (piecewise linear, knots at 3, 6, 10, 15 and 20 years) with a fixed effect for each make + model + fuel + power class, so cars are compared only with the same model at a different age, plus a dummy for the year of the decision. Groups with fewer than 5 decisions or less than 2 years of age spread are left out. Rate = 1 - exp(slope).",
+ "caveats": [
+  "Covers cars imported used, not cars sold within Finland. Importers favour cars in good condition with low mileage.",
+  "Typical mileage rises with age (median 85 000 km at 5 years, 164 000 km at 12 years), so the rates include normal mileage. The page reduces the value further only when the user drives more than 15 000 km a year.",
+  "Few battery-electric and hybrid cars are older than 6-10 years, so rates past those ages are extrapolated from petrol and diesel cars."
+ ],
+ "rates_percent_per_year": {
+  "petrol_and_diesel": {"0-3": 18.5, "3-6": 9.2, "6-10": 11.0, "10-15": 12.0, "15-20": 13.1, "20+": 10.2, "decisions": 15830},
+  "petrol": {"0-3": 16.4, "3-6": 8.8, "6-10": 11.2, "10-15": 11.8, "15-20": 12.2, "20+": 10.8, "decisions": 7586},
+  "hybrid": {"0-2": 19.2, "2-4": 14.4, "4-6": 7.7, "6-10": 8.5, "10+": 11.0, "decisions": 34184},
+  "electric": {"0-2": 16.3, "2-4": 10.5, "4-6": 10.4, "6+": 10.8, "decisions": 51290}
+ },
+ "used_by_page": [[0, 0.17], [3, 0.10], [6, 0.11], [10, 0.12], [20, 0.10]]
+}

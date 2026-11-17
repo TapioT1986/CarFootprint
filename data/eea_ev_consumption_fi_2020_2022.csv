@@ -1,0 +1,55 @@
+# WLTP electricity consumption of electric and plug-in hybrid cars registered in Finland 2020-2022,
+# for models that are missing from the 2025 register extract (cars no longer sold new in 2025).
+# Source: EEA, Monitoring of CO2 emissions from passenger cars (Regulation (EU) 2019/631), CC BY 4.0,
+# read through the EEA Discodata service, table [CO2Emission].[latest].[co2cars], 17 Nov 2026:
+# https://discodata.eea.europa.eu/  -  https://co2cars.apps.eea.europa.eu/
+# wh_km = median of the field "Z (Wh/km)" over rows with MS = 'FI', pooled by make + commercial name.
+# years: 2021-2022 where the model was registered then, otherwise 2020. Earlier years are left out
+# because their values were still partly measured with the older NEDC test and are not comparable.
+# rows = register rows behind the median (provisional and final datasets both count, so this is
+# roughly twice the number of cars). pt: E = battery electric, P = plug-in hybrid.
+make|model|pt|years|rows|wh_km
+AUDI|E-TRON|E|2020|90|250
+AUDI|E-TRON 50|E|2021-2022|54|249
+AUDI|E-TRON 55|E|2021-2022|181|254
+AUDI|E-TRON SPORTBACK 55|E|2021-2022|160|254
+BMW|225XE IPERFORMANCE|P|2021-2022|14|147
+BMW|320E XDRIVE|P|2021-2022|522|197
+BMW|545E XDRIVE|P|2021-2022|215|195
+BMW I|I3|E|2021-2022|76|163
+CITROEN|C5 AIRCROSS|P|2021-2022|533|175
+FIAT|500|E|2021-2022|202|155
+FORD|EXPLORER|P|2021-2022|377|219
+HYUNDAI|IONIQ|E|2021-2022|211|138
+HYUNDAI|IONIQ|P|2021-2022|288|117
+HYUNDAI|KONA|E|2021-2022|1222|147
+JAGUAR|I-PACE|E|2021-2022|25|248
+KIA|CEED|P|2021-2022|638|116
+KIA|NIRO|E|2021-2022|1050|159
+KIA|OPTIMA|P|2021-2022|74|149
+KIA|SOUL|E|2021-2022|48|157
+KIA|XCEED|P|2021-2022|461|123
+MERCEDES-BENZ|EQC 400 4MATIC|E|2021-2022|376|256
+MINI|COUNTRYMAN COOPER SE ALL4|P|2021-2022|423|160
+MITSUBISHI|ECLIPSE CROSS|P|2021-2022|1413|175
+NISSAN|LEAF 40KWH|E|2021-2022|1696|171
+NISSAN|LEAF 62KWH|E|2021-2022|337|185
+OPEL|CORSA|E|2021-2022|228|165
+OPEL|GRANDLAND X|P|2021-2022|364|174
+OPEL|MOKKA|E|2021-2022|348|170
+RENAULT|CAPTUR (E-TECH PLUG-IN HYBRID)|P|2021-2022|623|146
+RENAULT|ZOE|E|2021-2022|342|200
+SEAT|MII|E|2021-2022|824|164
+SKODA|CITIGO|E|2021-2022|42|164
+SKODA|OCTAVIA|P|2021-2022|2101|145
+SKODA|OCTAVIA RS|P|2021-2022|380|166
+TOYOTA|PRIUS PHV|P|2021-2022|26|105
+VOLKSWAGEN|ARTEON|P|2021-2022|515|154
+VOLKSWAGEN|GOLF|E|2020|316|162
+VOLKSWAGEN|UP!|E|2021-2022|570|164
+VOLVO|C40|E|2021-2022|656|210
+VOLVO|S60|P|2021-2022|488|168
+VOLVO|S90|P|2021-2022|193|152
+VOLVO|XC40|E|2021-2022|1799|251
+VOLVO|XC40|P|2021-2022|2081|161
+VOLVO|XC40 T5 TWIN ENGINE|P|2020|630|159

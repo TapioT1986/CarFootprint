@@ -37,6 +37,8 @@ import unicodedata
 
 MIN_CARS_PER_MODEL = 300      # drop models too rare to be worth listing
 MIN_CARS_PER_BRAND_FUEL = 1000  # drop brand averages built on too few cars
+MIN_CARS_PER_NEDC_YEAR = 30   # a model's NEDC figure for one year needs this many cars
+LAST_NEDC_YEAR = 2017         # WLTP applied to all new registrations from September 2018
 FIRST_YEAR, LAST_YEAR = 2008, 2026
 # WLTP CO2 (g/km) per litre of fuel burnt, used to turn the register's CO2
 # figure into a consumption figure.
@@ -221,7 +223,24 @@ def build_catalog(sources):
     # An electric or plug-in model with no electricity figure is useless here.
     catalog = [c for c in catalog if c[2] in "EP" or c[3] is not None]
     catalog.sort(key=lambda c: (c[0], c[1], c[2]))
-    return catalog
+
+    # Cars first registered up to 2017 were type-approved with the older NEDC
+    # test, whose figures are much further from real-world consumption than
+    # WLTP's. Keep their own NEDC figure per model and year, so the page can
+    # use it with an NEDC-specific correction instead of the WLTP one.
+    old = df[(df.year <= LAST_NEDC_YEAR) & df.pt.isin(["B", "D", "H"]) & df.NEDC_Co2.between(50, 400)]
+    per_year = old.groupby(["brand", "model", "pt", "year"]).NEDC_Co2.agg(["median", "size"]).reset_index()
+    per_year = per_year[per_year["size"] >= MIN_CARS_PER_NEDC_YEAR]
+    nedc = {}
+    for r in per_year.itertuples():
+        litres = round(r.median / CO2_PER_LITRE[r.pt], 1)
+        nedc.setdefault((r.brand, r.model, r.pt), []).append([int(r.year), litres])
+    return catalog, nedc
+
+
+def attach_nedc(catalog, nedc):
+    """Append each row's [[year, NEDC l/100 km], ...] list (empty when none)."""
+    return [r + [sorted(nedc.get((r[0], r[1], r[2]), []))] for r in catalog]
 
 
 def add_electricity(catalog, sources):
@@ -262,6 +281,41 @@ def add_electricity(catalog, sources):
                 kwh, matched = round(float(hit.wh_km.median()) / 10, 1), len(hit)
         out.append(row + [kwh, matched])
     return out, ev_default, phev_default
+
+
+def fill_old_electricity(catalog, root):
+    """Fill missing kWh/100 km from data/eea_ev_consumption_fi_2020_2022.csv.
+
+    The 2025 EEA extract only covers models still sold new in 2025, so older
+    electric cars such as the Nissan Leaf 40 kWh or Renault Zoe got a default.
+    The fallback file carries their WLTP figure from Finnish registrations in
+    2020-2022. A model must match exactly, or be the only model starting with
+    the catalogue's name, so a generic "LEAF" never borrows a 62 kWh figure.
+    """
+    path = root / "data" / "eea_ev_consumption_fi_2020_2022.csv"
+    if not path.exists():
+        return catalog, 0
+    table = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("#") or line.startswith("make|") or not line.strip():
+            continue
+        make, model, pt, _years, rows, wh = line.split("|")
+        table.setdefault((norm(make), pt), []).append((norm(model), int(rows), int(wh)))
+
+    filled = 0
+    out = []
+    for r in catalog:
+        r = list(r)
+        if r[2] in "EP" and r[7] is None:
+            cands = table.get((norm(r[0]), r[2]), [])
+            model = norm(r[1])
+            hit = [c for c in cands if c[0] == model] or \
+                  [c for c in cands if c[0].startswith(model + " ")]
+            if len(hit) == 1:
+                r[7], r[8] = round(hit[0][2] / 10, 1), hit[0][1]
+                filled += 1
+        out.append(r)
+    return out, filled
 
 
 # --- model-level real-world consumption -------------------------------------
@@ -396,18 +450,25 @@ def main():
 
     print("2. model catalogue", file=sys.stderr)
     catalog = None
-    if sources.is_dir():
-        catalog = build_catalog(sources)
-        if catalog is not None:
-            catalog, ev_default, phev_default = add_electricity(catalog, sources)
-            realworld["evMedian"], realworld["phevMedian"] = ev_default, phev_default
-            catalog = attach_model_realworld(catalog, root)
-    if catalog is None:
+    built = build_catalog(sources) if sources.is_dir() else None
+    if built is not None:
+        catalog, nedc = built
+        catalog, ev_default, phev_default = add_electricity(catalog, sources)
+        realworld["evMedian"], realworld["phevMedian"] = ev_default, phev_default
+        catalog, filled = fill_old_electricity(catalog, root)
+        catalog = attach_model_realworld(catalog, root)
+        catalog = attach_nedc(catalog, nedc)
+    else:
         print("   no source CSVs found, keeping data/catalog.json", file=sys.stderr)
         catalog = json.loads((root / "data" / "catalog.json").read_text())
-        catalog = attach_model_realworld([r[:9] for r in catalog], root)
+        nedc = {(r[0], r[1], r[2]): r[11] for r in catalog if len(r) > 11}
+        catalog, filled = fill_old_electricity([r[:9] for r in catalog], root)
+        catalog = attach_model_realworld(catalog, root)
+        catalog = attach_nedc(catalog, nedc)
         old = json.loads((root / "data" / "realworld.json").read_text())
         realworld["evMedian"], realworld["phevMedian"] = old["evMedian"], old["phevMedian"]
+    print(f"   electricity from the 2020-2022 register for {filled} older models", file=sys.stderr)
+    print(f"   NEDC figures for {sum(1 for r in catalog if r[11])} models", file=sys.stderr)
 
     (root / "data" / "catalog.json").write_text(json.dumps(catalog, ensure_ascii=False, indent=1))
     (root / "data" / "realworld.json").write_text(json.dumps(realworld, ensure_ascii=False, indent=1))

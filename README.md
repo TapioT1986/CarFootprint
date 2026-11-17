@@ -18,20 +18,22 @@ Every assumption is visible and editable.
 
 ## How it works
 
-- **Depreciation:** residual value = price × (1 − rate)^years. If no rate is given, it is chosen by the car's average age during ownership (18% per year for a new car, down to 5% for a car of 15 years or more). Above-average mileage lowers the residual value further.
+- **Depreciation:** residual value = price × (1 − rate)^years. If no rate is given, it is chosen by the car's average age during ownership: 17% a year under 3 years, 10–12% from 3 to 19 years, 10% after that. The rates are estimated from the Finnish Tax Administration's taxation values of 114,000 used cars imported in 2024–2026, comparing cars of the same model at different ages (method in `data/depreciation.json`). Above-average mileage lowers the residual value further.
 - **Real-world consumption:** the WLTP figure is multiplied by a factor measured from cars' on-board fuel consumption meters (EEA data, cars registered in the EU 2021–2024). The factor is model-specific for 367 of the 588 models; the rest fall back to a brand or powertrain average, and the page says which one it used. On average petrol cars use 20% and diesels 18% more than WLTP, but individual models range from about 5% to over 40%.
+- **Older cars:** cars first registered up to 2017 were rated on the old NEDC test. For them the page uses the model's own NEDC figure for that year from the Finnish register, and adds the NEDC-to-real-world gap measured by the ICCT (8% for 2001 cars, 38% for 2014, 40% for 2016, linear in between).
 - **Plug-in hybrids:** default consumption matches the measured brand average (6.0 l/100 km across the EU, against a WLTP figure of 1.4).
-- **Electric cars:** WLTP electricity consumption per model from the EEA register. Measured consumption is not collected from battery-electric cars, so the real-world factor of 1.20 is an assumption.
+- **Electric cars:** WLTP electricity consumption per model from the EEA register (Finnish registrations 2025; 2020–2022 for models no longer sold new). Measured consumption is not collected from battery-electric cars, so the real-world factor of 1.20 is an assumption. Battery wear is not modelled; the page reminds users to check the battery of an older car.
 - **Electricity:** no source counts as zero-emission. Lifecycle values per generation type follow IPCC and UNECE.
 
 ## Known limitations
 
 - Real-world factors are EU-wide and do not account for Finnish winters.
 - Model-level consumption comes from a 13.7% sample of the 2.1 GB per-vehicle file (12 evenly spaced slices), not the whole of it. Models below 50 sampled vehicles fall back to a brand average.
-- The same factor is applied to cars registered before 2021, which the measurements do not cover.
+- The EEA measurements cover cars registered 2021–2024. WLTP cars from 2018–2020 get the same factor; NEDC cars get the ICCT gap instead, which is an EU average, not model-specific.
 - Manufacturing emissions, insurance and servicing costs are rough assumptions.
-- The depreciation model is generic, not calibrated against used-car prices.
-- 51 of the 216 electric and plug-in models have no model-specific electricity figure and fall back to a default.
+- Depreciation is calibrated on imported used cars, which tend to be in better condition than the average car sold in Finland. It is one rate for all models.
+- 10 of the 216 electric and plug-in models have no model-specific electricity figure and fall back to a default.
+- The example cars (a 2014 Golf, a 2018 Nissan Leaf, a 2016 Auris hybrid) and their prices are estimates from the register and the Tax Administration's taxation values, not live market prices.
 - This is a draft, not a verified comparison.
 
 ## Data sources
@@ -40,7 +42,9 @@ Every assumption is visible and editable.
 | --- | --- | --- |
 | Model list, CO₂ values, actual mileages | [Traficom open vehicle data](https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data), 30 June 2026 | CC BY 4.0 |
 | Measured real-world fuel consumption, per brand and per model | [EEA, Real-world CO₂ emissions from new cars and vans](https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information), reporting year 2024 | CC BY 4.0 |
-| Electricity consumption of EVs and plug-in hybrids | [EEA, CO₂ emissions from new passenger cars](https://co2cars.apps.eea.europa.eu/), Finland 2025 | CC BY 4.0 |
+| Electricity consumption of EVs and plug-in hybrids | [EEA, CO₂ emissions from new passenger cars](https://co2cars.apps.eea.europa.eu/), Finland 2025, and 2020–2022 via [Discodata](https://discodata.eea.europa.eu/) | CC BY 4.0 |
+| Depreciation by age | [Finnish Tax Administration, applied taxation values of used cars](https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/), 2024–2026 | |
+| NEDC-to-real-world gap | [ICCT, From laboratory to road: a 2018 update](https://theicct.org/publication/from-laboratory-to-road-a-2018-update/) | |
 | Fuel prices | [Statistics Finland, StatFin table 11xx](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/), monthly | CC BY 4.0 |
 | Electricity prices | [Statistics Finland, StatFin table 13rb](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/), monthly | CC BY 4.0 |
 | Grid emission factor | Finnish Energy (Energiateollisuus), 2025; Finnish Climate Change Panel | |
@@ -67,6 +71,8 @@ data/prices.json                     latest fuel and electricity prices
 data/eea_obfcm_2024_models.csv       measured consumption per model
 data/realworld.json                  measured consumption per brand
 data/eea_obfcm_2024_aggregated.csv   EEA measured-consumption table (source data)
+data/eea_ev_consumption_fi_2020_2022.csv  electricity use of models no longer sold new
+data/depreciation.json               depreciation rates by age, with method and caveats
 ```
 
 ## Price updates

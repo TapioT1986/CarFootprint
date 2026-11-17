@@ -288,23 +288,24 @@ fi: {
   em_h:'Päästöt vuodessa', em_lead:'kg CO₂e vuodessa. Auton valmistus jaetaan sen koko käyttöiälle.',
   lg_drive:'Ajo (polttoaine tai sähkö)', lg_make:'Valmistus',
   notes_h:'Näin laskenta toimii', reset:'Palauta esimerkkiautot',
-  notes:`<li><b>Arvonalenema:</b> jäännösarvo = hinta × (1 − arvonalenema-%)<sup>vuodet</sup>. Jos jätät prosentin tyhjäksi, se valitaan auton keski-iän mukaan: alle 3 v 18 %, 3–5 v 14 %, 6–9 v 10 %, 10–14 v 7 %, 15 v tai yli 5 %. Keskimääräistä suurempi ajomäärä (yli 15 000 km/v) laskee jäännösarvoa 0,2 % per 1 000 km vuodessa.</li>
+  notes:`<li><b>Arvonalenema:</b> jäännösarvo = hinta × (1 − arvonalenema-%)<sup>vuodet</sup>. Jos jätät prosentin tyhjäksi, se valitaan auton keski-iän mukaan: alle 3 v 17 %, 3–5 v 10 %, 6–9 v 11 %, 10–19 v 12 %, 20 v tai yli 10 %. Prosentit on laskettu <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Verohallinnon verotusarvoista</a> (114 000 käytettynä tuotua autoa 2024–2026) vertaamalla saman mallin eri-ikäisiä autoja. Keskimääräistä suurempi ajomäärä (yli 15 000 km/v) laskee jäännösarvoa 0,2 % per 1 000 km vuodessa.</li>
 <li><b>Pääoma:</b> autoon sitoutuneen rahan keskiarvo × korko.</li>
 <li><b>Todellinen kulutus:</b> WLTP-arvo kerrotaan kertoimella, joka on mitattu autojen omista kulutusmittareista (luetaan mm. katsastuksissa). Kerroin on <b>mallikohtainen</b> 367 mallille; muille käytetään merkin tai käyttövoiman keskiarvoa, ja auton kortti kertoo kumman. Bensiiniautot kuluttavat keskimäärin 20 % ja dieselit 18 % yli WLTP:n, mutta mallien väliset erot ovat suuria. Luvut ovat koko EU:sta eivätkä huomioi Suomen talvea.</li>
+<li><b>Vanhat autot (vuosimalli 2017 tai vanhempi):</b> niiden virallinen kulutus on mitattu vanhalla NEDC-testillä, joka aliarvioi kulutusta selvästi enemmän kuin WLTP. Laskuri käyttää mallin ja vuosimallin omaa NEDC-arvoa Traficomin rekisteristä ja lisää siihen <a href="https://theicct.org/publication/from-laboratory-to-road-a-2018-update/" target="_blank" rel="noopener">ICCT:n</a> mittaaman eron: 8 % vuoden 2001 autoissa, 38 % vuoden 2014 ja 40 % vuoden 2016 autoissa. Välivuodet on interpoloitu suoraviivaisesti.</li>
 <li><b>Lataushybridit:</b> oletuskulutus on mallin oma mitattu keskiarvo, tai jos sitä ei ole, merkin keskiarvo. Koko EU:ssa se on 6,0 l/100 km, kun WLTP lupaa 1,4. Oletuksena 25 % ajosta kulkee sähköllä. Nosta osuutta, jos lataat ahkerasti.</li>
-<li><b>Sähköautot:</b> kulutus on mallin WLTP-arvo EEA:n rekisteristä (Suomessa 2025 rekisteröidyt autot). Mitattua kulutusta ei kerätä täyssähköautoista, joten kerroin 1,20 on oletus.</li>
+<li><b>Sähköautot:</b> kulutus on mallin WLTP-arvo EEA:n rekisteristä (Suomessa 2025 rekisteröidyt autot; jo myynnistä poistuneille malleille 2020–2022). Mitattua kulutusta ei kerätä täyssähköautoista, joten kerroin 1,20 on oletus. Akun kulumista laskuri ei huomioi: suuressa tutkimuksessa (Geotab, 22 700 autoa) kapasiteetti laski keskimäärin 2,3 % vuodessa. Kulunut akku lyhentää toimintamatkaa, mutta ei juuri lisää kulutusta.</li>
 <li><b>Sähkön päästöt:</b> Suomen tuotannon suorat päästöt 26 g/kWh (Energiateollisuus, 2025) + tuotantoketju 16 g/kWh (Ilmastopaneeli). Tuotantotapojen elinkaariarvot IPCC:n ja UNECE:n mukaan.</li>
-<li><b>Lähteet:</b> malliluettelo ja CO₂-arvot <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficomin avoimesta datasta</a> 30.6.2026, mitattu kulutus <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA:n OBFCM-aineistosta</a> ja sähkönkulutus <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA:n uusien autojen rekisteristä</a>. Kaikki CC BY 4.0. Koko laskentamalli ja käytetty data ovat <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">GitHubissa</a>.</li>
+<li><b>Lähteet:</b> malliluettelo ja CO₂-arvot <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficomin avoimesta datasta</a> 30.6.2026, mitattu kulutus <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA:n OBFCM-aineistosta</a> ja sähkönkulutus <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA:n uusien autojen rekisteristä</a> (Suomessa 2020–2025 rekisteröidyt). Kaikki CC BY 4.0. Arvonalenema Verohallinnon verotusarvoista ja NEDC-korjaus ICCT:ltä. Koko laskentamalli ja käytetty data ovat <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">GitHubissa</a>.</li>
 <li>Valmistuspäästöt, vakuutus ja huolto ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
-  ex1:'Toyota Corolla, uusi', ex2:'Škoda Octavia diesel, käytetty', ex3:'Tesla Model 3, käytetty',
+  ex1:'Golf 2014, bensiini', ex2:'Nissan Leaf 2018', ex3:'Auris-hybridi 2016',
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
   pick_l:'Hae malli rekisteristä', pick_ph:'esim. Volkswagen Golf', pt_l:'Käyttövoima',
   price_l:'Ostohinta', age_l:'Ikä ostaessa', age_u:'v (0 = uusi)', odo_l:'Mittarilukema', odo_u:'km ostaessa',
   dep_l:'Arvonalenema', dep_u:'% / v, tyhjä = iän mukaan',
-  fuel_l:'Polttoaine', fuel_u:'l / 100 km (WLTP)', fuel_u_p:'l / 100 km polttoaineella ajaessa',
+  fuel_l:'Polttoaine', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, vanha mittaus)', fuel_u_p:'l / 100 km polttoaineella ajaessa',
   el_l:'Sähkö', kwh_u:'kWh / 100 km (WLTP)', share_l:'Sähköllä ajettu', share_u:'% ajosta',
   other_l:'Muut kulut', other_u:'€ / v: vero, vakuutus, huolto, renkaat', more:'Lisää oletuksia',
-  real_l:'Realismikerroin', real_u:'× WLTP, todellinen kulutus', make_l:'Valmistus', life_l:'Käyttöikä', life_u:'vuotta yhteensä',
+  real_l:'Realismikerroin', real_u:'× WLTP, todellinen kulutus', real_u_nedc:'× NEDC, todellinen kulutus', make_l:'Valmistus', life_l:'Käyttöikä', life_u:'vuotta yhteensä',
   add:'+ Lisää auto vertailuun', cheapest:'Edullisin', cleanest:'Vähäpäästöisin', your_km:'sinun ajosi',
   be_aria:'Vuosikustannus ajomäärän mukaan',
   tag:(p,a,o,r)=>`Arvonalenema ${p} %/v · myyt ${a} v, ${o} km, arvo ${r} €`,
@@ -316,7 +317,11 @@ fi: {
   rw_phev:(b,a,n)=>` · Mitattu kulutus: ${b?b+'-lataushybridit':'lataushybridit'} keskimäärin ${a} l/100 km (${n} autoa, EEA)`,
   rw_phev_kwh:' · sähkönkulutus EEA:n rekisteristä',
   rw_ev_reg:' · Sähkönkulutus EEA:n rekisteristä (WLTP); mitattua tietoa ei kerätä sähköautoista',
-  rw_ev_def:' · Sähkönkulutus on oletusarvo, mallia ei löytynyt EEA:n 2025 rekisteristä',
+  rw_nedc:(y,p)=>` · Vuoden ${y} auto on mitattu vanhalla NEDC-testillä: todellinen kulutus arviolta ${p} % yli virallisen (ICCT)`,
+  rw_nedc_manual:(y)=>` · Vuoden ${y} auton virallinen kulutus on NEDC-arvo; realismikerroin on asetettu sen mukaan (ICCT)`,
+  rw_nedc_hint:(y,p)=>` · Vuoden ${y} auton virallinen kulutus on NEDC-arvo, jota todellinen kulutus ylittää noin ${p} % (ICCT). Tarkista realismikerroin`,
+  batt:' · Vanhan sähköauton akku on voinut heiketä: tarkista akun kunto (SOH) ennen ostoa',
+  rw_ev_def:' · Sähkönkulutus on oletusarvo, mallia ei löytynyt EEA:n rekisteristä (2020–2025)',
   be_one_t:'Kustannus ajomäärän mukaan', be_one_l:'Lisää toinen auto nähdäksesi, missä kohdassa toinen tulee halvemmaksi.',
   be_none_t:(b)=>`${b} on halvin koko välillä 2 000–50 000 km`, be_none_l:'Käyrät eivät leikkaa tällä ajomäärävälillä.',
   be_x_t:(a,b,k)=>`${a} ja ${b} maksavat saman ${k} km:n vuosiajolla`, be_x_l:'Ympyrät näyttävät leikkauspisteet. Katkoviiva on oma ajomääräsi.',
@@ -343,23 +348,24 @@ en: {
   lg_drive:'Driving (fuel or electricity)', lg_make:'Manufacturing',
   notes_h:'How the calculation works', reset:'Restore example cars',
   notes:`<li><b>Finland only, for now:</b> fuel and electricity prices, taxes, grid emissions and the model list describe Finland. The method works for any EU country once those inputs are changed.</li>
-<li><b>Depreciation:</b> residual value = price × (1 − depreciation %)<sup>years</sup>. If you leave the percentage blank, it is chosen by the car's average age during ownership: under 3 years 18%, 3–5 years 14%, 6–9 years 10%, 10–14 years 7%, 15 years or more 5%. Above-average mileage (over 15,000 km/yr) lowers the residual value by 0.2% per 1,000 km per year.</li>
+<li><b>Depreciation:</b> residual value = price × (1 − depreciation %)<sup>years</sup>. If you leave the percentage blank, it is chosen by the car's average age during ownership: under 3 years 17%, 3–5 years 10%, 6–9 years 11%, 10–19 years 12%, 20 years or more 10%. The rates come from the <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Finnish Tax Administration's taxation values</a> (114,000 cars imported used in 2024–2026), comparing cars of the same model at different ages. Above-average mileage (over 15,000 km/yr) lowers the residual value by 0.2% per 1,000 km per year.</li>
 <li><b>Capital:</b> average money tied up in the car × interest rate.</li>
 <li><b>Real-world consumption:</b> the WLTP figure is multiplied by a factor measured from the cars' own on-board fuel consumption meters (read at periodic inspections, among other ways). The factor is <b>model-specific</b> for 367 models; the rest fall back to a brand or powertrain average, and each car's card says which one is in use. On average petrol cars use 20% and diesels 18% more than WLTP, but models differ widely. The figures cover the whole EU and do not account for Finnish winters.</li>
+<li><b>Older cars (model year 2017 or earlier):</b> their official consumption was measured with the old NEDC test, which understates consumption far more than WLTP. The calculator uses the model's own NEDC figure for that model year from the Traficom register and adds the gap measured by the <a href="https://theicct.org/publication/from-laboratory-to-road-a-2018-update/" target="_blank" rel="noopener">ICCT</a>: 8% for 2001 cars, 38% for 2014 and 40% for 2016 cars, interpolated linearly in between.</li>
 <li><b>Plug-in hybrids:</b> the default consumption is the model's own measured average where there is one, otherwise the brand's. Across the EU that is 6.0 l/100 km, where WLTP promises 1.4. By default 25% of driving is electric. Raise the share if you charge diligently.</li>
-<li><b>Electric cars:</b> consumption is the model's WLTP figure from the EEA register (cars registered in Finland in 2025). Measured consumption is not collected from battery-electric cars, so the 1.20 factor is an assumption.</li>
+<li><b>Electric cars:</b> consumption is the model's WLTP figure from the EEA register (cars registered in Finland in 2025; 2020–2022 for models no longer sold). Measured consumption is not collected from battery-electric cars, so the 1.20 factor is an assumption. Battery wear is not modelled: in a large study (Geotab, 22,700 cars) capacity fell by 2.3% a year on average. A worn battery shortens the range but barely raises consumption.</li>
 <li><b>Electricity emissions:</b> direct emissions of Finnish generation 26 g/kWh (Finnish Energy, 2025) + supply chain 16 g/kWh (Finnish Climate Change Panel). Lifecycle values per generation type follow IPCC and UNECE.</li>
-<li><b>Sources:</b> model list and CO₂ values from <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficom open vehicle data</a> (30 June 2026), measured consumption from the <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA's OBFCM dataset</a> and electricity consumption from the <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA new-car register</a>. All CC BY 4.0. The full calculation model and the data behind it are <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">on GitHub</a>.</li>
+<li><b>Sources:</b> model list and CO₂ values from <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficom open vehicle data</a> (30 June 2026), measured consumption from the <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA's OBFCM dataset</a> and electricity consumption from the <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA new-car register</a> (cars registered in Finland 2020–2025). All CC BY 4.0. Depreciation from the Finnish Tax Administration's taxation values and the NEDC correction from the ICCT. The full calculation model and the data behind it are <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">on GitHub</a>.</li>
 <li>Manufacturing emissions, insurance and servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
-  ex1:'Toyota Corolla, new', ex2:'Škoda Octavia diesel, used', ex3:'Tesla Model 3, used',
+  ex1:'Golf 2014, petrol', ex2:'Nissan Leaf 2018', ex3:'Auris hybrid 2016',
   new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
   pick_l:'Find a model in the register', pick_ph:'e.g. Volkswagen Golf', pt_l:'Powertrain',
   price_l:'Purchase price', age_l:'Age at purchase', age_u:'years (0 = new)', odo_l:'Odometer', odo_u:'km at purchase',
   dep_l:'Depreciation', dep_u:'% / yr, blank = by age',
-  fuel_l:'Fuel', fuel_u:'l / 100 km (WLTP)', fuel_u_p:'l / 100 km when running on fuel',
+  fuel_l:'Fuel', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, old test)', fuel_u_p:'l / 100 km when running on fuel',
   el_l:'Electricity', kwh_u:'kWh / 100 km (WLTP)', share_l:'Driven on electricity', share_u:'% of driving',
   other_l:'Other costs', other_u:'€ / yr: tax, insurance, servicing, tyres', more:'More assumptions',
-  real_l:'Real-world factor', real_u:'× WLTP, real-world consumption', make_l:'Manufacturing', life_l:'Lifetime', life_u:'years in total',
+  real_l:'Real-world factor', real_u:'× WLTP, real-world consumption', real_u_nedc:'× NEDC, real-world consumption', make_l:'Manufacturing', life_l:'Lifetime', life_u:'years in total',
   add:'+ Add a car to compare', cheapest:'Cheapest', cleanest:'Lowest emissions', your_km:'your mileage',
   be_aria:'Annual cost by mileage',
   tag:(p,a,o,r)=>`Depreciation ${p}%/yr · sold at ${a} years, ${o} km, worth €${r}`,
@@ -371,7 +377,11 @@ en: {
   rw_phev:(b,a,n)=>` · Measured consumption: ${b?b+' plug-in hybrids':'plug-in hybrids'} average ${a} l/100 km (${n} cars, EEA)`,
   rw_phev_kwh:' · electricity consumption from the EEA register',
   rw_ev_reg:' · Electricity consumption from the EEA register (WLTP); measured data is not collected from electric cars',
-  rw_ev_def:' · Electricity consumption is a default, model not found in the 2025 EEA register',
+  rw_nedc:(y,p)=>` · A ${y} car was rated on the old NEDC test: real-world consumption is about ${p}% above the official figure (ICCT)`,
+  rw_nedc_manual:(y)=>` · A ${y} car's official figure is an NEDC value; the real-world factor is set accordingly (ICCT)`,
+  rw_nedc_hint:(y,p)=>` · A ${y} car's official figure is an NEDC value, which real-world consumption exceeds by about ${p}% (ICCT). Check the real-world factor`,
+  batt:' · An older electric car\'s battery may have degraded: check its state of health (SOH) before buying',
+  rw_ev_def:' · Electricity consumption is a default, model not found in the EEA register (2020–2025)',
   be_one_t:'Cost by annual mileage', be_one_l:'Add a second car to see where one becomes cheaper than the other.',
   be_none_t:(b)=>`${b} is cheapest across 2,000–50,000 km`, be_none_l:'The lines do not cross in this mileage range.',
   be_x_t:(a,b,k)=>`${a} and ${b} cost the same at ${k} km per year`, be_x_l:'Circles mark the break-even points. The dashed line is your own mileage.',
@@ -410,24 +420,57 @@ function applyRW(c, brandName, kwh, rwVal, rwN){
             n:rwVal?rwN:(b.PE?b.PE[1]:RW.fleet.PE.n), avg:f, kwhReg:kwh!=null};
   } else { c.kwh = kwh ?? d.kwh; c.real = d.real; c.rw = {t:'ev', kwhReg:kwh!=null}; }
 }
-const AGE_DEP = [[0,.18],[3,.14],[6,.10],[10,.07],[15,.05]];
+// Arvonalenema iän mukaan, Verohallinnon verotusarvoista (data/depreciation.json)
+const AGE_DEP = [[0,.17],[3,.10],[6,.11],[10,.12],[20,.10]];
+// NEDC-testin ja todellisen kulutuksen ero (ICCT, From laboratory to road 2015 ja 2018)
+const CUR_YEAR = new Date().getFullYear(), LAST_NEDC = 2017;
+function nedcGap(y){ const P = [[2001,.08],[2014,.38],[2016,.40],[2017,.39]];
+  if (y<=P[0][0]) return P[0][1]; if (y>=P[P.length-1][0]) return P[P.length-1][1];
+  for (let i=1;i<P.length;i++) if (y<=P[i][0]){ const [a,ga]=P[i-1],[b,gb]=P[i]; return ga+(gb-ga)*(y-a)/(b-a); } }
+const regYear = c => CUR_YEAR - Math.round(c.age||0);
+const isNedc = c => 'BDH'.includes(c.pt) && regYear(c) <= LAST_NEDC;
+const findRow = ([b,m,pt]) => CATALOG.find(r => r[0]===b && r[1].toUpperCase()===m.toUpperCase() && r[2]===pt);
 const COLORS = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)'];
+// Esimerkkiautot: Suomen tyypillinen auto ja samanhintaiset vaihtoehdot.
+// Perusteet ja lähteet: Traficomin rekisteri 30.6.2026 ja Verohallinnon verotusarvot 2025-2026.
 const EXAMPLES = [
-  {exKey:'ex1', pt:'H', price:31000, age:0, odo:0, dep:'', fuel:4.4, brand:'Toyota'},
-  {exKey:'ex2', pt:'D', price:14000, age:7, odo:140000, dep:'', fuel:5.2, brand:'Skoda'},
-  {exKey:'ex3', pt:'E', price:27000, age:3, odo:60000, dep:'', brand:'Tesla', kwhReg:13.8},
+  {exKey:'ex1', pick:['Volkswagen','GOLF','B'], price:8000, age:12, odo:150000, dep:''},
+  {exKey:'ex2', pick:['Nissan','LEAF 40KWH','E'], price:11500, age:8, odo:95000, dep:''},
+  {exKey:'ex3', pick:['Toyota','AURIS','H'], price:11000, age:10, odo:110000, dep:''},
 ];
 const $ = id => document.getElementById(id);
 const fmt = (n,d=0) => (isFinite(n)?n:0).toLocaleString(T('locale'),{maximumFractionDigits:d,minimumFractionDigits:d});
 const num = (v,def=0) => { const x = parseFloat(String(v).replace(',','.')); return isFinite(x)?x:def; };
 
+// Asettaa kulutusoletukset rekisteririvistä ja auton iästä.
+function fromRow(c, r){
+  const d = PT_DEF[r[2]];
+  c.fuel = r[3] ?? d.fuel; c.real = d.real; c.std = null;
+  applyRW(c, r[0], r[7], r[9], r[10]);
+  if (isNedc(c) && r[11] && r[11].length){
+    const y = regYear(c), e = r[11].reduce((b,x)=>Math.abs(x[0]-y)<Math.abs(b[0]-y)?x:b);
+    c.fuel = e[1]; c.real = +(1+nedcGap(e[0])).toFixed(2); c.std = {year:e[0]};
+  }
+  c.autoFuel = true;
+}
+// Ikä muuttui: päivitä kulutus, ellei käyttäjä ole itse muuttanut sitä.
+function refreshStd(c){
+  if (c.autoFuel === false || !'BDH'.includes(c.pt)) return;
+  if (c.picked) return fromRow(c, c.picked);
+  const d = PT_DEF[c.pt];
+  if (isNedc(c)){ c.real = +(1+nedcGap(regYear(c))).toFixed(2); c.std = {year:regYear(c), manual:true}; }
+  else { c.real = d.real; c.std = null; }
+}
 let cars = [];
 function newCar(o={}){
-  const pt = o.pt||'B', d = PT_DEF[pt];
+  const pt = o.pt || (o.pick && o.pick[2]) || 'B', d = PT_DEF[pt];
   const c = {name:o.name||(o.exKey?T(o.exKey):T('new_car')), exKey:o.exKey||null, pt, price:o.price??20000, age:o.age??0, odo:o.odo??0, dep:o.dep??'',
     fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??(d.tax+d.ins+d.serv+d.tyre),
     make:o.make??d.make, life:o.life??d.life, real:o.real??d.real, rw:o.rw??null};
-  if (o.brand) applyRW(c, o.brand, o.kwhReg);
+  c.std = o.std ?? null; c.autoFuel = o.autoFuel ?? (o.fuel===undefined);
+  if (o.pick){ const r = findRow(o.pick); if (r){ c.picked = r; fromRow(c, r); } }
+  else if (o.brand) applyRW(c, o.brand, o.kwhReg);
+  else if (o.std===undefined && o.real===undefined) refreshStd(c);
   return c;
 }
 
@@ -445,7 +488,8 @@ function buildModels(){
 // muuttamat hinnat säilyvät mutta koskemattomat oletukset päivittyvät uusiin.
 const PRICE_DEF = {pBens:'__P_PETROL__', pDies:'__P_DIESEL__', pEl:'__P_ELEC__'};
 const OLD_DEFS = ['1.85','1.75','0.15','2.09','2.15','0.1791']; // ennen tallennettuja oletuksia
-function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF})); }catch(e){} }
+const EX_VERSION = 2; // kasvata, kun esimerkkiautot vaihtuvat
+function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF, ev:EX_VERSION})); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
 const GIDS = ['km','years','rate','pBens','pDies','pEl','loss','elSrc','eBens','eDies'];
 function readGlobalsRaw(){ const o={}; GIDS.forEach(id=>o[id]=$(id).type==='select-one'?$(id).selectedIndex:$(id).value); return o; }
@@ -497,14 +541,14 @@ function carCard(c,i){
       <div class="field"><label class="label" for="age${i}">${T('age_l')}</label><input type="number" id="age${i}" data-k="age" min="0" step="1" value="${c.age}"><span class="unit">${T('age_u')}</span></div>
       <div class="field"><label class="label" for="odo${i}">${T('odo_l')}</label><input type="number" id="odo${i}" data-k="odo" step="1000" value="${c.odo}"><span class="unit">${T('odo_u')}</span></div>
       <div class="field"><label class="label" for="dep${i}">${T('dep_l')}</label><input type="number" id="dep${i}" data-k="dep" step="1" value="${c.dep}" placeholder="auto"><span class="unit">${T('dep_u')}</span></div>
-      ${showFuel?`<div class="field"><label class="label" for="fuel${i}">${T('fuel_l')}</label><input type="number" id="fuel${i}" data-k="fuel" step="0.1" value="${c.fuel}"><span class="unit">${c.pt==='P'?T('fuel_u_p'):T('fuel_u')}</span></div>`:''}
+      ${showFuel?`<div class="field"><label class="label" for="fuel${i}">${T('fuel_l')}</label><input type="number" id="fuel${i}" data-k="fuel" step="0.1" value="${c.fuel}"><span class="unit" id="fuelu${i}">${c.pt==='P'?T('fuel_u_p'):(isNedc(c)?T('fuel_u_nedc'):T('fuel_u'))}</span></div>`:''}
       ${showEl?`<div class="field"><label class="label" for="kwh${i}">${T('el_l')}</label><input type="number" id="kwh${i}" data-k="kwh" step="0.5" value="${c.kwh}"><span class="unit">${T('kwh_u')}</span></div>`:''}
       ${c.pt==='P'?`<div class="field"><label class="label" for="share${i}">${T('share_l')}</label><input type="number" id="share${i}" data-k="share" step="5" value="${c.share}"><span class="unit">${T('share_u')}</span></div>`:''}
       <div class="field"><label class="label" for="other${i}">${T('other_l')}</label><input type="number" id="other${i}" data-k="other" step="50" value="${c.other}"><span class="unit">${T('other_u')}</span></div>
     </div>
     <details class="adv"><summary>${T('more')}</summary>
       <div class="fields">
-        <div class="field"><label class="label" for="real${i}">${T('real_l')}</label><input type="number" id="real${i}" data-k="real" step="0.05" value="${c.real}"><span class="unit">${T('real_u')}</span></div>
+        <div class="field"><label class="label" for="real${i}">${T('real_l')}</label><input type="number" id="real${i}" data-k="real" step="0.05" value="${c.real}"><span class="unit" id="realu${i}">${isNedc(c)?T('real_u_nedc'):T('real_u')}</span></div>
         <div class="field"><label class="label" for="make${i}">${T('make_l')}</label><input type="number" id="make${i}" data-k="make" step="0.5" value="${c.make}"><span class="unit">t CO₂e</span></div>
         <div class="field"><label class="label" for="life${i}">${T('life_l')}</label><input type="number" id="life${i}" data-k="life" step="1" value="${c.life}"><span class="unit">${T('life_u')}</span></div>
       </div></details>
@@ -521,17 +565,26 @@ $('cars').addEventListener('input', e => {
   if (el.dataset.pick!==undefined){
     const r = byLabel.get(el.value); if (!r) return;
     const d = PT_DEF[r[2]];
-    Object.assign(c, {name:`${r[0]} ${r[1]}`, exKey:null, pt:r[2], fuel:r[3]??d.fuel, kwh:d.kwh, share:d.share,
-      other:d.tax+d.ins+d.serv+d.tyre, make:d.make, life:d.life, real:d.real});
-    applyRW(c, r[0], r[7], r[9], r[10]);
-    c.picked = r;
+    Object.assign(c, {name:`${r[0]} ${r[1]}`, exKey:null, pt:r[2], kwh:d.kwh, share:d.share,
+      other:d.tax+d.ins+d.serv+d.tyre, make:d.make, life:d.life});
+    c.picked = r; fromRow(c, r);
     renderCars(); update(); return;
   }
   const k = el.dataset.k; if (!k) return;
   if (k==='name'){ c.name = el.value; c.exKey = null; }
-  else if (k==='pt'){ const d=PT_DEF[el.value]; Object.assign(c,{pt:el.value,fuel:(el.value==='P'||!c.fuel)?d.fuel:c.fuel,kwh:c.kwh||d.kwh,share:d.share,make:d.make,real:d.real,rw:null}); renderCars(); }
+  else if (k==='pt'){ const d=PT_DEF[el.value]; Object.assign(c,{pt:el.value,fuel:(el.value==='P'||!c.fuel)?d.fuel:c.fuel,kwh:c.kwh||d.kwh,share:d.share,make:d.make,real:d.real,rw:null,picked:null,autoFuel:true}); refreshStd(c); renderCars(); }
   else if (k==='dep') c.dep = el.value;
-  else c[k] = num(el.value);
+  else {
+    c[k] = num(el.value);
+    if (k==='fuel'||k==='real') c.autoFuel = false;
+    if (k==='age'){ // päivitä kulutus ja yksiköt paikallaan, ettei kenttä menetä kohdistusta
+      refreshStd(c);
+      const f=$('fuel'+i), r=$('real'+i), fu=$('fuelu'+i), ru=$('realu'+i);
+      if (f) f.value = c.fuel; if (r) r.value = c.real;
+      if (fu && c.pt!=='P') fu.textContent = isNedc(c)?T('fuel_u_nedc'):T('fuel_u');
+      if (ru) ru.textContent = isNedc(c)?T('real_u_nedc'):T('real_u');
+    }
+  }
   update();
 });
 $('cars').addEventListener('click', e => {
@@ -592,7 +645,15 @@ function breakEven(el, G){
 }
 
 function rwText(c){
-  const w = c.rw; if (!w) return '';
+  if (isNedc(c) && c.autoFuel===false) return T('rw_nedc_hint')(regYear(c), fmt(nedcGap(regYear(c))*100));
+  if (isNedc(c) && c.std)
+    return c.std.manual ? T('rw_nedc_manual')(c.std.year) : T('rw_nedc')(c.std.year, fmt((c.real-1)*100));
+  const w = c.rw;
+  if (c.pt==='E' && (c.age||0) >= 6) return (w ? rwTextBase(c, w) : '') + T('batt');
+  if (!w) return '';
+  return rwTextBase(c, w);
+}
+function rwTextBase(c, w){
   if (w.t==='model' && c.pt!=='P') return T('rw_model')(fmt((c.real-1)*100), fmt(w.n));
   if (w.t==='model') return T('rw_model_phev')(fmt(w.avg,1), fmt(w.n)) + (w.kwhReg?T('rw_phev_kwh'):'');
   if (w.t==='brand' && c.pt!=='P') return T('rw_brand')(w.brand, fmt((c.real-1)*100), fmt(w.n));
@@ -648,13 +709,17 @@ $('reset').onclick = () => { cars = EXAMPLES.map(newCar); renderCars(); update()
 // päivitettäessä edellisen käynnin arvot lomakkeeseen.
 Object.entries(PRICE_DEF).forEach(([id,v])=>{ const el=$(id); el.value=v; el.autocomplete='off'; });
 const saved = load();
-if (saved && Array.isArray(saved.cars) && saved.cars.length){
+// Koskemattomat vanhat esimerkkiautot korvataan uusilla; omat autot säilyvät.
+const oldExamples = saved && saved.ev !== EX_VERSION && Array.isArray(saved.cars) && saved.cars.every(c => c.exKey);
+if (saved && Array.isArray(saved.cars) && saved.cars.length && !oldExamples)
   cars = saved.cars.map(c=>newCar({...c,brand:undefined})).map((c,i)=>Object.assign(c,{picked:saved.cars[i].picked}));
+else cars = EXAMPLES.map(newCar);
+if (saved){
   try{ GIDS.forEach(id=>{ const v=saved.g?.[id]; if(v===undefined) return;
     if (id in PRICE_DEF){ // oletushinta, jota ei ole muutettu -> käytä uusinta
       const wasDefault = (saved.d && String(v)===String(saved.d[id])) || OLD_DEFS.includes(String(v));
       if (wasDefault || v==='') return; }
     if($(id).type==='select-one') $(id).selectedIndex=v; else $(id).value=v; }); }catch(e){}
-} else cars = EXAMPLES.map(newCar);
+}
 applyLang(LANG);
 </script>
