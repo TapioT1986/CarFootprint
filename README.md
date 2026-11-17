@@ -10,7 +10,7 @@ CarFootprint is a single-page calculator for people choosing between cars: new o
 
 For up to four cars side by side:
 
-- **Annual cost** (€/year, €/month, €/km): depreciation, financing, energy, and vehicle tax, servicing and repairs, insurance (compulsory motor liability and optional comprehensive cover, shown separately) and other costs (tyres).
+- **Annual cost** (€/year, €/month; €/km on the result card is the driving energy only, fuel or electricity per km, and all costs per km are under More details): depreciation, financing, energy, and vehicle tax, servicing and repairs, insurance (compulsory motor liability and optional comprehensive cover, shown separately) and other costs (tyres).
 - **Annual emissions** (kg CO₂e/year, g/km): driving emissions plus manufacturing emissions spread over the car's lifetime.
 - **Break-even mileage:** the annual mileage at which one car becomes cheaper than another.
 

@@ -124,6 +124,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   an old name excluded). Survival = pooled year-to-year inspection-count ratios from age 10 (annual inspections);
   median beyond the data = linear drop-out-rate extrapolation (ages 10-19), shown as an estimate, "over 25" above 25.
   Models with counts rising > 5 % (used imports) get no lifetime. The `life` field is still the flat assumption.
+- €/km on the result card = driving energy (r.energy / km). Total cost per km and the yearly breakdown sit in the card's
+  `details.sumd`. Owner's plan: switch to the cost of an extra km (energy + servicing rise + mileage depreciation) once
+  those parts have good sources (the 0.2 % per 1 000 km depreciation adjustment has none yet).
 - Monthly budget (optional, field `monthly`): cash flow = loan payment incl. fees + (energy + other)/12
   while the loan runs; depreciation and return on own money are not cash. Shown on the summary
   card and flagged only when a budget is entered.
