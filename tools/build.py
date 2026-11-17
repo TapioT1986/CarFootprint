@@ -628,6 +628,11 @@ def main():
         print(f"   inspection data for {sum(1 for n in insp['idx'] if n)} of {len(catalog)} models "
               f"({len(insp['m'])} model series, {insp['y']})", file=sys.stderr)
     page = page.replace("__INSP__", json.dumps(insp, ensure_ascii=False, separators=(",", ":")))
+    # Example-car candidates: [slot, make, model, label, v0, last model year, register powertrain]
+    bc = json.loads((root / "data" / "budget_cars.json").read_text(encoding="utf-8"))["candidates"]
+    page = page.replace("__BUDGET_CARS__", json.dumps(
+        [[c["slot"], c["make"], c["model"], c["label"], c["v0"], c.get("last_model_year"), c.get("register_pt")]
+         for c in bc], ensure_ascii=False, separators=(",", ":")))
     evr = ev_range_for_page(catalog, root)
     print(f"   WLTP electric range for {sum(1 for x in evr if x)} of "
           f"{sum(1 for r in catalog if r[2] in 'EP')} electric and plug-in models", file=sys.stderr)

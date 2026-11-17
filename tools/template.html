@@ -741,22 +741,8 @@ const COLORS = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)'];
 // Esimerkkiautot valitaan enimmäishinnan mukaan (data/budget_cars.json):
 // [paikka, merkki, malli, nimi, arvo uutena (Verohallinnon verotusarvoista), viimeinen vuosimalli, rekisterin käyttövoima]
 // Golf eTSI: vuodesta 2020 Golfit ovat kevythybridejä, jotka Traficom luokittelee hybrideiksi; bensiini-Golf päättyy
-// rekisterissä vuoteen 2020. Arvo uutena tools/golf_etsi_value.py:stä (Verohallinto 2025-2026, 111 päätöstä).
-const BUDGET_CARS = [
-  ["B", "Volkswagen", "GOLF", "Golf", 33400],
-  ["B", "Volkswagen", "GOLF", "Golf eTSI", 36500, null, "H"],
-  ["H", "Toyota", "Corolla", "Corolla", 39200],
-  ["H", "Toyota", "Auris", "Auris", 38900, 2019],
-  ["H", "Toyota", "Yaris", "Yaris", 28900],
-  ["E", "Tesla", "Model Y", "Tesla Model Y", 53800],
-  ["E", "Tesla", "MODEL 3", "Tesla Model 3", 47000],
-  ["E", "Volkswagen", "ID.3 PRO 150 KW", "VW ID.3", 37000],
-  ["E", "Hyundai", "KONA", "Hyundai Kona", 37600],
-  ["E", "Kia", "NIRO", "Kia Niro", 39000],
-  ["E", "Nissan", "LEAF 40KWH", "Nissan Leaf", 24500],
-  ["E", "Volkswagen", "GOLF", "VW e-Golf", 29000, 2020],
-  ["E", "Renault", "ZOE", "Renault Zoe", 24700]
-];
+// rekisterissä vuoteen 2020. Arvot uutena laskee tools/budget_values.py Verohallinnon verotusarvoista.
+const BUDGET_CARS = __BUDGET_CARS__; // data/budget_cars.json (tools/budget_values.py)
 const SLOTS = ['B','E','H'];
 const rateAt = a => { let r = AGE_DEP[0][1]; for (const [x,q] of AGE_DEP) if (a>=x) r=q; return r; };
 const depFactor = a => { let d = 1; for (let t=0; t<a; t++) d *= 1-rateAt(t); return d; };

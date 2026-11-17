@@ -3,9 +3,13 @@
  "source": {
   "name": "Verohallinto / Finnish Tax Administration: applied taxation values of passenger cars, 2025 and 2026 (January-September)",
   "url": "https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/",
-  "read": "2026-11-17"
+  "read": "2026-11-17",
+  "files": [
+   "henkiloautojen-sovelletut-verotusarvot-2025.xls",
+   "henkiloautojen-sovelletut-verotusarvot-2026.xls"
+  ]
  },
- "method": "v0 = median over the model's tax decisions of value / depreciation(age). Model years available come from the Traficom register (catalogue field 'years', 5th-95th percentile of first registration). Mileage = age x the model's median annual mileage in the register. Where a model was discontinued, its last model year caps the range (e-Golf 2020, Auris 2019), because the register's 95th percentile also includes later imports.",
+ "method": "v0 = median over the model's tax decisions (filter 'vero') of taxation value / depreciation(age), age = decision date - first registration, depreciation = the page's AGE_DEP curve; rounded to 100. Computed by tools/budget_values.py. Model years available come from the Traficom register (catalogue field 'years', 5th-95th percentile of first registration); a discontinued model's last model year caps the range (e-Golf 2020, Auris 2019), because the register's 95th percentile also includes later imports.",
  "rules": {
   "petrol": "Volkswagen Golf: the petrol Golf (model years up to 2020) or, when the budget fits a younger car, the Golf eTSI mild hybrid (2020-); the youngest that fits, the petrol Golf on a tie.",
   "hybrid": "Toyota Corolla if it fits the budget, else Auris, else Yaris (the most common full hybrids).",
@@ -17,8 +21,17 @@
    "make": "Volkswagen",
    "model": "GOLF",
    "label": "Golf",
-   "v0": 33400,
-   "decisions": 116
+   "v0": 32800,
+   "decisions": 105,
+   "vero": {
+    "make": "VOLKSWAGEN",
+    "models": [
+     "GOLF"
+    ],
+    "fuel": "Bensiini",
+    "kw_max": 110
+   },
+   "note": "Up to 110 kW, so GTI and R models do not raise the value."
   },
   {
    "slot": "B",
@@ -28,32 +41,66 @@
    "label": "Golf eTSI",
    "v0": 36500,
    "decisions": 111,
-   "note": "Mild hybrid (2020-), which Traficom classes as a hybrid; the petrol Golf ends at model year 2020 in the register. v0 from tools/golf_etsi_value.py: 'Bensiini ja sähkö' Golfs with a tax rate of 6% or more (plug-in hybrids pay about 3%), first registered 2020 or later, tax decisions 2025-2026, fractional age. The same script gives 39 900 for the petrol Golf (184 decisions), not the 33 400 above, whose calculation was not recorded."
+   "note": "Mild hybrid (2020-), which Traficom classes as a hybrid; the petrol Golf ends at model year 2020 in the register. Tax decisions: 'Bensiini ja sähkö' with a tax rate of 6% or more (plug-in hybrids pay about 3%), first registered 2020 or later.",
+   "vero": {
+    "make": "VOLKSWAGEN",
+    "models": [
+     "GOLF"
+    ],
+    "fuel": "Bensiini ja sähkö",
+    "pct_min": 6,
+    "reg_from": 2020
+   }
   },
   {
    "slot": "H",
    "make": "Toyota",
    "model": "Corolla",
    "label": "Corolla",
-   "v0": 39200,
-   "decisions": 837
+   "v0": 36600,
+   "decisions": 580,
+   "vero": {
+    "make": "TOYOTA",
+    "models": [
+     "COROLLA"
+    ],
+    "fuel": "Bensiini ja sähkö"
+   },
+   "note": "Corolla Cross (a separate, dearer SUV) is left out; the old value 39 200 included it."
   },
   {
    "slot": "H",
    "make": "Toyota",
    "model": "Auris",
    "label": "Auris",
-   "v0": 38900,
+   "v0": 38800,
    "decisions": 81,
-   "last_model_year": 2019
+   "last_model_year": 2019,
+   "vero": {
+    "make": "TOYOTA",
+    "models": [
+     "AURIS"
+    ],
+    "model_prefixes": [
+     "AURIS"
+    ],
+    "fuel": "Bensiini ja sähkö"
+   }
   },
   {
    "slot": "H",
    "make": "Toyota",
    "model": "Yaris",
    "label": "Yaris",
-   "v0": 28900,
-   "decisions": 98
+   "v0": 29000,
+   "decisions": 98,
+   "vero": {
+    "make": "TOYOTA",
+    "models": [
+     "YARIS HYBRID"
+    ],
+    "fuel": "Bensiini ja sähkö"
+   }
   },
   {
    "slot": "E",
@@ -61,7 +108,14 @@
    "model": "Model Y",
    "label": "Tesla Model Y",
    "v0": 53800,
-   "decisions": 1995
+   "decisions": 1996,
+   "vero": {
+    "make": "TESLA",
+    "models": [
+     "MODEL Y"
+    ],
+    "fuel": "Sähkö"
+   }
   },
   {
    "slot": "E",
@@ -69,23 +123,50 @@
    "model": "MODEL 3",
    "label": "Tesla Model 3",
    "v0": 47000,
-   "decisions": 2157
+   "decisions": 2158,
+   "vero": {
+    "make": "TESLA",
+    "models": [
+     "MODEL 3"
+    ],
+    "fuel": "Sähkö"
+   }
   },
   {
    "slot": "E",
    "make": "Volkswagen",
    "model": "ID.3 PRO 150 KW",
    "label": "VW ID.3",
-   "v0": 37000,
-   "decisions": 902
+   "v0": 36900,
+   "decisions": 902,
+   "vero": {
+    "make": "VOLKSWAGEN",
+    "models": [
+     "ID.3"
+    ],
+    "model_prefixes": [
+     "ID.3"
+    ],
+    "fuel": "Sähkö"
+   }
   },
   {
    "slot": "E",
    "make": "Hyundai",
    "model": "KONA",
    "label": "Hyundai Kona",
-   "v0": 37600,
-   "decisions": 393
+   "v0": 37500,
+   "decisions": 393,
+   "vero": {
+    "make": "HYUNDAI",
+    "models": [
+     "KONA"
+    ],
+    "model_prefixes": [
+     "KONA"
+    ],
+    "fuel": "Sähkö"
+   }
   },
   {
    "slot": "E",
@@ -93,7 +174,15 @@
    "model": "NIRO",
    "label": "Kia Niro",
    "v0": 39000,
-   "decisions": 569
+   "decisions": 573,
+   "vero": {
+    "make": "KIA",
+    "models": [
+     "NIRO",
+     "E-NIRO"
+    ],
+    "fuel": "Sähkö"
+   }
   },
   {
    "slot": "E",
@@ -101,16 +190,34 @@
    "model": "LEAF 40KWH",
    "label": "Nissan Leaf",
    "v0": 24500,
-   "decisions": 151
+   "decisions": 151,
+   "vero": {
+    "make": "NISSAN",
+    "models": [
+     "LEAF"
+    ],
+    "fuel": "Sähkö",
+    "kw": [
+     110.0
+    ]
+   },
+   "note": "110 kW = the 40 kWh model, as in the catalogue row LEAF 40KWH."
   },
   {
    "slot": "E",
    "make": "Volkswagen",
    "model": "GOLF",
    "label": "VW e-Golf",
-   "v0": 29000,
+   "v0": 29100,
    "decisions": 25,
-   "last_model_year": 2020
+   "last_model_year": 2020,
+   "vero": {
+    "make": "VOLKSWAGEN",
+    "models": [
+     "E-GOLF"
+    ],
+    "fuel": "Sähkö"
+   }
   },
   {
    "slot": "E",
@@ -118,7 +225,14 @@
    "model": "ZOE",
    "label": "Renault Zoe",
    "v0": 24700,
-   "decisions": 40
+   "decisions": 40,
+   "vero": {
+    "make": "RENAULT",
+    "models": [
+     "ZOE"
+    ],
+    "fuel": "Sähkö"
+   }
   }
  ]
 }
