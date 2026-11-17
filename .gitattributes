@@ -1,0 +1,10 @@
+# Keep LF line endings in the repository and in every checkout, Windows included.
+# The files are generated on Linux (tools/build.py and the monthly GitHub Action),
+# so converting them to CRLF on checkout would only produce noisy diffs.
+* text=auto eol=lf
+
+# Binary files are never touched.
+*.png binary
+*.jpg binary
+*.zip binary
+*.xlsx binary

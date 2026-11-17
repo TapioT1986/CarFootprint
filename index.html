@@ -148,6 +148,9 @@ svg text{font-family:var(--body)}
 .rowbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .btn{font:600 13.5px var(--body);border:1px solid var(--line);background:var(--input);color:var(--ink);padding:8px 12px;border-radius:6px;cursor:pointer}
 .btn:hover{border-color:var(--accent)}
+.btn.sm{font-size:12.5px;padding:5px 9px}
+.phead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.phead h2{margin-bottom:0}
 @media (prefers-reduced-motion:no-preference){.bar{transition:width .25s ease}}
 .foot{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 .foot a{color:var(--accent)}
@@ -179,7 +182,7 @@ svg text{font-family:var(--body)}
   <div class="grid">
     <aside>
       <div class="panel">
-        <h2 data-i="drive_h"></h2>
+        <div class="phead"><h2 data-i="drive_h"></h2><button class="btn sm" type="button" data-reset data-i="reset"></button></div>
         <div class="km">
           <span class="label" id="kmLabel" data-i="km_label"></span>
           <div class="read"><span class="odo" id="kmOut">15 000</span><span class="unit" data-i="km_unit"></span></div>
@@ -267,9 +270,9 @@ svg text{font-family:var(--body)}
       </section>
 
       <div class="notes">
+        <div class="rowbtns" style="margin:0 0 18px"><button class="btn" type="button" data-reset data-i="reset"></button></div>
         <h3 data-i="notes_h"></h3>
         <ul data-i="notes"></ul>
-        <div class="rowbtns"><button class="btn" id="reset" type="button" data-i="reset"></button></div>
       </div>
     </main>
   </div>
@@ -310,7 +313,7 @@ fi: {
   lg_dep:'Arvonalenema', lg_cap:'Rahoitus', lg_en:'Energia', lg_oth:'Vero, vakuutus, huolto, renkaat',
   em_h:'Päästöt vuodessa', em_lead:'kg CO₂e vuodessa. Auton valmistus jaetaan sen koko käyttöiälle.',
   lg_drive:'Ajo (polttoaine tai sähkö)', lg_make:'Valmistus',
-  notes_h:'Näin laskenta toimii', reset:'Palauta esimerkkiautot',
+  notes_h:'Näin laskenta toimii', reset:'Nollaa asetukset', reset_q:'Palautetaanko kaikki asetukset ja esimerkkiautot oletuksiin? Itse lisäämäsi ja muuttamasi autot poistuvat.',
   notes:`<li><b>Arvonalenema:</b> jäännösarvo = hinta × (1 − arvonalenema-%)<sup>vuodet</sup>. Jos jätät prosentin tyhjäksi, se valitaan auton keski-iän mukaan: alle 3 v 17 %, 3–5 v 10 %, 6–9 v 11 %, 10–19 v 12 %, 20 v tai yli 10 %. Prosentit on laskettu <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Verohallinnon verotusarvoista</a> (114 000 käytettynä tuotua autoa 2024–2026) vertaamalla saman mallin eri-ikäisiä autoja. Keskimääräistä suurempi ajomäärä (yli 15 000 km/v) laskee jäännösarvoa 0,2 % per 1 000 km vuodessa.</li>
 <li><b>Esimerkkiautot</b> valitaan enimmäishinnan mukaan: bensiiniauto on aina Golf (Suomen yleisin keski-ikäinen auto), hybridi Toyota Corolla, Auris tai Yaris ja sähköauto rekisterissä yleisin malli, johon budjetti riittää. Kustakin valitaan nuorin vuosimalli, jonka arvioitu hinta mahtuu budjettiin. Hinta-arviot perustuvat <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Verohallinnon verotusarvoihin</a> ja mittarilukema mallin keskimääräiseen ajomäärään. Kun muutat esimerkkiautoa, se lakkaa seuraamasta budjettia.</li>
 <li><b>Rahoitus:</b> se osa hinnasta, jota oma raha ja vaihtohyvitys eivät kata, rahoitetaan tasaerälainalla. Lainan kustannus on omistusaikana maksettu korko ja kuukausimaksut. Jos auto myydään ennen kuin laina on maksettu, loppu maksetaan myyntihinnasta. Lisäksi autoon sitoutuneelle omalle rahalle lasketaan menetetty tuotto. Enimmäishintaa kalliimmat autot merkitään.</li>
@@ -376,7 +379,7 @@ en: {
   lg_dep:'Depreciation', lg_cap:'Financing', lg_en:'Energy', lg_oth:'Tax, insurance, servicing, tyres',
   em_h:'Emissions per year', em_lead:'kg CO₂e per year. Manufacturing is spread over the car\'s whole lifetime.',
   lg_drive:'Driving (fuel or electricity)', lg_make:'Manufacturing',
-  notes_h:'How the calculation works', reset:'Restore example cars',
+  notes_h:'How the calculation works', reset:'Reset all', reset_q:'Reset all settings and example cars to the defaults? Cars you added or changed will be removed.',
   notes:`<li><b>Finland only, for now:</b> fuel and electricity prices, taxes, grid emissions and the model list describe Finland. The method works for any EU country once those inputs are changed.</li>
 <li><b>Depreciation:</b> residual value = price × (1 − depreciation %)<sup>years</sup>. If you leave the percentage blank, it is chosen by the car's average age during ownership: under 3 years 17%, 3–5 years 10%, 6–9 years 11%, 10–19 years 12%, 20 years or more 10%. The rates come from the <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Finnish Tax Administration's taxation values</a> (114,000 cars imported used in 2024–2026), comparing cars of the same model at different ages. Above-average mileage (over 15,000 km/yr) lowers the residual value by 0.2% per 1,000 km per year.</li>
 <li><b>Example cars</b> follow your maximum price: the petrol car is always a Golf (Finland's most common car of median age), the hybrid a Toyota Corolla, Auris or Yaris, and the electric car the most common model in the register that fits your budget. Each is the youngest model year whose estimated price fits. Price estimates come from the <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Tax Administration's taxation values</a>, mileage from the model's average annual mileage. Once you edit an example car, it stops following the budget.</li>
@@ -556,7 +559,7 @@ function buildModels(){
 // muuttamat hinnat säilyvät mutta koskemattomat oletukset päivittyvät uusiin.
 const PRICE_DEF = {pBens:'2.28', pDies:'2.49', pEl:'0.1791'};
 const OLD_DEFS = ['1.85','1.75','0.15','2.09','2.15','0.1791']; // ennen tallennettuja oletuksia
-const EX_VERSION = 3; // kasvata, kun esimerkkiautot vaihtuvat
+const EX_VERSION = 4; // kasvata, kun esimerkkiautot vaihtuvat
 function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF, ev:EX_VERSION})); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
 const GIDS = ['km','years','budget','own','loanRate','loanFee','loanYears','ownRate','pBens','pDies','pEl','loss','elSrc','eBens','eDies'];
@@ -794,7 +797,17 @@ document.querySelectorAll('.lang').forEach(b => b.onclick = () => applyLang(b.da
 
 GIDS.forEach(id => $(id).addEventListener('input', update));
 document.querySelectorAll('.chip').forEach(b => b.onclick = () => { $('km').value = b.dataset.km; update(); });
-$('reset').onclick = () => { cars = examples(); renderCars(); update(); };
+// Kaikki kentät HTML:n oletusarvoihin (myös selaimen palauttamat lomakearvot ohitetaan)
+function defaultInputs(){
+  GIDS.forEach(id => { const el = $(id);
+    if (el.type==='select-one'){ const k = [...el.options].findIndex(o=>o.defaultSelected); el.selectedIndex = k<0?0:k; }
+    else el.value = el.defaultValue; });
+}
+document.querySelectorAll('[data-reset]').forEach(b => b.onclick = () => {
+  if (!confirm(T('reset_q'))) return;
+  try { localStorage.removeItem('carfootprint.v1'); } catch(e){}
+  defaultInputs(); cars = examples(); renderCars(); update();
+});
 // Enimmäishinta muuttui: vaihda koskemattomat esimerkkiautot budjettiin sopiviksi
 $('budget').addEventListener('input', () => {
   let changed = false;
@@ -804,12 +817,15 @@ $('budget').addEventListener('input', () => {
 
 // Kirjoita oletushinnat kenttiin aina itse: selain voi muuten palauttaa
 // päivitettäessä edellisen käynnin arvot lomakkeeseen.
-Object.entries(PRICE_DEF).forEach(([id,v])=>{ const el=$(id); el.value=v; el.autocomplete='off'; });
+document.querySelectorAll('input,select').forEach(el => el.autocomplete = 'off');
+defaultInputs();
 const saved = load();
 // Koskemattomat vanhat esimerkkiautot korvataan uusilla; omat autot säilyvät.
 const oldExamples = saved && saved.ev !== EX_VERSION && Array.isArray(saved.cars) && saved.cars.every(c => c.exKey || c.exAuto);
 if (saved){ // asetukset ensin, jotta esimerkkiautot osataan valita enimmäishinnan mukaan
+  const trustAll = (saved.ev||0) >= 4; // vanhemmissa tallennuksissa selain saattoi sekoittaa kenttien arvot
   try{ GIDS.forEach(id=>{ const v=saved.g?.[id]; if(v===undefined) return;
+    if (!trustAll && id!=='km' && id!=='years') return;
     if (id in PRICE_DEF){ // oletushinta, jota ei ole muutettu -> käytä uusinta
       const wasDefault = (saved.d && String(v)===String(saved.d[id])) || OLD_DEFS.includes(String(v));
       if (wasDefault || v==='') return; }
