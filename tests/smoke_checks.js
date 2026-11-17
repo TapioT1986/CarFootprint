@@ -33,6 +33,21 @@ async () => {
     if (wide.length) problems.push(`${lang} ${when}: elements over the right edge: ${wide.join(', ')}`);
   }
 
+  // 6. Phone summary bar: same cars and yearly costs as the result cards, each value fits its cell
+  function dockOk(when) {
+    const dock = $('dock');
+    if (!dock || document.documentElement.clientWidth > 900) return;
+    if (getComputedStyle(dock).position !== 'fixed') { problems.push(`${lang} ${when}: summary bar is not fixed`); return; }
+    const vals = [...dock.querySelectorAll('.dv')].map(e => e.firstChild.textContent.trim());
+    const bigs = [...document.querySelectorAll('#sums .big')].map(e => e.textContent.trim());
+    if (JSON.stringify(vals) !== JSON.stringify(bigs))
+      problems.push(`${lang} ${when}: summary bar shows ${JSON.stringify(vals)}, results ${JSON.stringify(bigs)}`);
+    dock.querySelectorAll('.dc').forEach((c, i) => { const v = c.querySelector('.dv');
+      if (v.scrollWidth > c.clientWidth + 1) problems.push(`${lang} ${when}: summary bar value ${i + 1} does not fit`); });
+  }
+  const _sameCars = sameCars;
+  sameCars = when => { _sameCars(when); dockOk(when); };
+
   sameCars('on load'); fits('on load');
 
   // 3. Example cars follow the maximum price, and results follow the cards

@@ -176,6 +176,36 @@ svg text{font-family:var(--body)}
 .phead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
 .phead h2{margin-bottom:0}
 @media (prefers-reduced-motion:no-preference){.bar{transition:width .25s ease}}
+/* Lisäasetukset: rahoitus ja energia yhdessä taitettavassa osiossa */
+details.more>summary{cursor:pointer;list-style:none;display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;font:600 20px/1.2 var(--display)}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:'';width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);margin:0 2px 0 2px;flex:none}
+details.more[open]>summary::before{transform:rotate(45deg)}
+.morecount{font:600 12.5px/1 var(--body);color:var(--accent)}
+.morecount:empty{display:none}
+.morepart{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.morepart h2{font-size:18px;margin-bottom:12px}
+/* Puhelimen tiivistelmäpalkki: autot ja €/v alareunassa, kunnes tulokset ovat ruudulla */
+.dock{display:none}
+@media (max-width:900px){
+  .dock{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:10px;
+    padding:9px max(14px,env(safe-area-inset-right,0px)) calc(9px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px));
+    background:var(--surface);color:var(--ink);border:0;border-top:1px solid var(--line);box-shadow:0 -6px 18px rgba(0,0,0,.14);
+    font:inherit;text-align:left;cursor:pointer}
+  .dock.off{visibility:hidden;transform:translateY(110%)}
+  body{padding-bottom:calc(var(--dockh,0px) + 48px)}
+  html{scroll-padding-bottom:calc(var(--dockh,0px) + 12px)}
+}
+@media (max-width:900px) and (prefers-reduced-motion:no-preference){.dock{transition:transform .2s ease,visibility .2s}}
+.dock .dc{min-width:0;border-left:3px solid var(--cc);padding-left:7px;display:flex;flex-direction:column;gap:1px}
+.dock .dn{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dock .dv{font:500 16px/1.2 var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dock .dv small{font:500 11.5px var(--body);color:var(--muted)}
+.dock.n4{gap:7px}
+.dock.n4 .dv{font-size:14px}
+.dock.n4 .dv .yr{display:none}
+.dock .db{font-size:10.5px;font-weight:600;color:var(--good);line-height:1.25}
+.dock .db:empty{display:none}
 .foot{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 .foot a{color:var(--accent)}
 .topright{display:flex;flex-direction:column;gap:10px;align-items:flex-end;max-width:46ch}
@@ -227,7 +257,9 @@ svg text{font-family:var(--body)}
         </div>
       </div>
 
-      <div class="panel">
+      <details class="panel more" id="more">
+        <summary><span data-i="more_h"></span><span class="morecount" id="moreCount"></span></summary>
+        <div class="morepart">
         <h2 data-i="fin_h"></h2>
         <div class="fields">
           <div class="field full"><label class="label" for="own" data-i="own_l"></label><input type="number" id="own" min="0" step="500" value="6000"><span class="unit" data-i="own_u"></span></div>
@@ -237,9 +269,8 @@ svg text{font-family:var(--body)}
           <div class="field"><label class="label" for="ownRate" data-i="ownRate_l"></label><input type="number" id="ownRate" min="0" max="20" step="0.5" value="2.5"><span class="unit" data-i="rate_u"></span></div>
         </div>
         <p class="hint" data-i="fin_hint"></p>
-      </div>
-
-      <div class="panel">
+        </div>
+        <div class="morepart">
         <h2 data-i="energy_h"></h2>
         <div class="fields">
           <div class="field"><label class="label" for="pBens" data-i="petrol"></label><input type="number" id="pBens" step="0.01" value="__P_PETROL__"><span class="unit">€ / l</span></div>
@@ -266,7 +297,8 @@ svg text{font-family:var(--body)}
           </div>
           <p class="hint" data-i="ef_hint"></p>
         </details>
-      </div>
+        </div>
+      </details>
     </aside>
 
     <main style="min-width:0">
@@ -304,6 +336,8 @@ svg text{font-family:var(--body)}
     </main>
   </div>
 
+  <button class="dock off" id="dock" type="button" aria-controls="sums"></button>
+
   <footer class="foot">
     <span data-i="foot"></span>
     <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">github.com/TapioT1986/CarFootprint</a>
@@ -330,6 +364,7 @@ fi: {
   years_l:'Omistusaika', years_u:'vuotta', rate_u:'% / vuosi',
   budget_l:'Enimmäishinta', budget_u:'€; esimerkkiautot valitaan tämän mukaan',
   monthly_l:'Kuukausibudjetti (valinnainen)', monthly_u:'€ / kk autoon: lainaerä, energia ja muut kulut; tyhjä = ei käytössä',
+  more_h:'Lisäasetukset', more_n:(n)=>`· ${n} muutettu`, dock_aria:'Näytä tulokset', dock_cheap:'Halvin', dock_clean:'Vähin CO₂',
   fin_h:'Rahoitus', own_l:'Oma raha ja vaihtohyvitys', own_u:'€ käteistä + vanhasta autosta saatava hyvitys; loppu lainaa',
   loanRate_l:'Lainan korko', loanRate_u:'% / vuosi (nimellinen)', loanFee_l:'Lainan kulut', loanFee_u:'€ / kk, tilinhoito ja laskutus',
   loanYears_l:'Laina-aika', ownRate_l:'Oman rahan tuotto',
@@ -421,6 +456,7 @@ en: {
   years_l:'Ownership period', years_u:'years', rate_u:'% / year',
   budget_l:'Maximum price', budget_u:'€; the example cars follow it',
   monthly_l:'Monthly budget (optional)', monthly_u:'€ / month for the car: loan payment, energy and other costs; empty = off',
+  more_h:'More settings', more_n:(n)=>`· ${n} changed`, dock_aria:'Show the results', dock_cheap:'Cheapest', dock_clean:'Lowest CO₂',
   fin_h:'Financing', own_l:'Own money and trade-in', own_u:'€ cash + what you get for your old car; the rest is a loan',
   loanRate_l:'Loan interest', loanRate_u:'% / year (nominal)', loanFee_l:'Loan fees', loanFee_u:'€ / month, account and billing',
   loanYears_l:'Loan term', ownRate_l:'Return on own money',
@@ -965,6 +1001,14 @@ function update(){
       ${G.monthly>0?`<div class="sub">${T('cash')(fmt(r.cash))}${r.cashAfter!==null?T('cash_after')(fmt(r.cashAfter)):''}</div>`:''}
       <div class="badges">${G.budget>0&&c.price>G.budget?`<span class="badge warn">${T('over')}</span>`:''}${G.monthly>0&&Math.round(r.cash)>G.monthly?`<span class="badge warn">${T('over_mo')}</span>`:''}${cars.length>1&&r.total===minCost?`<span class="badge win">${T('cheapest')}</span>`:''}${cars.length>1&&r.em===minEm?`<span class="badge win">${T('cleanest')}</span>`:''}</div>
     </div>`;}).join('');
+  const dock = $('dock');
+  dock.classList.toggle('n4', cars.length>3);
+  dock.setAttribute('aria-label', T('dock_aria'));
+  dock.innerHTML = cars.map((c,i)=>{ const r=R[i], b=[];
+    if (cars.length>1 && r.total===minCost) b.push(T('dock_cheap'));
+    if (cars.length>1 && r.em===minEm) b.push(T('dock_clean'));
+    return `<span class="dc" style="--cc:${COLORS[i]}"><span class="dn">${esc(c.name)}</span><span class="dv">${fmt(r.total)} <small>€<span class="yr">/${yr}</span></small></span><span class="db">${b.join(' · ')}</span></span>`; }).join('');
+  moreCount();
   document.querySelectorAll('#sums .big').forEach((e,i)=>{ if (before.length && before[i]!==undefined && before[i]!==e.textContent) e.classList.add('flash'); });
   cars.forEach((c,i)=>{ const e=$('insp'+i); if(e) e.innerHTML = inspText(c); });
   cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];
@@ -982,6 +1026,28 @@ function update(){
     $('beLead').textContent = T('be_x_l'); }
   save();
 }
+
+// Lisäasetukset: montako kenttää on muutettu oletuksesta (näkyy suljetun osion otsikossa)
+function isChanged(el){
+  if (el.type==='select-one'){ const k = [...el.options].findIndex(o=>o.defaultSelected); return el.selectedIndex !== (k<0?0:k); }
+  return el.value !== el.defaultValue;
+}
+function moreCount(){
+  const n = GIDS.filter(id => $('more').contains($(id)) && isChanged($(id))).length;
+  $('moreCount').textContent = n ? T('more_n')(n) : '';
+}
+// Tietokoneella osio on auki kuten ennenkin; puhelimella kiinni
+if (matchMedia('(min-width:901px)').matches) $('more').open = true;
+// Tiivistelmäpalkki: piiloon, kun tuloskortit näkyvät; napautus vierittää tuloksiin
+(() => {
+  const dock = $('dock');
+  dock.onclick = () => $('sums').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', block:'start'});
+  const setH = () => document.documentElement.style.setProperty('--dockh', dock.offsetHeight + 'px');
+  if (window.ResizeObserver) new ResizeObserver(setH).observe(dock); else addEventListener('resize', setH);
+  if (window.IntersectionObserver)
+    new IntersectionObserver(es => es.forEach(e => dock.classList.toggle('off', e.isIntersecting))).observe($('sums'));
+  else dock.classList.remove('off');
+})();
 
 // --- kielen vaihto ---
 function applyLang(lang){

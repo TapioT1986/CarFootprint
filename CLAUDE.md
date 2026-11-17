@@ -112,6 +112,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Phones show stale cached pages (restored tabs), while GitHub Pages only sends max-age=600. build.py puts a
   hash of the page into `const BUILD`; checkFresh() fetches the page with cache:'reload' on load and when the tab
   becomes visible, and reloads once (sessionStorage guard) if the BUILD differs. Keep the `const BUILD = '...'` form.
+- Phone layout (≤ 900 px): `#dock` is a fixed summary bar filled in update(), hidden (class `off`) by an
+  IntersectionObserver while `#sums` is on screen; its height goes to `--dockh` (body padding, scroll-padding).
+  `#more` (<details>) holds the financing and energy panels: closed on phones, opened by JS above 900 px;
+  moreCount() counts GIDS inside it that differ from their HTML defaults.
 - tests/smoke.py runs on GitHub after every push (.github/workflows/test.yml): build check + tests/smoke_checks.js
   in headless Chromium. The same checks can be run in the built-in browser by evaluating smoke_checks.js.
 - Test in a real browser (FI and EN, phone width 390 px) and check the numbers by hand for at
