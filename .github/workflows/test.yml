@@ -1,0 +1,39 @@
+name: Test the page
+
+# Runs after every push and pull request: checks that index.html is built from
+# tools/template.html, then opens the page in a headless browser (tests/smoke.py).
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: index.html matches tools/template.html and data/
+        run: |
+          python tools/build.py
+          git diff --exit-code -- index.html || {
+            echo "::error::index.html is not what tools/build.py produces. Run python tools/build.py and commit the result."
+            exit 1
+          }
+
+      - name: Install the test browser
+        run: |
+          pip install playwright==1.47.0
+          python -m playwright install --with-deps chromium
+
+      - name: Open the page and check it (phone and desktop, FI and EN)
+        run: python tests/smoke.py

@@ -1,0 +1,63 @@
+// Smoke checks for index.html, run inside the page (by tests/smoke.py, or pasted
+// into a browser console). Returns a list of problems; an empty list means OK.
+async () => {
+  const problems = [];
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const $ = id => document.getElementById(id);
+  const fire = (el, v) => { el.value = v; el.dispatchEvent(new Event('input', {bubbles: true})); };
+  const lang = document.documentElement.lang;
+
+  // 1. Cards, summary cards and the cost chart show the same cars
+  function sameCars(when) {
+    const cards = [...document.querySelectorAll('#cars .car .head input')].map(e => e.value.trim());
+    const sums = [...document.querySelectorAll('#sums .nm')].map(e => e.innerText.trim());
+    if (!cards.length) problems.push(`${lang} ${when}: no car cards`);
+    if (JSON.stringify(cards) !== JSON.stringify(sums))
+      problems.push(`${lang} ${when}: cards ${JSON.stringify(cards)} but results ${JSON.stringify(sums)}`);
+    const bars = document.querySelectorAll('#costChart svg circle').length;
+    if (bars !== cards.length) problems.push(`${lang} ${when}: cost chart has ${bars} cars, cards ${cards.length}`);
+    document.querySelectorAll('#sums .big').forEach((e, i) => {
+      const v = parseFloat(e.textContent.replace(/[^\d,.-]/g, '').replace(',', '.'));
+      if (!(v > 0)) problems.push(`${lang} ${when}: result ${i + 1} is "${e.textContent}"`);
+    });
+  }
+  // 2. Nothing wider than the screen (the break-even chart scrolls in its own box)
+  function fits(when) {
+    const vw = document.documentElement.clientWidth;
+    if (document.documentElement.scrollWidth > vw + 1)
+      problems.push(`${lang} ${when}: page is ${document.documentElement.scrollWidth}px wide on a ${vw}px screen`);
+    const wide = [...document.querySelectorAll('body *')]
+      .filter(e => !e.closest('#beChart') && !e.closest('[hidden]'))
+      .filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.right > vw + 1; })
+      .slice(0, 3).map(e => e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + (e.className && typeof e.className === 'string' ? '.' + e.className.split(' ')[0] : ''));
+    if (wide.length) problems.push(`${lang} ${when}: elements over the right edge: ${wide.join(', ')}`);
+  }
+
+  sameCars('on load'); fits('on load');
+
+  // 3. Example cars follow the maximum price, and results follow the cards
+  const budget = $('budget'), before = budget.value;
+  for (const v of ['30000', '6000']) {
+    fire(budget, v); await wait(50);
+    sameCars(`maximum price ${v}`); fits(`maximum price ${v}`);
+  }
+  fire(budget, before); await wait(50);
+
+  // 4. Model search shows a visible list and picking a model updates everything
+  const pick = $('pick0');
+  if (pick) {
+    pick.focus(); fire(pick, 'golf'); await wait(50);
+    const box = $('sg0'), opt = box && box.querySelector('button');
+    if (!box || box.hidden || !opt) problems.push(`${lang}: model search shows no suggestions for "golf"`);
+    else {
+      const bg = getComputedStyle(box).backgroundColor;
+      if (bg === 'transparent' || /rgba\(.*,\s*0\)$/.test(bg)) problems.push(`${lang}: model suggestion list is transparent`);
+      const label = opt.textContent; opt.click(); await wait(50);
+      const name = $('cars').querySelector('.car .head input').value;
+      if (!label.toUpperCase().includes(name.toUpperCase().split(' ')[1] || '#'))
+        problems.push(`${lang}: picked "${label}" but the card is "${name}"`);
+      sameCars('after picking a model'); fits('after picking a model');
+    }
+  }
+  return problems;
+}
