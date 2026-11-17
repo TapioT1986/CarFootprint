@@ -102,10 +102,12 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   ownership km [odo, odo + km·years] of Consumer Reports 2020 band factors: ICE/hybrids 1 / 2.14 / 2.82,
   EV 1 / 2.33 / 3.58 (bands 0–80 467, –160 934, beyond). "Other costs" (`other`) = tyres and other
   (EX_VERSION 6 subtracts the servicing default from older saves). Battery wear adds no cost.
-- Insurance: car fields `traf` (motor liability, default 200) and `kasko` (comprehensive, PT_DEF.ins − 200), added to
-  other costs in calc(). No open per-car premium data exists; both are labelled assumptions. EX_VERSION 8: splitIns()
-  splits an old default `other` (ins + tyre) and leaves a custom one whole with traf = kasko = 0; y-links before v8
-  with X get the same treatment in carFromShare(). Share letters Y = traf, Z = kasko.
+- Insurance: car fields `traf` (motor liability) and `kasko` (comprehensive), added to other costs in calc(). Defaults
+  INS_DEF = Taloustaito comparisons 24.9.2026 and 20.10.2022, the higher average of the two: traf 200 (E 205), kasko
+  B/D/H 520, P 700, E 835. PT_DEF.ins is the old combined default, kept only for splitIns(). EX_VERSION 8: splitIns()
+  splits an old default `other` and leaves a custom one whole with traf = kasko = 0; y-links before v8 with X get the
+  same in carFromShare(). EX_VERSION 9: untouched old defaults (traf 200, kasko = OLD_KASKO) move to INS_DEF.
+  Share letters Y = traf, Z = kasko.
 - Tipping points (`tipping()`, `#sens`): winnerOf(totals) is the cheapest car; for km, pB/pD/pE (only if some car uses it),
   years and a common depreciation factor, tipSearch() scans 48 steps (years: whole years) from the current value each way
   and bisects the first change; the two nearest (relative distance) are shown, rounded towards the tipping side (finer when
