@@ -217,6 +217,17 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 .disclaim{margin:10px 0 0}
 .sens{margin:12px 0 0;font-size:14px;line-height:1.5;max-width:90ch}
 .sens:empty{display:none}
+details.info{margin:10px 0 0;font-size:13.5px;max-width:90ch}
+details.info summary{cursor:pointer;color:var(--accent);font-weight:600}
+details.info p,details.info ul{margin:8px 0}
+details.info ul{padding-left:18px}
+details.info a{color:var(--accent)}
+.rtable{border-collapse:collapse;margin:8px 0;font-size:13px;width:100%;max-width:640px}
+.rtable th,.rtable td{text-align:left;padding:5px 8px 5px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.rtable th{font-weight:600;color:var(--muted)}
+.rtable td.n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.rwrap{overflow-x:auto;max-width:100%}
+@media (max-width:560px){.rtable{font-size:12px}.rtable td.n{font-size:11.5px}}
 .topright{display:flex;flex-direction:column;gap:10px;align-items:flex-end;max-width:46ch}
 .langs{display:flex;gap:6px}
 .lang{padding:5px 10px;font-size:13px}
@@ -324,6 +335,7 @@ details.more[open]>summary::before{transform:rotate(45deg)}
       <section class="results" aria-live="polite">
         <div class="sumrow" id="sums"></div>
         <p class="sens" id="sens"></p>
+        <details class="info" id="rangeInfo"><summary data-i="rng_sum"></summary><div id="rangeBody"></div></details>
         <p class="hint disclaim" data-i="disclaim"></p>
         <div class="sharebar"><button class="btn share" type="button" id="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span data-i="share"></span></button><span class="hint shareinv" data-i="share_inv"></span><span class="hint" id="shareMsg" role="status"></span></div>
         <div class="charts">
@@ -367,6 +379,7 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 <script>
 const BUILD = '__BUILD__'; // sivun versio (build.py), uuden version tunnistamiseen
 const CATALOG = __CATALOG__;
+const PRANGE = __PRANGE__; // energian hintojen vaihteluvälit (tools/update_prices.py, data/prices.json)
 const VTAX = __VTAX__; // ajoneuvoveron taulukot 2026 (Finlex 814/2024, data/vehicle_tax.json)
 const INSP = __INSP__; // Traficom: määräaikaiskatsastukset ja elinikä malleittain (tools/update_inspection.py)
 const RW = __RW__; // EEA: mitattu kulutus (OBFCM) valmistajittain + Suomen 2025 sähkönkulutukset
@@ -378,6 +391,17 @@ fi: {
   pt:{B:'Bensiini',D:'Diesel',H:'Hybridi',P:'Ladattava hybridi',E:'Sähkö'},
   tagline:'Mitä auto oikeasti maksaa vuodessa – ja paljonko se päästää',
   title:'CarFootprint – auton todelliset vuosikulut ja päästöt', desc:'Mitä auto oikeasti maksaa vuodessa ja paljonko se päästää. Suomen hinnoilla, veroilla ja rekisteritiedoilla. Uudet ja käytetyt autot, todellinen kulutus ja arvonalenema.',
+  rng:(a,b)=>`Energian hintojen vaihtelulla: ${a}–${b} € / v`, rng_sum:'Lisätietoja vaihteluväleistä',
+  rng_intro:(y)=>`Tuloskorttien vaihteluväli kertoo, mitä vuosikulu olisi, jos energia maksaisi yhtä vähän tai yhtä paljon kuin halvimpana ja kalleimpana 12 kuukauden jaksona viimeisten ${y} vuoden aikana. Kaikki muu pysyy laskelmassa ennallaan.`,
+  rng_head:['Energia','Halvin 12 kk','Kallein 12 kk','Laskelmassa nyt'], rng_names:{petrol:'Bensiini', diesel:'Diesel', electricity:'Sähkö kotona'},
+  rng_src:(cpi)=>`<b>Lähteet:</b> Tilastokeskus: <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/" target="_blank" rel="noopener">polttonesteiden keskihinnat</a> (khi/11xx) ja <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/" target="_blank" rel="noopener">sähkön kokonaishinta</a> kotitaloudelle, joka käyttää 5 000–15 000 kWh vuodessa (ehi/13rb). Hinnat on muutettu kuukauden ${cpi} rahaksi <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xs.px/" target="_blank" rel="noopener">kuluttajahintaindeksillä</a> (khi/11xs, 2005=100). Luvut päivittyvät kuukausittain hintojen mukana.`,
+  rng_ass:['<b>Oletukset</b>',
+    '12 kuukauden keskihinta, koska energiakulu kertyy koko vuoden ajalta; yksittäinen kallis kuukausi ei kuvaa sitä.',
+    'Alaraja käyttää jokaisen energian halvinta jaksoa ja yläraja kalleinta, vaikka ne osuivat eri aikoihin. Lataushybridillä bensiini ja sähkö ovat siis yhtä aikaa ääripäissään.',
+    'Jos laskelmassa käytetty hinta on välin ulkopuolella, väli laajennetaan kattamaan se.',
+    'Väli ei ole ennuste: tulevat hinnat voivat olla myös sen ulkopuolella.',
+    'Muiden kulujen (arvonalenema, korot, huolto, vakuutus) vaihtelua väli ei sisällä, koska niille ei ole vielä avointa ja perusteltua lähdettä. Niiden vaikutusta kuvaa yllä oleva rivi "Kuinka varma järjestys on?".',
+    'Päästöihin vaihteluväli ei vaikuta.'],
   sens_h:'Kuinka varma järjestys on?', sens_close:'Autot ovat lähes tasoissa. ', sens_if:(p)=>`Halvin vaihtuu, jos ${p}.`, sens_or:' tai ',
   sens_none:'Halvin pysyy samana, vaikka ajomäärä, energian hinnat, omistusaika tai arvonalenema muuttuisivat tutkituissa rajoissa (ks. Näin laskenta toimii).',
   sens_km:(d,v)=>`ajat ${d<0?'alle':'yli'} ${v} km/v`, sens_p:(k,d,v)=>`${{pB:'bensiini',pD:'diesel',pE:'sähkö'}[k]} maksaa ${d<0?'alle':'yli'} ${v} ${k==='pE'?'€/kWh':'€/l'}`,
@@ -428,6 +452,7 @@ fi: {
 <li><b>Katsastus ja elinikä</b> (tietoa autokortilla, ei vaikuta laskelmaan) tulevat <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficomin katsastuksen vikatilastoista</a> (määräaikaiskatsastukset 2017–2025, avoin data CC BY 4.0). Traficom tilastoi mallisarjoittain, eli kaikki saman mallin käyttövoimat ja sukupolvet ovat yhdessä. Hylkäysprosentti on uusimmalta vuodelta auton ostoiän mukaan, tai lähimmältä iältä, josta on vähintään 50 katsastusta. Viat ovat hylkäykseen johtaneiden vikojen osuudet kaikista ikäluokista. Elinikä lasketaan katsastusmääristä: 10 vuoden iästä alkaen autot katsastetaan joka vuosi, joten saman vuoden autojen katsastusmäärä kertoo, montako on vielä liikenteessä. Ennen 10 vuoden ikää poistuneet autot (kolarit, vienti) eivät näy luvussa. Käytettynä tuodut autot kasvattavat lukuja, ja jos katsastusmäärät kasvavat iän mukana, elinikää ei arvioida. Kun yli puolet on vielä liikenteessä 20-vuotiaana, ikä, jossa puolet on poistunut, on arvio: vuosittainen poistumaosuus jatketaan suorana viivana iän 10–19 havainnoista. Kenttä Käyttöikä (päästöjen jakaminen) on edelleen oletus 18–20 vuotta.</li>
 <li><b>Valmistuspäästöt</b> ovat <a href="https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/" target="_blank" rel="noopener">ICCT:n</a> EU:n elinkaaritutkimuksesta (2025) keskikokoiselle autolle, kuten Golfille. Auton valmistus ja kierrätys ilman akkua: bensiini-, diesel- ja hybridiauto 8,2 t, lataushybridi 8,6 t ja sähköauto 7,5 t CO₂e. Akun valmistus on 72,8 kg CO₂e/kWh, kun painotetaan solujen valmistusmaita (30 % Eurooppa, 56 % Kiina). Oletusakku on EU:ssa 2023 myytyjen keskikokoisten autojen keskiarvo: sähköauto 53,4 kWh (3,9 t), lataushybridi 13,3 kWh (1,0 t). Akun koon voi vaihtaa oman auton mukaiseksi kohdassa Lisää oletuksia. Pienen auton valmistus tuottaa vähemmän ja ison enemmän päästöjä. Valmistuspäästöt jaetaan auton koko käyttöiälle. ICCT:n mukaan akut kestävät yleensä auton käyttöiän: alle 1 %:ssa vuoden 2016 jälkeen myydyistä sähköautoista akku on vaihdettu (Recurrent, 20 000 autoa).</li>
 <li><b>Jaa vertailu</b> tekee lyhyen linkin, jossa on vain valitut mallit ja muutetut luvut; kaikki muu lasketaan avattaessa uudelleen. Tiedot ovat linkin #-merkin jälkeisessä osassa, jota selain ei lähetä palvelimelle, eikä sivu kerää mitään tietoa. Linkkiin tallentuvat vain muutetut asetukset, joten avaaja näkee ajantasaiset polttoaineen ja sähkön hinnat, ellet ole muuttanut niitä. Jaetun linkin avaaminen ei hävitä avaajan omia autoja: ne voi palauttaa.</li>
+<li><b>Vaihteluväli</b> tuloskorteissa näyttää vuosikulun 15 vuoden halvimmilla ja kalleimmilla energian hinnoilla (12 kuukauden keskihinnat nykyrahassa, Tilastokeskus). Lähteet ja oletukset ovat tulosten alla kohdassa Lisätietoja vaihteluväleistä.</li>
 <li><b>Kuinka varma järjestys on?</b> Sivu muuttaa yhtä asiaa kerrallaan ja etsii lähimmän arvon, jolla halvin auto vaihtuu, ja näyttää kaksi lähintä. Haun rajat: ajomäärä 2 000–50 000 km, polttoaineen ja sähkön hinta puolesta kaksinkertaiseen, omistusaika 1–20 vuotta ja arvonalenema puolesta kaksinkertaiseen (sama kerroin kaikille autoille). Rajat eivät ole ennusteita tai vaihteluvälejä, vaan sitä, kuinka kaukaa kääntöpistettä haetaan; kaukana olevaa kääntöpistettä ei näytetä.</li>
 <li>Vakuutus ja huollon lähtötaso ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
@@ -482,6 +507,17 @@ en: {
   pt:{B:'Petrol',D:'Diesel',H:'Hybrid',P:'Plug-in hybrid',E:'Electric'},
   tagline:'What a car really costs per year, and how much it emits',
   title:'CarFootprint – what a car really costs per year and emits', desc:'What a car really costs per year and how much it emits, with Finnish prices, taxes and register data. New and used cars, real-world consumption and depreciation.',
+  rng:(a,b)=>`With energy price swings: ${a}–${b} € / yr`, rng_sum:'More about the ranges',
+  rng_intro:(y)=>`The range on each result card shows the yearly cost if energy cost as little or as much as in the cheapest and dearest 12-month period of the last ${y} years. Everything else in the calculation stays the same.`,
+  rng_head:['Energy','Cheapest 12 months','Dearest 12 months','Used now'], rng_names:{petrol:'Petrol', diesel:'Diesel', electricity:'Home electricity'},
+  rng_src:(cpi)=>`<b>Sources:</b> Statistics Finland: <a href="https://pxdata.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/" target="_blank" rel="noopener">average prices of liquid fuels</a> (khi/11xx) and the <a href="https://pxdata.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/" target="_blank" rel="noopener">total electricity price</a> for a household using 5,000–15,000 kWh a year (ehi/13rb). Prices are converted into the money of ${cpi} with the <a href="https://pxdata.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__khi/statfin_khi_pxt_11xs.px/" target="_blank" rel="noopener">consumer price index</a> (khi/11xs, 2005=100). The figures update monthly with the prices.`,
+  rng_ass:['<b>Assumptions</b>',
+    'A 12-month average price, because the energy bill builds up over the year; a single expensive month does not describe it.',
+    'The low end uses the cheapest period of each energy and the high end the dearest, although they fell at different times. For a plug-in hybrid, petrol and electricity are both at their extremes at once.',
+    'If the price used in the calculation lies outside the range, the range is widened to include it.',
+    'The range is not a forecast: future prices may also fall outside it.',
+    'It does not include swings in other costs (depreciation, interest, servicing, insurance), because there is no open, well-founded source for them yet. The line "How firm is the ranking?" above shows their effect.',
+    'The range does not affect emissions.'],
   sens_h:'How firm is the ranking?', sens_close:'The cars are nearly even. ', sens_if:(p)=>`The cheapest car changes if ${p}.`, sens_or:' or ',
   sens_none:'The cheapest car stays the same even if mileage, energy prices, ownership period or depreciation change within the tested limits (see How the calculation works).',
   sens_km:(d,v)=>`you drive ${d<0?'under':'over'} ${v} km/yr`, sens_p:(k,d,v)=>`${{pB:'petrol',pD:'diesel',pE:'electricity'}[k]} costs ${d<0?'under':'over'} ${v} ${k==='pE'?'€/kWh':'€/l'}`,
@@ -533,6 +569,7 @@ en: {
 <li><b>Inspections and lifetime</b> (information on the car card, not used in the calculation) come from <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficom's periodic inspection statistics</a> (inspections 2017–2025, open data CC BY 4.0). Traficom groups cars by model series, so all powertrains and generations of a model are together. The failure rate is for the latest year at the car's age at purchase, or the nearest age with at least 50 inspections. The faults are shares of the faults that caused a failure, all ages together. Lifetime is worked out from inspection counts: from 10 years on, cars are inspected every year, so the count for one model year shows how many are still on the road. Cars that left the road before 10 years (crashes, exports) do not show in the figure. Cars imported used raise the counts, and if the counts rise with age, no lifetime is estimated. When more than half are still on the road at 20, the age at which half have left is an estimate: the yearly drop-out rate is continued as a straight line from ages 10–19. The Lifetime field (spreading manufacturing emissions) is still the 18–20-year assumption.</li>
 <li><b>Manufacturing emissions</b> come from the <a href="https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/" target="_blank" rel="noopener">ICCT</a> EU life-cycle study (2025) for a medium-size car such as the Golf. Making and recycling the car without its battery: petrol, diesel and hybrid cars 8.2 t, plug-in hybrids 8.6 t and electric cars 7.5 t CO₂e. Battery production is 72.8 kg CO₂e per kWh, weighted by where the cells are made (30% Europe, 56% China). The default battery is the average of medium-size cars sold in the EU in 2023: 53.4 kWh for electric cars (3.9 t) and 13.3 kWh for plug-in hybrids (1.0 t). You can set your own car's battery size under More assumptions. A small car takes less to make and a large one more. Manufacturing emissions are spread over the car's whole lifetime. According to the ICCT, batteries usually outlast the car: fewer than 1% of electric cars sold after 2016 have had their battery replaced (Recurrent, 20,000 cars).</li>
 <li><b>Share comparison</b> makes a short link holding only the chosen models and the numbers you changed; everything else is recalculated when it opens. The data sits after the # sign, which browsers never send to the server, and the page collects nothing. Only settings you changed go into the link, so whoever opens it sees current fuel and electricity prices unless you changed them. Opening a shared link does not lose the opener's own cars: they can be restored.</li>
+<li><b>The range</b> on the result cards shows the yearly cost at the cheapest and dearest energy prices of the last 15 years (12-month averages in today's money, Statistics Finland). Sources and assumptions are under the results in More about the ranges.</li>
 <li><b>How firm is the ranking?</b> The page changes one thing at a time, finds the nearest value at which the cheapest car changes, and shows the two nearest. Search limits: mileage 2,000–50,000 km, fuel and electricity prices from half to double, ownership 1–20 years and depreciation from half to double (the same factor for every car). The limits are not forecasts or ranges, only how far the page looks for a tipping point; one further away is not shown.</li>
 <li>Insurance and the starting level of servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
@@ -1030,6 +1067,34 @@ function inspText(c){
   }
   return out.trim();
 }
+// --- energian hintojen vaihteluväli: vuosikulu 15 vuoden halvimmilla ja kalleimmilla 12 kk:n keskihinnoilla ---
+const RKEY = {pB:'petrol', pD:'diesel', pE:'electricity'};
+function priceBounds(G){
+  if (!PRANGE) return null;
+  const lo = {...G}, hi = {...G};
+  for (const [k, n] of Object.entries(RKEY)){ const r = PRANGE[n]; if (!r) return null;
+    lo[k] = Math.min(r.lo, G[k]); hi[k] = Math.max(r.hi, G[k]); }
+  return {lo, hi};
+}
+function energyRange(c, G){
+  const b = priceBounds(G); if (!b) return null;
+  const r10 = x => Math.round(x/10)*10;
+  return [r10(calc(c, b.lo).total), r10(calc(c, b.hi).total)];
+}
+const ym = m => `${+m.slice(5)}/${m.slice(0,4)}`;
+const ymBack = (m, n) => { let y = +m.slice(0,4), k = +m.slice(5) - n; while (k < 1){ k += 12; y--; } return `${k}/${y}`; };
+function rangeInfo(G){
+  if (!PRANGE){ $('rangeInfo').hidden = true; return; }
+  const cur = {petrol:G.pB, diesel:G.pD, electricity:G.pE}, unit = n => n==='electricity' ? '€/kWh' : '€/l', d = n => n==='electricity' ? 3 : 2;
+  const rows = Object.values(RKEY).map(n => { const r = PRANGE[n];
+    return `<tr><td>${T('rng_names')[n]}</td><td class="n">${fmt(r.lo, d(n))} ${unit(n)}<br><span class="unit">${ymBack(r.lo_end, 11)}–${ym(r.lo_end)}</span></td>`
+      + `<td class="n">${fmt(r.hi, d(n))} ${unit(n)}<br><span class="unit">${ymBack(r.hi_end, 11)}–${ym(r.hi_end)}</span></td><td class="n">${fmt(cur[n], d(n))} ${unit(n)}</td></tr>`; }).join('');
+  const [h, ...a] = T('rng_ass');
+  $('rangeBody').innerHTML = `<p>${T('rng_intro')(PRANGE.years)}</p>`
+    + `<div class="rwrap"><table class="rtable"><thead><tr>${T('rng_head').map(x => `<th>${x}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`
+    + `<p>${T('rng_src')(ym(PRANGE.cpi_month))}</p><p>${h}</p><ul>${a.map(x => `<li>${x}</li>`).join('')}</ul>`;
+}
+
 // --- kääntöpisteet: lähin arvo, jolla halvin auto vaihtuu, kun yhtä asiaa muutetaan kerrallaan ---
 const winnerOf = t => t.reduce((k, v, i) => v < t[k] - 1e-9 ? i : k, 0);
 // f(x) -> halvimman auton indeksi. Hakee x0:sta kumpaankin suuntaan ensimmäisen vaihdon ja tarkentaa sen puolittamalla.
@@ -1083,11 +1148,13 @@ function update(){
   const R = cars.map(c => calc(c,G));
   const minCost = Math.min(...R.map(r=>r.total)), minEm = Math.min(...R.map(r=>r.em));
   const before = [...document.querySelectorAll('#sums .big')].map(e=>e.textContent);
+  const rng = cars.map(c => energyRange(c, G));
   $('sums').innerHTML = cars.map((c,i)=>{ const r=R[i];
     return `<div class="sum" style="--cc:${COLORS[i]}">
       <div class="nm"><span class="dot"></span><span title="${esc(c.name)}">${esc(c.name)}</span></div>
       <div><span class="big">${fmt(r.total)}</span> <span class="sub">€ / ${yr}</span></div>
       <div class="sub">${fmt(r.total/12)} €/${T('mo')} · ${fmt(r.total/G.km,2)} €/km</div>
+      ${rng[i]?`<div class="sub">${T('rng')(fmt(rng[i][0]), fmt(rng[i][1]))}</div>`:''}
       <div class="sub">${fmt(r.em)} kg CO₂e/${yr} · ${fmt(r.em*1000/G.km)} g/km</div>
       ${G.monthly>0?`<div class="sub">${T('cash')(fmt(r.cash))}${r.cashAfter!==null?T('cash_after')(fmt(r.cashAfter)):''}</div>`:''}
       <div class="badges">${G.budget>0&&c.price>G.budget?`<span class="badge warn">${T('over')}</span>`:''}${G.monthly>0&&Math.round(r.cash)>G.monthly?`<span class="badge warn">${T('over_mo')}</span>`:''}${cars.length>1&&r.total===minCost?`<span class="badge win">${T('cheapest')}</span>`:''}${cars.length>1&&r.em===minEm?`<span class="badge win">${T('cleanest')}</span>`:''}</div>
@@ -1100,6 +1167,7 @@ function update(){
     if (cars.length>1 && r.em===minEm) b.push(T('dock_clean'));
     return `<span class="dc" style="--cc:${COLORS[i]}"><span class="dn">${esc(c.name)}</span><span class="dv">${fmt(r.total)} <small>€<span class="yr">/${yr}</span></small></span><span class="db">${b.join(' · ')}</span></span>`; }).join('');
   moreCount(); renderPay();
+  rangeInfo(G);
   const tips = tipping(G);
   $('sens').innerHTML = !tips ? '' : `<b>${T('sens_h')}</b> ` + (tips.length && tips[0].rel < 0.02 ? T('sens_close') : '')
     + (tips.length ? T('sens_if')(tips.map(tipText).join(T('sens_or'))) : T('sens_none'));

@@ -38,7 +38,7 @@ plug-in hybrid and electric. Prices, taxes, grid emissions and the model list de
 index.html            BUILT FILE – never edit by hand; run tools/build.py
 tools/template.html   the page source: HTML, CSS, JS, FI/EN texts (I18N), placeholders
 tools/build.py        builds data/*.json and index.html (plain Python; pandas only with --sources)
-tools/update_prices.py  fuel and electricity prices from StatFin (khi/11xx, ehi/13rb)
+tools/update_prices.py  fuel and electricity prices from StatFin (khi/11xx, ehi/13rb) + 15-year ranges (CPI khi/11xs)
 .github/workflows/update-prices.yml  runs update_prices + build on the 5th of each month
 .github/workflows/update-inspection.yml  runs update_inspection + build on 20 May/June/July (Traficom's spring release)
 data/catalog.json     588 models: [brand, model, pt, WLTP l/100km, count, "years", km/yr,
@@ -85,7 +85,11 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   years and a common depreciation factor, tipSearch() scans 48 steps (years: whole years) from the current value each way
   and bisects the first change; the two nearest (relative distance) are shown, rounded towards the tipping side (finer when
   within 5 %; "nearly even" under 2 %). Search limits are labelled as limits, not ranges. Ranges (e.g. 4 200–5 100 €/yr)
-  only with a sourced basis for each bound; the only candidate so far is StatFin 12-month price min/max.
+  only with a sourced basis for each bound.
+- Energy price range (`energyRange()`, `#rangeInfo`): PRANGE = prices.json `ranges` from update_prices.py: min/max of
+  12-month average prices over 15 years in today's money (CPI khi/11xs ip_0_2005; the 2015 base starts only in 2015).
+  Low/high = all energies at their extremes at once, widened to include the current price; totals rounded to 10 €.
+  If the range fetch fails, update_prices keeps the old ranges and still updates prices.
 - Inspections and lifetime (`inspText()`, information only, not in the calculation): build.py links catalogue
   rows to Traficom model series (`inspection_for_page`, longest name prefix; BMW 320D -> 3-sarja; new EVs sharing
   an old name excluded). Survival = pooled year-to-year inspection-count ratios from age 10 (annual inspections);

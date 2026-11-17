@@ -575,6 +575,9 @@ def main():
     vtax = json.loads((root / "data" / "vehicle_tax.json").read_text(encoding="utf-8"))
     vtax = {k: vtax[k] for k in ("t1", "t1a", "ev_new_add", "propulsion_per_100kg")}
     page = page.replace("__VTAX__", json.dumps(vtax, separators=(",", ":")))
+    # Energy price ranges (15 years, 12-month averages in today's money), from tools/update_prices.py
+    prices = json.loads((root / "data" / "prices.json").read_text(encoding="utf-8"))
+    page = page.replace("__PRANGE__", json.dumps(prices.get("ranges"), separators=(",", ":")))
     # Periodic inspections and model lifetime, fetched by tools/update_inspection.py
     insp = inspection_for_page(catalog, root)
     if insp:

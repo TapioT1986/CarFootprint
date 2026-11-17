@@ -59,8 +59,16 @@ async () => {
       if (w === w0) problems.push(`${lang} ${when}: tipping point ${t.k} = ${t.x} does not change the cheapest car`);
     }
   }
+  // 8. Energy price range: each car's yearly cost lies inside its range (rounded to 10 €)
+  function rangeOk(when) {
+    if (typeof energyRange !== 'function' || !PRANGE) return;
+    const G = g();
+    cars.forEach((c, i) => { const r = energyRange(c, G), t = calc(c, G).total;
+      if (!r || r[0] > t + 5 || r[1] < t - 5) problems.push(`${lang} ${when}: car ${i + 1} cost ${Math.round(t)} outside its range ${r}`); });
+  }
   const _sameCars = sameCars;
-  sameCars = when => { _sameCars(when); dockOk(when); tipsOk(when); };
+  sameCars = when => { _sameCars(when); dockOk(when); tipsOk(when); rangeOk(when); };
+  const info = $('rangeInfo'); if (info) info.open = true; // the range table must fit the screen too
 
   sameCars('on load'); fits('on load');
 

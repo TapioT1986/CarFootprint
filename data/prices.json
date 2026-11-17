@@ -17,12 +17,43 @@
   "period": "2026M06",
   "url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/"
  },
- "checked": "2026-11-12",
+ "ranges": {
+  "petrol": {
+   "lo": 1.724,
+   "hi": 2.397,
+   "lo_end": "2021M01",
+   "hi_end": "2022M11",
+   "from": "2011M11",
+   "to": "2026M10"
+  },
+  "diesel": {
+   "lo": 1.502,
+   "hi": 2.422,
+   "lo_end": "2016M10",
+   "hi_end": "2023M02",
+   "from": "2011M11",
+   "to": "2026M10"
+  },
+  "electricity": {
+   "lo": 0.166,
+   "hi": 0.2202,
+   "lo_end": "2016M11",
+   "hi_end": "2023M08",
+   "from": "2011M07",
+   "to": "2026M06"
+  },
+  "cpi_month": "2026M10",
+  "cpi_url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xs.px/",
+  "years": 15,
+  "method": "Lowest and highest 12-month average price over the period, in the money of cpi_month (price x CPI[cpi_month] / CPI[month], CPI 2005=100)."
+ },
+ "checked": "2026-11-17",
  "source": {
   "name": "Tilastokeskus / Statistics Finland, StatFin",
   "tables": [
    "khi/11xx",
-   "ehi/13rb"
+   "ehi/13rb",
+   "khi/11xs"
   ],
   "url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/",
   "licence": "CC BY 4.0"
