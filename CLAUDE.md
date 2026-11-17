@@ -130,7 +130,11 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Phone layout (≤ 900 px): `#dock` is a fixed summary bar filled in update(), hidden (class `off`) by an
   IntersectionObserver while `#sums` is on screen; its height goes to `--dockh` (body padding, scroll-padding).
   `#more` (<details>) holds the financing and energy panels: closed on phones, opened by JS above 900 px;
-  moreCount() counts GIDS inside it that differ from their HTML defaults.
+  moreCount() counts GIDS inside it that differ from their HTML defaults. Closed by default on every screen size.
+- Simple default view: `.req` marks fields users should fill (blue border + dot, explained by `req_hint`); steps 1-3 are
+  `.stepn` headings. Car cards show model search, price, age and odometer; the rest is in `details.carmore` (`cm<i>`),
+  whose open state survives re-renders in `carOpen` (indices shifted on delete). carChanged() counts carToShare() tokens
+  other than N/P/A/O/U, i.e. fields that differ from the model's defaults.
 - Payment choice (`[data-pay]`, payState/setPay/renderPay) is derived from `own` vs `budget` (0 = loan, ≥ budget = cash,
   else part) and is not stored: saves and links keep only `own`. Cash follows budget changes (listener before update).
   `own` counts as changed in moreCount() only in the 'part' state.
