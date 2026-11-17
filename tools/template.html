@@ -1,3 +1,5 @@
+<!doctype html>
+<html lang="fi">
 <!--
   CarFootprint - compare car costs and CO2 emissions per year
   Copyright (C) 2026 Tapio T
@@ -11,6 +13,9 @@
 
   Source code and data: https://github.com/TapioT1986/CarFootprint
 -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CarFootprint</title>
 <meta name="description" content="Mitä auto oikeasti maksaa vuodessa ja paljonko se päästää. Suomen hinnoilla, veroilla ja rekisteritiedoilla. Uudet ja käytetyt autot, todellinen kulutus ja arvonalenema.">
 <meta property="og:type" content="website">
@@ -160,6 +165,8 @@ svg text{font-family:var(--body)}
 .lang[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 @media (max-width:700px){.topright{align-items:flex-start}}
 </style>
+</head>
+<body>
 
 <div class="wrap">
   <header class="top">
@@ -846,3 +853,5 @@ if (saved && Array.isArray(saved.cars) && saved.cars.length && !oldExamples)
 else cars = examples();
 applyLang(LANG);
 </script>
+</body>
+</html>

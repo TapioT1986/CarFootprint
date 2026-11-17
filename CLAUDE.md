@@ -74,6 +74,8 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   way old saves would break, bump `EX_VERSION` and handle older saves explicitly.
 - Default prices are tracked separately (PRICE_DEF) so untouched defaults update.
 - Line endings are LF (.gitattributes). Keep files UTF-8, LF.
+- index.html julkaistaan GitHub Pagesissa sellaisenaan – doctype, charset ja viewport-meta on oltava
+  templatessa itsessään.
 - On the owner's Windows PC Python runs as `py` (Python install manager), and Smart App Control
   blocks pandas DLLs. So the default build must stay free of third-party packages; do not ask him
   to turn Smart App Control off.
