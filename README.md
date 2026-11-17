@@ -75,7 +75,7 @@ tools/template.html                  the page with __CATALOG__ / __RW__ / __VTAX
 tools/build.py                       rebuilds index.html from the data
 tools/update_prices.py               fetches prices from Statistics Finland
 tools/vehicle_tax.py                 fetches the vehicle tax tables from Finlex (run when the law changes)
-tools/update_inspection.py           fetches Traficom inspection statistics (run once a year, in spring)
+tools/update_inspection.py           fetches Traficom inspection statistics (GitHub runs it each spring)
 tools/og-image.html                  source for the preview image
 tools/render_og.py                   renders og-image.png (needs playwright)
 .github/workflows/update-prices.yml  monthly price refresh
@@ -118,7 +118,7 @@ To rebuild the model list from the original registers, download the two large so
 
 Both are too large to keep in the repository, so `sources/` is not committed.
 
-Inspection statistics come straight from Traficom's statistics API, no download needed: `python3 tools/update_inspection.py` (standard library only) writes `data/inspection.json`; then rebuild. Traficom publishes a new year each spring.
+Inspection statistics come straight from Traficom's statistics API, no download needed: `python3 tools/update_inspection.py` (standard library only) writes `data/inspection.json`; then rebuild. Traficom publishes a new year each spring; `.github/workflows/update-inspection.yml` does this automatically on 20 May, June and July and commits only if the figures changed.
 
 ## Licence
 

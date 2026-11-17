@@ -1,0 +1,42 @@
+name: Update inspection statistics
+
+# Traficom publishes the previous year's periodic-inspection statistics each
+# spring (the 2025 figures appeared on 6 May 2026). This runs on the 20th of
+# May, June and July, so a late release is still picked up. When nothing has
+# changed, nothing is committed. Can also be started by hand from the Actions tab.
+on:
+  schedule:
+    - cron: "0 5 20 5,6,7 *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch inspection statistics from Traficom
+        run: python tools/update_inspection.py
+
+      - name: Rebuild the page
+        run: python tools/build.py
+
+      - name: Commit if anything changed
+        run: |
+          if git diff --quiet -- data/inspection.json index.html; then
+            echo "Inspection statistics unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git add data/inspection.json index.html
+          git commit -m "Update inspection statistics from Traficom"
+          git push

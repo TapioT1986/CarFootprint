@@ -40,6 +40,7 @@ tools/template.html   the page source: HTML, CSS, JS, FI/EN texts (I18N), placeh
 tools/build.py        builds data/*.json and index.html (plain Python; pandas only with --sources)
 tools/update_prices.py  fuel and electricity prices from StatFin (khi/11xx, ehi/13rb)
 .github/workflows/update-prices.yml  runs update_prices + build on the 5th of each month
+.github/workflows/update-inspection.yml  runs update_inspection + build on 20 May/June/July (Traficom's spring release)
 data/catalog.json     588 models: [brand, model, pt, WLTP l/100km, count, "years", km/yr,
                       kWh/100km, kWh n, model real-world factor, its n, [[year, NEDC l/100km]...]]
 data/realworld.json   brand/fleet real-world factors (EEA OBFCM)
