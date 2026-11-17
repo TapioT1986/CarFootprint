@@ -215,6 +215,8 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 .foot a{color:var(--accent)}
 .foot .feedback{margin:8px 0 0}
 .disclaim{margin:10px 0 0}
+.sens{margin:12px 0 0;font-size:14px;line-height:1.5;max-width:90ch}
+.sens:empty{display:none}
 .topright{display:flex;flex-direction:column;gap:10px;align-items:flex-end;max-width:46ch}
 .langs{display:flex;gap:6px}
 .lang{padding:5px 10px;font-size:13px}
@@ -321,6 +323,7 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 
       <section class="results" aria-live="polite">
         <div class="sumrow" id="sums"></div>
+        <p class="sens" id="sens"></p>
         <p class="hint disclaim" data-i="disclaim"></p>
         <div class="sharebar"><button class="btn share" type="button" id="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span data-i="share"></span></button><span class="hint shareinv" data-i="share_inv"></span><span class="hint" id="shareMsg" role="status"></span></div>
         <div class="charts">
@@ -375,6 +378,11 @@ fi: {
   pt:{B:'Bensiini',D:'Diesel',H:'Hybridi',P:'Ladattava hybridi',E:'Sähkö'},
   tagline:'Mitä auto oikeasti maksaa vuodessa – ja paljonko se päästää',
   title:'CarFootprint – auton todelliset vuosikulut ja päästöt', desc:'Mitä auto oikeasti maksaa vuodessa ja paljonko se päästää. Suomen hinnoilla, veroilla ja rekisteritiedoilla. Uudet ja käytetyt autot, todellinen kulutus ja arvonalenema.',
+  sens_h:'Kuinka varma järjestys on?', sens_close:'Autot ovat lähes tasoissa. ', sens_if:(p)=>`Halvin vaihtuu, jos ${p}.`, sens_or:' tai ',
+  sens_none:'Halvin pysyy samana, vaikka ajomäärä, energian hinnat, omistusaika tai arvonalenema muuttuisivat tutkituissa rajoissa (ks. Näin laskenta toimii).',
+  sens_km:(d,v)=>`ajat ${d<0?'alle':'yli'} ${v} km/v`, sens_p:(k,d,v)=>`${{pB:'bensiini',pD:'diesel',pE:'sähkö'}[k]} maksaa ${d<0?'alle':'yli'} ${v} ${k==='pE'?'€/kWh':'€/l'}`,
+  sens_years:(d,v)=>`omistat auton ${d<0?'enintään':'vähintään'} ${v} ${v==1?'vuoden':'vuotta'}`,
+  sens_dep:(d,v)=>`autot menettävät arvoaan yli ${v} % oletettua ${d<0?'hitaammin':'nopeammin'}`,
   disclaim:'Laskelma on arvio avoimen datan ja oletusten pohjalta, ei osto- tai rahoitusneuvo.',
   feedback:'Palaute ja virheilmoitukset: <a href="https://github.com/TapioT1986/CarFootprint/issues/new" target="_blank" rel="noopener">kirjoita GitHubiin</a> (vaatii ilmaisen GitHub-tunnuksen).',
   meta:'Beta __VERSION__ – päivitetty __UPDATED_FI__. Laskee arvonaleneman, rahoituksen, energian ja muut kulut sekä elinkaaren päästöt omalla ajomäärälläsi. Esimerkkiautot ovat esimerkkejä – vaihda omasi.',
@@ -420,6 +428,7 @@ fi: {
 <li><b>Katsastus ja elinikä</b> (tietoa autokortilla, ei vaikuta laskelmaan) tulevat <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficomin katsastuksen vikatilastoista</a> (määräaikaiskatsastukset 2017–2025, avoin data CC BY 4.0). Traficom tilastoi mallisarjoittain, eli kaikki saman mallin käyttövoimat ja sukupolvet ovat yhdessä. Hylkäysprosentti on uusimmalta vuodelta auton ostoiän mukaan, tai lähimmältä iältä, josta on vähintään 50 katsastusta. Viat ovat hylkäykseen johtaneiden vikojen osuudet kaikista ikäluokista. Elinikä lasketaan katsastusmääristä: 10 vuoden iästä alkaen autot katsastetaan joka vuosi, joten saman vuoden autojen katsastusmäärä kertoo, montako on vielä liikenteessä. Ennen 10 vuoden ikää poistuneet autot (kolarit, vienti) eivät näy luvussa. Käytettynä tuodut autot kasvattavat lukuja, ja jos katsastusmäärät kasvavat iän mukana, elinikää ei arvioida. Kun yli puolet on vielä liikenteessä 20-vuotiaana, ikä, jossa puolet on poistunut, on arvio: vuosittainen poistumaosuus jatketaan suorana viivana iän 10–19 havainnoista. Kenttä Käyttöikä (päästöjen jakaminen) on edelleen oletus 18–20 vuotta.</li>
 <li><b>Valmistuspäästöt</b> ovat <a href="https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/" target="_blank" rel="noopener">ICCT:n</a> EU:n elinkaaritutkimuksesta (2025) keskikokoiselle autolle, kuten Golfille. Auton valmistus ja kierrätys ilman akkua: bensiini-, diesel- ja hybridiauto 8,2 t, lataushybridi 8,6 t ja sähköauto 7,5 t CO₂e. Akun valmistus on 72,8 kg CO₂e/kWh, kun painotetaan solujen valmistusmaita (30 % Eurooppa, 56 % Kiina). Oletusakku on EU:ssa 2023 myytyjen keskikokoisten autojen keskiarvo: sähköauto 53,4 kWh (3,9 t), lataushybridi 13,3 kWh (1,0 t). Akun koon voi vaihtaa oman auton mukaiseksi kohdassa Lisää oletuksia. Pienen auton valmistus tuottaa vähemmän ja ison enemmän päästöjä. Valmistuspäästöt jaetaan auton koko käyttöiälle. ICCT:n mukaan akut kestävät yleensä auton käyttöiän: alle 1 %:ssa vuoden 2016 jälkeen myydyistä sähköautoista akku on vaihdettu (Recurrent, 20 000 autoa).</li>
 <li><b>Jaa vertailu</b> tekee lyhyen linkin, jossa on vain valitut mallit ja muutetut luvut; kaikki muu lasketaan avattaessa uudelleen. Tiedot ovat linkin #-merkin jälkeisessä osassa, jota selain ei lähetä palvelimelle, eikä sivu kerää mitään tietoa. Linkkiin tallentuvat vain muutetut asetukset, joten avaaja näkee ajantasaiset polttoaineen ja sähkön hinnat, ellet ole muuttanut niitä. Jaetun linkin avaaminen ei hävitä avaajan omia autoja: ne voi palauttaa.</li>
+<li><b>Kuinka varma järjestys on?</b> Sivu muuttaa yhtä asiaa kerrallaan ja etsii lähimmän arvon, jolla halvin auto vaihtuu, ja näyttää kaksi lähintä. Haun rajat: ajomäärä 2 000–50 000 km, polttoaineen ja sähkön hinta puolesta kaksinkertaiseen, omistusaika 1–20 vuotta ja arvonalenema puolesta kaksinkertaiseen (sama kerroin kaikille autoille). Rajat eivät ole ennusteita tai vaihteluvälejä, vaan sitä, kuinka kaukaa kääntöpistettä haetaan; kaukana olevaa kääntöpistettä ei näytetä.</li>
 <li>Vakuutus ja huollon lähtötaso ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
@@ -473,6 +482,11 @@ en: {
   pt:{B:'Petrol',D:'Diesel',H:'Hybrid',P:'Plug-in hybrid',E:'Electric'},
   tagline:'What a car really costs per year, and how much it emits',
   title:'CarFootprint – what a car really costs per year and emits', desc:'What a car really costs per year and how much it emits, with Finnish prices, taxes and register data. New and used cars, real-world consumption and depreciation.',
+  sens_h:'How firm is the ranking?', sens_close:'The cars are nearly even. ', sens_if:(p)=>`The cheapest car changes if ${p}.`, sens_or:' or ',
+  sens_none:'The cheapest car stays the same even if mileage, energy prices, ownership period or depreciation change within the tested limits (see How the calculation works).',
+  sens_km:(d,v)=>`you drive ${d<0?'under':'over'} ${v} km/yr`, sens_p:(k,d,v)=>`${{pB:'petrol',pD:'diesel',pE:'electricity'}[k]} costs ${d<0?'under':'over'} ${v} ${k==='pE'?'€/kWh':'€/l'}`,
+  sens_years:(d,v)=>`you keep the car ${d<0?'at most':'at least'} ${v} ${v==1?'year':'years'}`,
+  sens_dep:(d,v)=>`cars lose value over ${v}% ${d<0?'slower':'faster'} than assumed`,
   disclaim:'The calculation is an estimate based on open data and assumptions, not purchasing or financial advice.',
   feedback:'Feedback and bug reports: <a href="https://github.com/TapioT1986/CarFootprint/issues/new" target="_blank" rel="noopener">write on GitHub</a> (needs a free GitHub account).',
   meta:'Beta __VERSION__ – updated __UPDATED_EN__. Calculates depreciation, financing, energy and other costs plus lifecycle emissions at your own annual mileage. Prices, taxes and the model list are for Finland. The example cars are examples, so swap in your own.',
@@ -519,6 +533,7 @@ en: {
 <li><b>Inspections and lifetime</b> (information on the car card, not used in the calculation) come from <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficom's periodic inspection statistics</a> (inspections 2017–2025, open data CC BY 4.0). Traficom groups cars by model series, so all powertrains and generations of a model are together. The failure rate is for the latest year at the car's age at purchase, or the nearest age with at least 50 inspections. The faults are shares of the faults that caused a failure, all ages together. Lifetime is worked out from inspection counts: from 10 years on, cars are inspected every year, so the count for one model year shows how many are still on the road. Cars that left the road before 10 years (crashes, exports) do not show in the figure. Cars imported used raise the counts, and if the counts rise with age, no lifetime is estimated. When more than half are still on the road at 20, the age at which half have left is an estimate: the yearly drop-out rate is continued as a straight line from ages 10–19. The Lifetime field (spreading manufacturing emissions) is still the 18–20-year assumption.</li>
 <li><b>Manufacturing emissions</b> come from the <a href="https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/" target="_blank" rel="noopener">ICCT</a> EU life-cycle study (2025) for a medium-size car such as the Golf. Making and recycling the car without its battery: petrol, diesel and hybrid cars 8.2 t, plug-in hybrids 8.6 t and electric cars 7.5 t CO₂e. Battery production is 72.8 kg CO₂e per kWh, weighted by where the cells are made (30% Europe, 56% China). The default battery is the average of medium-size cars sold in the EU in 2023: 53.4 kWh for electric cars (3.9 t) and 13.3 kWh for plug-in hybrids (1.0 t). You can set your own car's battery size under More assumptions. A small car takes less to make and a large one more. Manufacturing emissions are spread over the car's whole lifetime. According to the ICCT, batteries usually outlast the car: fewer than 1% of electric cars sold after 2016 have had their battery replaced (Recurrent, 20,000 cars).</li>
 <li><b>Share comparison</b> makes a short link holding only the chosen models and the numbers you changed; everything else is recalculated when it opens. The data sits after the # sign, which browsers never send to the server, and the page collects nothing. Only settings you changed go into the link, so whoever opens it sees current fuel and electricity prices unless you changed them. Opening a shared link does not lose the opener's own cars: they can be restored.</li>
+<li><b>How firm is the ranking?</b> The page changes one thing at a time, finds the nearest value at which the cheapest car changes, and shows the two nearest. Search limits: mileage 2,000–50,000 km, fuel and electricity prices from half to double, ownership 1–20 years and depreciation from half to double (the same factor for every car). The limits are not forecasts or ranges, only how far the page looks for a tipping point; one further away is not shown.</li>
 <li>Insurance and the starting level of servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
   new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
@@ -1015,6 +1030,53 @@ function inspText(c){
   }
   return out.trim();
 }
+// --- kääntöpisteet: lähin arvo, jolla halvin auto vaihtuu, kun yhtä asiaa muutetaan kerrallaan ---
+const winnerOf = t => t.reduce((k, v, i) => v < t[k] - 1e-9 ? i : k, 0);
+// f(x) -> halvimman auton indeksi. Hakee x0:sta kumpaankin suuntaan ensimmäisen vaihdon ja tarkentaa sen puolittamalla.
+function tipSearch(f, x0, lo, hi, tol, integer){
+  const w0 = f(x0), out = [];
+  for (const dir of [-1, 1]){
+    const end = dir < 0 ? lo : hi;
+    if ((end - x0)*dir <= 0) continue;
+    const steps = integer ? Math.abs(end - x0) : 48;
+    let prev = x0;
+    for (let s = 1; s <= steps; s++){
+      const x = integer ? x0 + dir*s : x0 + (end - x0)*s/steps;
+      if (f(x) === w0){ prev = x; continue; }
+      let a = prev, b = x; // a: sama halvin, b: eri
+      if (integer) while (Math.abs(b - a) > 1){ const m = Math.round((a + b)/2); if (f(m) === w0) a = m; else b = m; }
+      else while (Math.abs(b - a) > tol){ const m = (a + b)/2; if (f(m) === w0) a = m; else b = m; }
+      out.push({x:b, dir, w:f(b)}); break;
+    }
+  }
+  return out;
+}
+function tipping(G){
+  if (cars.length < 2) return null;
+  const win = (G2, km) => winnerOf(cars.map(c => calc(c, G2, km).total));
+  const uses = {pB: cars.some(c => 'BHP'.includes(c.pt)), pD: cars.some(c => c.pt==='D'), pE: cars.some(c => c.pt==='E' || c.pt==='P')};
+  const rates = cars.map(c => calc(c, G).rate);
+  const V = [{k:'km', x0:G.km, lo:2000, hi:50000, tol:25, f:x => win(G, x)}];
+  ['pB','pD','pE'].forEach(k => { if (uses[k] && G[k] > 0) V.push({k, x0:G[k], lo:G[k]/2, hi:G[k]*2, tol:0.0005, f:x => win({...G, [k]:x})}); });
+  V.push({k:'years', x0:Math.round(G.years), lo:1, hi:20, int:true, f:x => win({...G, years:x})});
+  V.push({k:'dep', x0:1, lo:0.5, hi:2, tol:0.002, f:x => winnerOf(cars.map((c,i) => calc({...c, dep:rates[i]*x*100}, G).total))});
+  const tips = [];
+  V.forEach(v => { const t = tipSearch(v.f, v.x0, v.lo, v.hi, v.tol, v.int)
+    .map(o => ({...o, k:v.k, rel:Math.abs(o.x - v.x0)/v.x0})).sort((a,b) => a.rel - b.rel)[0];
+    if (t) tips.push(t); });
+  return tips.sort((a,b) => a.rel - b.rel).slice(0, 2);
+}
+// Pyöristys aina kääntöpisteen puolelle ("alle" alaspäin, "yli" ylöspäin); lähellä nykyistä tarkemmin
+const roundTo = (x, step, dir) => (dir < 0 ? Math.floor(x/step) : Math.ceil(x/step))*step;
+function tipText(t){
+  let s;
+  const close = t.rel < 0.05;
+  if (t.k==='km') s = T('sens_km')(t.dir, fmt(roundTo(t.x, close || t.x < 5000 ? 100 : 500, t.dir)));
+  else if (t.k==='years') s = T('sens_years')(t.dir, t.x);
+  else if (t.k==='dep') s = T('sens_dep')(t.dir, fmt(Math.ceil(Math.abs(t.x - 1)*100)));
+  else { const d = close ? 3 : 2; s = T('sens_p')(t.k, t.dir, fmt(roundTo(t.x, Math.pow(10,-d), t.dir), d)); }
+  return `${s} (→ ${esc(cars[t.w].name)})`;
+}
 function update(){
   const G = g(), yr = T('yr');
   $('kmOut').textContent = fmt(G.km);
@@ -1038,6 +1100,9 @@ function update(){
     if (cars.length>1 && r.em===minEm) b.push(T('dock_clean'));
     return `<span class="dc" style="--cc:${COLORS[i]}"><span class="dn">${esc(c.name)}</span><span class="dv">${fmt(r.total)} <small>€<span class="yr">/${yr}</span></small></span><span class="db">${b.join(' · ')}</span></span>`; }).join('');
   moreCount(); renderPay();
+  const tips = tipping(G);
+  $('sens').innerHTML = !tips ? '' : `<b>${T('sens_h')}</b> ` + (tips.length && tips[0].rel < 0.02 ? T('sens_close') : '')
+    + (tips.length ? T('sens_if')(tips.map(tipText).join(T('sens_or'))) : T('sens_none'));
   document.querySelectorAll('#sums .big').forEach((e,i)=>{ if (before.length && before[i]!==undefined && before[i]!==e.textContent) e.classList.add('flash'); });
   cars.forEach((c,i)=>{ const e=$('insp'+i); if(e) e.innerHTML = inspText(c); });
   cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];

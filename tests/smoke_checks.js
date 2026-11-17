@@ -45,8 +45,22 @@ async () => {
     dock.querySelectorAll('.dc').forEach((c, i) => { const v = c.querySelector('.dv');
       if (v.scrollWidth > c.clientWidth + 1) problems.push(`${lang} ${when}: summary bar value ${i + 1} does not fit`); });
   }
+  // 7. Tipping points: shown whenever there are two or more cars, and each one really changes the cheapest car
+  function tipsOk(when) {
+    const sens = $('sens');
+    if (!sens || typeof tipping !== 'function') return;
+    if (cars.length > 1 && !sens.textContent.trim()) problems.push(`${lang} ${when}: no "how firm is the ranking" line`);
+    const G = g(), w0 = winnerOf(cars.map(c => calc(c, G).total)), rates = cars.map(c => calc(c, G).rate);
+    for (const t of tipping(G) || []) {
+      const x = t.k === 'years' ? t.x : t.x + t.dir * (t.k === 'km' ? 60 : t.k === 'dep' ? 0.004 : 0.002);
+      const w = t.k === 'km' ? winnerOf(cars.map(c => calc(c, G, x).total))
+        : t.k === 'dep' ? winnerOf(cars.map((c, i) => calc({...c, dep: rates[i] * x * 100}, G).total))
+        : winnerOf(cars.map(c => calc(c, {...G, [t.k]: x}).total));
+      if (w === w0) problems.push(`${lang} ${when}: tipping point ${t.k} = ${t.x} does not change the cheapest car`);
+    }
+  }
   const _sameCars = sameCars;
-  sameCars = when => { _sameCars(when); dockOk(when); };
+  sameCars = when => { _sameCars(when); dockOk(when); tipsOk(when); };
 
   sameCars('on load'); fits('on load');
 

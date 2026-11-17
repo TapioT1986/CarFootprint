@@ -81,6 +81,11 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   ownership km [odo, odo + km·years] of Consumer Reports 2020 band factors: ICE/hybrids 1 / 2.14 / 2.82,
   EV 1 / 2.33 / 3.58 (bands 0–80 467, –160 934, beyond). "Other costs" = insurance + tyres only
   (EX_VERSION 6 subtracts the servicing default from older saves). Battery wear adds no cost.
+- Tipping points (`tipping()`, `#sens`): winnerOf(totals) is the cheapest car; for km, pB/pD/pE (only if some car uses it),
+  years and a common depreciation factor, tipSearch() scans 48 steps (years: whole years) from the current value each way
+  and bisects the first change; the two nearest (relative distance) are shown, rounded towards the tipping side (finer when
+  within 5 %; "nearly even" under 2 %). Search limits are labelled as limits, not ranges. Ranges (e.g. 4 200–5 100 €/yr)
+  only with a sourced basis for each bound; the only candidate so far is StatFin 12-month price min/max.
 - Inspections and lifetime (`inspText()`, information only, not in the calculation): build.py links catalogue
   rows to Traficom model series (`inspection_for_page`, longest name prefix; BMW 320D -> 3-sarja; new EVs sharing
   an old name excluded). Survival = pooled year-to-year inspection-count ratios from age 10 (annual inspections);
