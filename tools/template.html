@@ -123,6 +123,9 @@ details.adv .fields{margin-top:10px}
 .addcar{border:1.5px dashed var(--line);border-radius:10px;background:transparent;color:var(--muted);font:600 15px var(--body);cursor:pointer;min-height:120px}
 .addcar:hover{border-color:var(--accent);color:var(--accent)}
 .tag{font-size:11.5px;color:var(--muted)}
+.insp{display:block;margin-top:6px;font-size:11.5px;color:var(--muted);line-height:1.45}
+.insp:empty{display:none}
+.insp b{font-weight:600;color:var(--ink)}
 
 /* tulokset */
 section.results{margin-top:24px}
@@ -300,6 +303,7 @@ svg text{font-family:var(--body)}
 <script>
 const CATALOG = __CATALOG__;
 const VTAX = __VTAX__; // ajoneuvoveron taulukot 2026 (Finlex 814/2024, data/vehicle_tax.json)
+const INSP = __INSP__; // Traficom: määräaikaiskatsastukset ja elinikä malleittain (tools/update_inspection.py)
 const RW = __RW__; // EEA: mitattu kulutus (OBFCM) valmistajittain + Suomen 2025 sähkönkulutukset
 
 // ---------- kielet / languages ----------
@@ -342,6 +346,7 @@ fi: {
 <li><b>Sähkön päästöt:</b> Suomen tuotannon suorat päästöt 26 g/kWh (Energiateollisuus, 2025) + tuotantoketju 16 g/kWh (Ilmastopaneeli). Tuotantotapojen elinkaariarvot IPCC:n ja UNECE:n mukaan.</li>
 <li><b>Lähteet:</b> malliluettelo ja CO₂-arvot <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficomin avoimesta datasta</a> 30.6.2026, mitattu kulutus <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA:n OBFCM-aineistosta</a> ja sähkönkulutus <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA:n uusien autojen rekisteristä</a> (Suomessa 2020–2025 rekisteröidyt). Kaikki CC BY 4.0. Arvonalenema Verohallinnon verotusarvoista ja NEDC-korjaus ICCT:ltä. Koko laskentamalli ja käytetty data ovat <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">GitHubissa</a>.</li>
 <li><b>Ajoneuvovero</b> lasketaan vuoden 2026 verotaulukoista (<a href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814" target="_blank" rel="noopener">ajoneuvoverolaki, muutos 814/2024</a>). Perusvero määräytyy auton virallisen CO₂-päästön mukaan, ja se on 106–654 €/v. Päästö lasketaan mallin virallisesta kulutuksesta: vuosimallit 2017 ja vanhemmat NEDC-taulukolla 1, uudemmat WLTP-taulukolla 1 A. Sähköautoista, jotka on otettu käyttöön 1.10.2021 tai myöhemmin, perusvero on 171 €/v; laskuri pitää vuosimallia 2022 ja uudempia tällaisina. Lataushybridien perusvero on alin porras, koska niiden WLTP-päästö on lähes aina alle 103 g/km. Diesel-, sähkö- ja lataushybridiautoista maksetaan lisäksi käyttövoimaveroa: 5,5, 1,9 tai 0,95 senttiä päivässä jokaiselta kokonaismassan alkavalta 100 kg:lta. Kokonaismassa ei ole vielä malliluettelossa, joten se on oletus (diesel 2 000 kg, sähkö 2 200 kg, lataushybridi 2 300 kg). Oman auton kokonaismassa löytyy rekisteröintitodistuksesta, ja sen voi vaihtaa kohdassa Lisää oletuksia. Hallituksen esitys HE 173/2026 alentaisi yli 10-vuotiaiden polttomoottoriautojen perusveroa keskimäärin noin 6 €/v. Esitys on vielä eduskunnan käsittelyssä, eikä sitä ole otettu huomioon.</li>
+<li><b>Katsastus ja elinikä</b> (tietoa autokortilla, ei vaikuta laskelmaan) tulevat <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficomin katsastuksen vikatilastoista</a> (määräaikaiskatsastukset 2017–2025, avoin data CC BY 4.0). Traficom tilastoi mallisarjoittain, eli kaikki saman mallin käyttövoimat ja sukupolvet ovat yhdessä. Hylkäysprosentti on uusimmalta vuodelta auton ostoiän mukaan, tai lähimmältä iältä, josta on vähintään 50 katsastusta. Viat ovat hylkäykseen johtaneiden vikojen osuudet kaikista ikäluokista. Elinikä lasketaan katsastusmääristä: 10 vuoden iästä alkaen autot katsastetaan joka vuosi, joten saman vuoden autojen katsastusmäärä kertoo, montako on vielä liikenteessä. Ennen 10 vuoden ikää poistuneet autot (kolarit, vienti) eivät näy luvussa. Käytettynä tuodut autot kasvattavat lukuja, ja jos katsastusmäärät kasvavat iän mukana, elinikää ei arvioida. Kun yli puolet on vielä liikenteessä 20-vuotiaana, ikä, jossa puolet on poistunut, on arvio: vuosittainen poistumaosuus jatketaan suorana viivana iän 10–19 havainnoista. Kenttä Käyttöikä (päästöjen jakaminen) on edelleen oletus 18–20 vuotta.</li>
 <li>Valmistuspäästöt, vakuutus ja huollon lähtötaso ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
@@ -359,6 +364,15 @@ fi: {
   be_aria:'Vuosikustannus ajomäärän mukaan',
   tag:(p,a,o,r)=>`Arvonalenema ${p} %/v · myyt ${a} v, ${o} km, arvo ${r} €`,
   reg:(n,y)=>` · rekisterissä ${n} kpl (${y})`,
+  insp_rej:(y,m,a,p,q,n,near)=>`<b>Katsastus ${y}</b> (Traficom): ${a}-vuotiaista${near?' (lähin tilastoitu ikä)':''} ${m} -autoista hylättiin ${p} % (${n} katsastusta), kaikista ${a}-vuotiaista ${q} %.`,
+  insp_f:(t)=>` Hylkäykseen johtaneet viat tällä mallilla (kaikki iät): ${t.map(([l,p])=>`${l} ${p} %`).join(', ')}.`,
+  insp_s:(a,p,q)=>` <b>Elinikä:</b> ${p} % 10-vuotiaina katsastetuista katsastettiin vielä ${a}-vuotiaina (kaikki mallit ${q} %).`,
+  insp_med:(a)=>` Niistä puolet oli poistunut noin ${a} vuoden iässä.`,
+  insp_medx:(a)=>` Arvio: niistä puolet poistuu noin ${a} vuoden iässä (kaikki mallit noin __ALLMED__ v).`,
+  insp_med25:' Arvio: niistä puolet poistuu vasta yli 25 vuoden iässä (kaikki mallit noin __ALLMED__ v).',
+  insp_imp:' <b>Elinikä:</b> käytettynä tuotuja autoja on tällä mallilla niin paljon, että katsastusmäärät kasvavat iän mukana; elinikää ei voi arvioida.',
+  insp_series:(s)=>s,
+  areas:['tunnistus ja asiapaperit','akselistot, pyörät ja jousitus','alusta ja kori','jarrut','kaasulaitteet','koeajo ja näkyvyys','lisätarkastukset','muut laitteet','ohjaus','sähkö- ja hybridijärjestelmät','valot ja sähkölaitteet','päästöt ja muut ympäristöhaitat'],
   serv_tag:(e,k)=>` · huolto ja korjaukset keskimäärin ${e} €/v (× ${k})`,
   tax_tag:(t,b,p)=>` · ajoneuvovero ${t} €/v` + (p>0 ? ` (perusvero ${b} + käyttövoimavero ${p})` : ''),
   rw_model:(p,n)=>` · Mitattu kulutus tälle mallille: ${p} % yli WLTP:n (${n} autoa, EEA)`,
@@ -418,6 +432,7 @@ en: {
 <li><b>Electricity emissions:</b> direct emissions of Finnish generation 26 g/kWh (Finnish Energy, 2025) + supply chain 16 g/kWh (Finnish Climate Change Panel). Lifecycle values per generation type follow IPCC and UNECE.</li>
 <li><b>Sources:</b> model list and CO₂ values from <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficom open vehicle data</a> (30 June 2026), measured consumption from the <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA's OBFCM dataset</a> and electricity consumption from the <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA new-car register</a> (cars registered in Finland 2020–2025). All CC BY 4.0. Depreciation from the Finnish Tax Administration's taxation values and the NEDC correction from the ICCT. The full calculation model and the data behind it are <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">on GitHub</a>.</li>
 <li><b>Vehicle tax</b> follows the 2026 tax tables (<a href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814" target="_blank" rel="noopener">Vehicle Tax Act, amendment 814/2024</a>). The base tax depends on the car's official CO₂ emissions and is €106–654 a year. The emissions are worked out from the model's official consumption: model years 2017 and older use the NEDC table 1, newer cars the WLTP table 1 A. Electric cars first registered on or after 1 October 2021 pay €171 a year; the calculator treats model years 2022 and newer as such. Plug-in hybrids pay the lowest band, as their WLTP emissions are almost always below 103 g/km. Diesel, electric and plug-in hybrid cars also pay a propulsion tax: 5.5, 1.9 or 0.95 cents a day for every started 100 kg of total mass. Total mass is not yet in the model list, so it is an assumption (diesel 2,000 kg, electric 2,200 kg, plug-in hybrid 2,300 kg). Your own car's total mass is on its registration certificate; change it under More assumptions. Government proposal HE 173/2026 would lower the base tax of combustion cars over 10 years old by about €6 a year on average. It is still before Parliament and is not included.</li>
+<li><b>Inspections and lifetime</b> (information on the car card, not used in the calculation) come from <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficom's periodic inspection statistics</a> (inspections 2017–2025, open data CC BY 4.0). Traficom groups cars by model series, so all powertrains and generations of a model are together. The failure rate is for the latest year at the car's age at purchase, or the nearest age with at least 50 inspections. The faults are shares of the faults that caused a failure, all ages together. Lifetime is worked out from inspection counts: from 10 years on, cars are inspected every year, so the count for one model year shows how many are still on the road. Cars that left the road before 10 years (crashes, exports) do not show in the figure. Cars imported used raise the counts, and if the counts rise with age, no lifetime is estimated. When more than half are still on the road at 20, the age at which half have left is an estimate: the yearly drop-out rate is continued as a straight line from ages 10–19. The Lifetime field (spreading manufacturing emissions) is still the 18–20-year assumption.</li>
 <li>Manufacturing emissions, insurance and the starting level of servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
   new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
@@ -435,6 +450,15 @@ en: {
   be_aria:'Annual cost by mileage',
   tag:(p,a,o,r)=>`Depreciation ${p}%/yr · sold at ${a} years, ${o} km, worth €${r}`,
   reg:(n,y)=>` · ${n} in the Finnish register (${y})`,
+  insp_rej:(y,m,a,p,q,n,near)=>`<b>Inspections ${y}</b> (Traficom): ${p}% of ${a}-year-old${near?' (nearest age with data)':''} ${m} cars failed (${n} inspections); all ${a}-year-old cars ${q}%.`,
+  insp_f:(t)=>` Faults that caused failures for this model (all ages): ${t.map(([l,p])=>`${l} ${p}%`).join(', ')}.`,
+  insp_s:(a,p,q)=>` <b>Lifetime:</b> of the cars inspected at 10 years, ${p}% were still inspected at ${a} (all models ${q}%).`,
+  insp_med:(a)=>` Half of them had left the road by about ${a} years.`,
+  insp_medx:(a)=>` Estimate: half of them leave the road by about ${a} years (all models about __ALLMED__ years).`,
+  insp_med25:' Estimate: half of them leave the road only after 25 years (all models about __ALLMED__ years).',
+  insp_imp:' <b>Lifetime:</b> so many of this model are imported used that inspection counts rise with age; no lifetime estimate is possible.',
+  insp_series:(s)=>s.replace('-sarja',' Series'),
+  areas:['identification and documents','axles, wheels and suspension','chassis and body','brakes','gas equipment','road test and visibility','additional checks','other equipment','steering','electric and hybrid systems','lights and electrics','emissions and other environmental'],
   serv_tag:(e,k)=>` · servicing and repairs €${e}/yr on average (× ${k})`,
   tax_tag:(t,b,p)=>` · vehicle tax €${t}/yr` + (p>0 ? ` (base tax ${b} + propulsion tax ${p})` : ''),
   rw_model:(p,n)=>` · Measured consumption for this model: ${p}% above WLTP (${n} cars, EEA)`,
@@ -729,6 +753,7 @@ function carCard(c,i){
         ${'DEP'.includes(c.pt)?`<div class="field"><label class="label" for="mass${i}">${T('mass_l')}</label><input type="number" id="mass${i}" data-k="mass" step="50" min="0" value="${c.mass}"><span class="unit">${T('mass_u')}</span></div>`:''}
       </div></details>
     <span class="tag" id="tag${i}"></span>
+    <span class="insp" id="insp${i}"></span>
   </div>`;
 }
 function renderCars(){
@@ -859,6 +884,40 @@ function rwTextBase(c, w){
   if (c.pt==='P') return T('rw_phev')(w.t==='brand'?w.brand:'', fmt(w.avg,1), fmt(w.n)) + (w.kwhReg?T('rw_phev_kwh'):'');
   return w.kwhReg ? T('rw_ev_reg') : T('rw_ev_def');
 }
+// Katsastustilasto ja elinikä mallisarjalle (Traficom). Ikä = ostohetken ikä, lähin tilastoitu.
+function inspSeries(c){
+  if (!INSP || !c.picked) return null;
+  const name = INSP.idx[CATALOG.indexOf(c.picked)];
+  return name ? [name, INSP.m[name]] : null;
+}
+const prettySeries = n => T('insp_series')(n.replace(/\b([A-ZÄÖ]{4,})\b/g, w => w[0]+w.slice(1).toLowerCase()));
+function inspText(c){
+  const hit = inspSeries(c); if (!hit) return '';
+  const [name, e] = hit, all = INSP.all, m = esc(prettySeries(name));
+  let out = '';
+  if (e.r){
+    const want = Math.max(0, Math.round(c.age||0)), ages = Object.keys(e.r).map(Number);
+    const a = ages.reduce((b,x) => Math.abs(x-want) < Math.abs(b-want) ? x : b, ages[0]);
+    const [n, p] = e.r[a], q = all.r[a] ? all.r[a][1] : null;
+    if (p!=null) out += T('insp_rej')(INSP.y, m, a, fmt(p,1), q!=null?fmt(q,1):'–', fmt(n), a!==want);
+  }
+  if (e.f){
+    const tot = e.f.reduce((s,x)=>s+x,0);
+    if (tot >= 30) out += T('insp_f')(e.f.map((x,k)=>[x,k]).sort((x,y)=>y[0]-x[0]).slice(0,3)
+      .map(([x,k]) => [T('areas')[k], fmt(x/tot*100)]));
+  }
+  if (e.s){
+    const allMed = fmt(Math.round(all.med));
+    if (e.imp) out += T('insp_imp');
+    else {
+      const [a, v] = e.s[e.s.length-1], av = (all.s.find(([x]) => x===a)||[0,null])[1];
+      out += T('insp_s')(a, fmt(v*100), av!=null?fmt(av*100):'–');
+      if (e.med!=null) out += !e.medx ? T('insp_med')(fmt(Math.round(e.med)))
+        : (e.med > 25 ? T('insp_med25') : T('insp_medx')(fmt(Math.round(e.med)))).replace('__ALLMED__', allMed);
+    }
+  }
+  return out.trim();
+}
 function update(){
   const G = g(), yr = T('yr');
   $('kmOut').textContent = fmt(G.km);
@@ -875,6 +934,7 @@ function update(){
       <div class="badges">${G.budget>0&&c.price>G.budget?`<span class="badge warn">${T('over')}</span>`:''}${G.monthly>0&&Math.round(r.cash)>G.monthly?`<span class="badge warn">${T('over_mo')}</span>`:''}${cars.length>1&&r.total===minCost?`<span class="badge win">${T('cheapest')}</span>`:''}${cars.length>1&&r.em===minEm?`<span class="badge win">${T('cleanest')}</span>`:''}</div>
     </div>`;}).join('');
   document.querySelectorAll('#sums .big').forEach((e,i)=>{ if (before.length && before[i]!==undefined && before[i]!==e.textContent) e.classList.add('flash'); });
+  cars.forEach((c,i)=>{ const e=$('insp'+i); if(e) e.innerHTML = inspText(c); });
   cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];
     t.textContent = T('tag')(fmt(r.rate*100,0), fmt(r.endAge), fmt(r.endOdo), fmt(r.resid)) + (r.loan>0?T('loan_tag')(fmt(r.loan), fmt(r.pay)):'') + T('serv_tag')(fmt(r.serv), fmt(r.servF,1)) + (r.autoTax?T('tax_tag')(fmt(r.tax), fmt(r.vt.base), fmt(r.vt.prop)):'') + (c.picked?T('reg')(fmt(c.picked[4]), c.picked[5]):'') + rwText(c);
     const tx=$('tax'+i); if (tx) tx.placeholder = fmt(r.vt.total); });

@@ -23,6 +23,7 @@ Every assumption is visible and editable.
 - **Financing:** the part of the price not covered by your own money and trade-in is an annuity loan. Its cost is the interest and monthly fees paid during ownership; a loan still running when the car is sold is repaid from the sale. Own money tied up in the car is charged the return it would earn elsewhere. Defaults: 4.1% loan interest (Bank of Finland, new vehicle loans, May 2026), €12.50/month in fees, 2.5% return on own money (Bank of Finland, new term deposits, June 2026). Cars above your maximum price are flagged.
 - **Vehicle tax:** the 2026 tables of the Vehicle Tax Act (amendment 814/2024, fetched from Finlex open data by `tools/vehicle_tax.py`). The base tax follows the official CO₂ figure, worked out from the model's official consumption: NEDC table 1 for model years up to 2017, WLTP table 1 A after that. Electric cars from model year 2022 on are treated as first registered after 1 October 2021 and pay the higher EV base tax; plug-in hybrids pay the lowest band. Diesel, electric and plug-in hybrid cars also pay the propulsion tax per started 100 kg of total mass. Total mass is not in the model list yet, so it is an editable assumption by powertrain (diesel 2,000 kg, electric 2,200 kg, plug-in hybrid 2,300 kg).
 - **Servicing and repairs rise with mileage:** the car's value is the level below 80,000 km (a rough assumption). Per kilometre it is multiplied by 2.1 between 80,000 and 160,000 km and 2.8 beyond for combustion cars and hybrids, and by 2.3 and 3.6 for electric cars (from a lower starting level), averaged over the distance driven during ownership. The factors come from Consumer Reports owner surveys (US, 2020); only the rise is taken from them, not the dollar amounts.
+- **Inspections and lifetime (information only):** each car card shows the model's periodic-inspection failure rate at the car's age (latest year, Traficom), the fault areas that most often caused failures, and how many of the cars inspected at 10 years were still inspected at 20. From 10 years on, cars are inspected every year, so a model year's inspection count tracks how many are still on the road; ratios from year to year are pooled over all model years (inspections 2017–2025). When more than half are still on the road at 20, the age at which half have left is an estimate: the yearly drop-out rate is extended as a straight line fitted over ages 10–19. Traficom groups models by series (all powertrains together); cars imported used raise the counts, and models whose counts rise more than 5% get no lifetime. The Lifetime field used for manufacturing emissions is unchanged.
 - **Monthly budget (optional):** monthly outgoings are what leaves your account each month while the loan runs: the loan payment with fees, plus energy and other costs spread over the months. Depreciation and the lost return on own money are not monthly bills, so they are left out; monthly outgoings therefore differ from the annual cost / 12. If the loan is shorter than the ownership period, the page also shows the outgoings after it. Cars over the monthly budget are flagged.
 - **Example cars follow the maximum price:** a Golf (Finland's typical car), a Toyota full hybrid and the most common electric model that fits the budget, each the youngest model year whose estimated price fits. Prices are estimated from the Tax Administration's taxation values (`data/budget_cars.json`).
 - **Older cars:** cars first registered up to 2017 were rated on the old NEDC test. For them the page uses the model's own NEDC figure for that year from the Finnish register, and adds the NEDC-to-real-world gap measured by the ICCT (8% for 2001 cars, 38% for 2014, 40% for 2016, linear in between).
@@ -51,6 +52,7 @@ Every assumption is visible and editable.
 | Measured real-world fuel consumption, per brand and per model | [EEA, Real-world CO₂ emissions from new cars and vans](https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information), reporting year 2024 | CC BY 4.0 |
 | Electricity consumption of EVs and plug-in hybrids | [EEA, CO₂ emissions from new passenger cars](https://co2cars.apps.eea.europa.eu/), Finland 2025, and 2020–2022 via [Discodata](https://discodata.eea.europa.eu/) | CC BY 4.0 |
 | Vehicle tax tables (2026) | [Vehicle Tax Act 1281/2003, amendment 814/2024 (Finlex)](https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814) |
+| Periodic inspections by model and age, fault areas, lifetime estimate | [Traficom, Katsastuksen vikatilastot (PxWeb)](https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/), inspections 2017–2025 | CC BY 4.0 |
 | Rise of servicing and repair costs with mileage | [Consumer Reports, EV ownership cost, chapter 2 (2020)](https://advocacy.consumerreports.org/wp-content/uploads/2020/10/TCO-Fact-Sheet-Chapter-2-FINAL.pdf) |
 | Depreciation by age | [Finnish Tax Administration, applied taxation values of used cars](https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/), 2024–2026 | |
 | NEDC-to-real-world gap | [ICCT, From laboratory to road: a 2018 update](https://theicct.org/publication/from-laboratory-to-road-a-2018-update/) | |
@@ -73,6 +75,7 @@ tools/template.html                  the page with __CATALOG__ / __RW__ / __VTAX
 tools/build.py                       rebuilds index.html from the data
 tools/update_prices.py               fetches prices from Statistics Finland
 tools/vehicle_tax.py                 fetches the vehicle tax tables from Finlex (run when the law changes)
+tools/update_inspection.py           fetches Traficom inspection statistics (run once a year, in spring)
 tools/og-image.html                  source for the preview image
 tools/render_og.py                   renders og-image.png (needs playwright)
 .github/workflows/update-prices.yml  monthly price refresh
@@ -85,6 +88,7 @@ data/eea_ev_consumption_fi_2020_2022.csv  electricity use of models no longer so
 data/depreciation.json               depreciation rates by age, with method and caveats
 data/budget_cars.json                example-car candidates and their estimated value when new
 data/vehicle_tax.json                vehicle tax tables 1 and 1 A and propulsion tax rates, with source
+data/inspection.json                 inspection failure rates, fault areas and survival by model series
 ```
 
 ## Price updates
@@ -113,6 +117,8 @@ To rebuild the model list from the original registers, download the two large so
 - `eea_fi_*.csv` — [EEA new-car data](https://co2cars.apps.eea.europa.eu/) filtered to Country = FI. It carries the WLTP electricity consumption that the Finnish register does not record.
 
 Both are too large to keep in the repository, so `sources/` is not committed.
+
+Inspection statistics come straight from Traficom's statistics API, no download needed: `python3 tools/update_inspection.py` (standard library only) writes `data/inspection.json`; then rebuild. Traficom publishes a new year each spring.
 
 ## Licence
 

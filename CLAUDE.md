@@ -48,6 +48,8 @@ data/depreciation.json  depreciation by age from Tax Administration values, with
 data/budget_cars.json   example-car candidates and value-when-new (v0)
 data/vehicle_tax.json   vehicle tax tables 1 / 1 A (c/day per g CO2) + propulsion rates;
                       from tools/vehicle_tax.py (Finlex open data, act 814/2024). Re-run when the law changes.
+data/inspection.json  Traficom periodic inspections per model series: failure % by age (latest year), fault
+                      areas, survival from age 10; from tools/update_inspection.py (PxWeb API, stdlib). Yearly.
 data/eea_*.csv        source tables with provenance headers
 ```
 
@@ -73,6 +75,11 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   ownership km [odo, odo + km·years] of Consumer Reports 2020 band factors: ICE/hybrids 1 / 2.14 / 2.82,
   EV 1 / 2.33 / 3.58 (bands 0–80 467, –160 934, beyond). "Other costs" = insurance + tyres only
   (EX_VERSION 6 subtracts the servicing default from older saves). Battery wear adds no cost.
+- Inspections and lifetime (`inspText()`, information only, not in the calculation): build.py links catalogue
+  rows to Traficom model series (`inspection_for_page`, longest name prefix; BMW 320D -> 3-sarja; new EVs sharing
+  an old name excluded). Survival = pooled year-to-year inspection-count ratios from age 10 (annual inspections);
+  median beyond the data = linear drop-out-rate extrapolation (ages 10-19), shown as an estimate, "over 25" above 25.
+  Models with counts rising > 5 % (used imports) get no lifetime. The `life` field is still the flat assumption.
 - Monthly budget (optional, field `monthly`): cash flow = loan payment incl. fees + (energy + other)/12
   while the loan runs; depreciation and return on own money are not cash. Shown on the summary
   card and flagged only when a budget is entered.
@@ -95,6 +102,7 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 
 ## Open ideas (not started)
 
+- Use the inspection-based lifetime as the model default for `life` (owner chose information-only first, 2026-11).
 - Per-model total mass from the Traficom register (needs the ~200 MB source file) for the propulsion tax.
 - A Finnish or European source for the servicing-and-repair rise (now US Consumer Reports factors).
 - A "what the same yearly money buys" view, once the above exist.

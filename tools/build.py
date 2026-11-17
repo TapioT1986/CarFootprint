@@ -442,6 +442,57 @@ def apply_prices(page, root):
     return page.replace("__PRICES_NOTE_FI__", fi).replace("__PRICES_NOTE_EN__", en)
 
 
+def inspection_for_page(catalog, root):
+    """Link each catalogue row to a Traficom inspection model series.
+
+    data/inspection.json comes from tools/update_inspection.py. Traficom groups
+    cars by model series ("Toyota COROLLA", "BMW 3-sarja", "Mercedes-Benz C"),
+    all powertrains together; the catalogue has commercial names ("320D",
+    "C 300 E", "ID.3 PRO 150 KW"). A row matches the longest series name that
+    its model name starts with, at a word or number boundary.
+    """
+    path = root / "data" / "inspection.json"
+    if not path.exists():
+        return None
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    brand_key = lambda b: {"bmw i": "bmw", "tesla motors": "tesla", "ford-cng-technik": "ford"}.get(b.lower(), b.lower())
+    by_brand = {}
+    for name in doc["models"]:
+        for b in sorted({r[0] for r in catalog} | {"BMW", "Tesla", "Ford"}, key=len, reverse=True):
+            if name.lower().startswith(b.lower() + " "):
+                by_brand.setdefault(brand_key(b), []).append((name[len(b) + 1:].upper(), name))
+                break
+    for v in by_brand.values():
+        v.sort(key=lambda s: len(s[0]), reverse=True)
+    squash = lambda s: re.sub(r"[\s.]+", "", s)
+
+    # New electric models that share a name with an older, different car
+    different_car = [("renault", "MEGANE E-TECH"), ("renault", "SCENIC E-TECH"),
+                     ("porsche", "MACAN 4"), ("ford", "EXPLORER")]
+
+    def match(brand, model, pt):
+        m = re.sub(r"^MAZDA(?=\d)", "", model.upper().replace("-KLASSE", ""))
+        if any(brand_key(brand) == b and m.startswith(p) for b, p in different_car):
+            return None
+        if brand_key(brand) == "bmw" and m[:1].isdigit():
+            m = m[0] + "-SARJA"
+        first = m.split(" ")[0]
+        for s, name in by_brand.get(brand_key(brand), []):
+            if m == s or m.startswith(s + " "):
+                return name
+            ms, ss = squash(m), squash(s)
+            # "C 300 E" -> C, "NX300H" -> NX, but "IX1" is not IX and "IONIQ6" is not IONIQ
+            if ms.startswith(ss) and (len(ms) == len(ss) or not ms[len(ss)].isalpha()) \
+                    and not re.fullmatch(re.escape(s) + r"\d", first):
+                return name
+        return None
+
+    idx = [match(r[0], r[1], r[2]) for r in catalog]
+    used = sorted({n for n in idx if n})
+    return {"y": doc["year"], "ys": doc["years"], "url": doc["url"], "all": doc["all"],
+            "m": {n: doc["models"][n] for n in used}, "idx": idx}
+
+
 # --- step 3: assemble the page ----------------------------------------------
 
 def main():
@@ -492,6 +543,12 @@ def main():
     vtax = json.loads((root / "data" / "vehicle_tax.json").read_text(encoding="utf-8"))
     vtax = {k: vtax[k] for k in ("t1", "t1a", "ev_new_add", "propulsion_per_100kg")}
     page = page.replace("__VTAX__", json.dumps(vtax, separators=(",", ":")))
+    # Periodic inspections and model lifetime, fetched by tools/update_inspection.py
+    insp = inspection_for_page(catalog, root)
+    if insp:
+        print(f"   inspection data for {sum(1 for n in insp['idx'] if n)} of {len(catalog)} models "
+              f"({len(insp['m'])} model series, {insp['y']})", file=sys.stderr)
+    page = page.replace("__INSP__", json.dumps(insp, ensure_ascii=False, separators=(",", ":")))
     (root / "index.html").write_text(page, encoding="utf-8", newline="\n")
     print(f"   {len(catalog)} models, {len(realworld['brand'])} brands, "
           f"{len(page) // 1024} KiB", file=sys.stderr)
