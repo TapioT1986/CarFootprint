@@ -361,7 +361,7 @@ fi: {
 <li><b>Ajoneuvovero</b> lasketaan vuoden 2026 verotaulukoista (<a href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814" target="_blank" rel="noopener">ajoneuvoverolaki, muutos 814/2024</a>). Perusvero määräytyy auton virallisen CO₂-päästön mukaan, ja se on 106–654 €/v. Päästö lasketaan mallin virallisesta kulutuksesta: vuosimallit 2017 ja vanhemmat NEDC-taulukolla 1, uudemmat WLTP-taulukolla 1 A. Sähköautoista, jotka on otettu käyttöön 1.10.2021 tai myöhemmin, perusvero on 171 €/v; laskuri pitää vuosimallia 2022 ja uudempia tällaisina. Lataushybridien perusvero on alin porras, koska niiden WLTP-päästö on lähes aina alle 103 g/km. Diesel-, sähkö- ja lataushybridiautoista maksetaan lisäksi käyttövoimaveroa: 5,5, 1,9 tai 0,95 senttiä päivässä jokaiselta kokonaismassan alkavalta 100 kg:lta. Kokonaismassa ei ole vielä malliluettelossa, joten se on oletus (diesel 2 000 kg, sähkö 2 200 kg, lataushybridi 2 300 kg). Oman auton kokonaismassa löytyy rekisteröintitodistuksesta, ja sen voi vaihtaa kohdassa Lisää oletuksia. Hallituksen esitys HE 173/2026 alentaisi yli 10-vuotiaiden polttomoottoriautojen perusveroa keskimäärin noin 6 €/v. Esitys on vielä eduskunnan käsittelyssä, eikä sitä ole otettu huomioon.</li>
 <li><b>Katsastus ja elinikä</b> (tietoa autokortilla, ei vaikuta laskelmaan) tulevat <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficomin katsastuksen vikatilastoista</a> (määräaikaiskatsastukset 2017–2025, avoin data CC BY 4.0). Traficom tilastoi mallisarjoittain, eli kaikki saman mallin käyttövoimat ja sukupolvet ovat yhdessä. Hylkäysprosentti on uusimmalta vuodelta auton ostoiän mukaan, tai lähimmältä iältä, josta on vähintään 50 katsastusta. Viat ovat hylkäykseen johtaneiden vikojen osuudet kaikista ikäluokista. Elinikä lasketaan katsastusmääristä: 10 vuoden iästä alkaen autot katsastetaan joka vuosi, joten saman vuoden autojen katsastusmäärä kertoo, montako on vielä liikenteessä. Ennen 10 vuoden ikää poistuneet autot (kolarit, vienti) eivät näy luvussa. Käytettynä tuodut autot kasvattavat lukuja, ja jos katsastusmäärät kasvavat iän mukana, elinikää ei arvioida. Kun yli puolet on vielä liikenteessä 20-vuotiaana, ikä, jossa puolet on poistunut, on arvio: vuosittainen poistumaosuus jatketaan suorana viivana iän 10–19 havainnoista. Kenttä Käyttöikä (päästöjen jakaminen) on edelleen oletus 18–20 vuotta.</li>
 <li><b>Valmistuspäästöt</b> ovat <a href="https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/" target="_blank" rel="noopener">ICCT:n</a> EU:n elinkaaritutkimuksesta (2025) keskikokoiselle autolle, kuten Golfille. Auton valmistus ja kierrätys ilman akkua: bensiini-, diesel- ja hybridiauto 8,2 t, lataushybridi 8,6 t ja sähköauto 7,5 t CO₂e. Akun valmistus on 72,8 kg CO₂e/kWh, kun painotetaan solujen valmistusmaita (30 % Eurooppa, 56 % Kiina). Oletusakku on EU:ssa 2023 myytyjen keskikokoisten autojen keskiarvo: sähköauto 53,4 kWh (3,9 t), lataushybridi 13,3 kWh (1,0 t). Akun koon voi vaihtaa oman auton mukaiseksi kohdassa Lisää oletuksia. Pienen auton valmistus tuottaa vähemmän ja ison enemmän päästöjä. Valmistuspäästöt jaetaan auton koko käyttöiälle. ICCT:n mukaan akut kestävät yleensä auton käyttöiän: alle 1 %:ssa vuoden 2016 jälkeen myydyistä sähköautoista akku on vaihdettu (Recurrent, 20 000 autoa).</li>
-<li><b>Jaa vertailu</b> tekee linkin, johon asetukset ja autot on pakattu. Ne ovat linkin #-merkin jälkeisessä osassa, jota selain ei lähetä palvelimelle, eikä sivu kerää mitään tietoa. Linkkiin tallentuvat vain muutetut asetukset, joten avaaja näkee ajantasaiset polttoaineen ja sähkön hinnat, ellet ole muuttanut niitä. Jaetun linkin avaaminen ei hävitä avaajan omia autoja: ne voi palauttaa.</li>
+<li><b>Jaa vertailu</b> tekee lyhyen linkin, jossa on vain valitut mallit ja muutetut luvut; kaikki muu lasketaan avattaessa uudelleen. Tiedot ovat linkin #-merkin jälkeisessä osassa, jota selain ei lähetä palvelimelle, eikä sivu kerää mitään tietoa. Linkkiin tallentuvat vain muutetut asetukset, joten avaaja näkee ajantasaiset polttoaineen ja sähkön hinnat, ellet ole muuttanut niitä. Jaetun linkin avaaminen ei hävitä avaajan omia autoja: ne voi palauttaa.</li>
 <li>Vakuutus ja huollon lähtötaso ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
@@ -453,7 +453,7 @@ en: {
 <li><b>Vehicle tax</b> follows the 2026 tax tables (<a href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814" target="_blank" rel="noopener">Vehicle Tax Act, amendment 814/2024</a>). The base tax depends on the car's official CO₂ emissions and is €106–654 a year. The emissions are worked out from the model's official consumption: model years 2017 and older use the NEDC table 1, newer cars the WLTP table 1 A. Electric cars first registered on or after 1 October 2021 pay €171 a year; the calculator treats model years 2022 and newer as such. Plug-in hybrids pay the lowest band, as their WLTP emissions are almost always below 103 g/km. Diesel, electric and plug-in hybrid cars also pay a propulsion tax: 5.5, 1.9 or 0.95 cents a day for every started 100 kg of total mass. Total mass is not yet in the model list, so it is an assumption (diesel 2,000 kg, electric 2,200 kg, plug-in hybrid 2,300 kg). Your own car's total mass is on its registration certificate; change it under More assumptions. Government proposal HE 173/2026 would lower the base tax of combustion cars over 10 years old by about €6 a year on average. It is still before Parliament and is not included.</li>
 <li><b>Inspections and lifetime</b> (information on the car card, not used in the calculation) come from <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficom's periodic inspection statistics</a> (inspections 2017–2025, open data CC BY 4.0). Traficom groups cars by model series, so all powertrains and generations of a model are together. The failure rate is for the latest year at the car's age at purchase, or the nearest age with at least 50 inspections. The faults are shares of the faults that caused a failure, all ages together. Lifetime is worked out from inspection counts: from 10 years on, cars are inspected every year, so the count for one model year shows how many are still on the road. Cars that left the road before 10 years (crashes, exports) do not show in the figure. Cars imported used raise the counts, and if the counts rise with age, no lifetime is estimated. When more than half are still on the road at 20, the age at which half have left is an estimate: the yearly drop-out rate is continued as a straight line from ages 10–19. The Lifetime field (spreading manufacturing emissions) is still the 18–20-year assumption.</li>
 <li><b>Manufacturing emissions</b> come from the <a href="https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/" target="_blank" rel="noopener">ICCT</a> EU life-cycle study (2025) for a medium-size car such as the Golf. Making and recycling the car without its battery: petrol, diesel and hybrid cars 8.2 t, plug-in hybrids 8.6 t and electric cars 7.5 t CO₂e. Battery production is 72.8 kg CO₂e per kWh, weighted by where the cells are made (30% Europe, 56% China). The default battery is the average of medium-size cars sold in the EU in 2023: 53.4 kWh for electric cars (3.9 t) and 13.3 kWh for plug-in hybrids (1.0 t). You can set your own car's battery size under More assumptions. A small car takes less to make and a large one more. Manufacturing emissions are spread over the car's whole lifetime. According to the ICCT, batteries usually outlast the car: fewer than 1% of electric cars sold after 2016 have had their battery replaced (Recurrent, 20,000 cars).</li>
-<li><b>Share comparison</b> makes a link that packs in the settings and cars. They sit after the # sign, which browsers never send to the server, and the page collects nothing. Only settings you changed go into the link, so whoever opens it sees current fuel and electricity prices unless you changed them. Opening a shared link does not lose the opener's own cars: they can be restored.</li>
+<li><b>Share comparison</b> makes a short link holding only the chosen models and the numbers you changed; everything else is recalculated when it opens. The data sits after the # sign, which browsers never send to the server, and the page collects nothing. Only settings you changed go into the link, so whoever opens it sees current fuel and electricity prices unless you changed them. Opening a shared link does not lose the opener's own cars: they can be restored.</li>
 <li>Insurance and the starting level of servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
   new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
@@ -1043,27 +1043,84 @@ if (saved && Array.isArray(saved.cars) && saved.cars.length && !oldExamples)
 else cars = examples();
 
 // --- jaettava linkki: asetukset ja autot linkin #-osaan (selain ei lähetä sitä palvelimelle) ---
+// Linkin muoto 'y' (tiivis, luettava): y<versio>~<asetukset>~<auto>~<auto>...
+//  asetukset: muutetut kentät, kirjain = GIDS-indeksi (a=km, b=years, ...) + arvo, erottimena _
+//  auto: pohja + vain oletuksesta poikkeavat kentät (kirjain + arvo, erottimena _; U = kulutus muutettu käsin). Pohja on
+//   eB/eE/eH  koskematon esimerkkiauto (syntyy uudelleen enimmäishinnasta)
+//   xB/xE/xH  muokattu esimerkkiauto, pB3k7  rekisteristä valittu malli (rivi + tarkiste), nB  oma auto
+//  Johdettuja kenttiä (todellinen kulutus, NEDC-tiedot, lähdeselitteet) ei tallenneta: ne lasketaan uudelleen.
+// Vanhat linkit 'z' (pakattu JSON) ja 'j' (JSON) avautuvat edelleen.
 const SHARE_KEYS = ['name','pt','price','age','odo','dep','fuel','kwh','share','other','serv','tax','mass','make','batt','life','real','autoFuel','std','rw'];
+const SHARE_F = {N:'name',P:'price',A:'age',O:'odo',D:'dep',K:'kwh',S:'share',X:'other',V:'serv',T:'tax',M:'mass',W:'make',B:'batt',L:'life',F:'fuel',R:'real'};
+const SHARE_STR = ['name','dep','tax'];
+const escS = t => encodeURIComponent(t).replace(/[!'()*_~]/g, ch => '%'+ch.charCodeAt(0).toString(16).toUpperCase()).replace(/\.$/,'%2E');
+const decS = t => { try { return decodeURIComponent(t); } catch(e){ return t; } };
+const numS = v => String(+(+v).toFixed(4));
+const sameV = (a, b) => (typeof a==='number' && typeof b==='number') ? Math.abs(a-b) < 1e-9 : String(a??'')===String(b??'');
+// Rekisteririvin tunniste: rivinumero (36-kanta) + 2 merkin tarkiste nimestä, jos luettelo on välillä muuttunut
+const rowChk = r => { let h = 0; for (const ch of r[0]+'|'+r[1]+'|'+r[2]) h = (h*31 + ch.charCodeAt(0)) % 1296; return h.toString(36).padStart(2,'0'); };
+const rowKey = r => CATALOG.indexOf(r).toString(36) + rowChk(r);
+function rowFromKey(k){
+  const chk = k.slice(-2), r = CATALOG[parseInt(k.slice(0,-2), 36)];
+  return (r && rowChk(r)===chk) ? r : CATALOG.find(x => rowChk(x)===chk) || null;
+}
+// Auton pohja tunnisteesta; age = auton ikä ennen kuin kulutus lasketaan uudelleen
+function shareBase(t, i, age){
+  const k = t[0], v = t.slice(1), budget = num($('budget').value, 12000);
+  let c = null;
+  if ((k==='e'||k==='x') && SLOTS.includes(v)){ c = exampleCar(v, budget); if (k==='x') c.exAuto = false; }
+  else if (k==='p'){ const r = rowFromKey(v); if (r) c = newCar({pick:[r[0],r[1],r[2]], name:`${r[0]} ${r[1]}`}); }
+  else if (k==='n' && PT_DEF[v]) c = newCar({pt:v, name:T('car_n')+' '+(i+1)});
+  if (c && age!==undefined && !sameV(+age, c.age)){ c.age = +age; refreshStd(c); }
+  return c;
+}
+function carFromShare(tok, i){
+  const parts = tok.split('_'), f = {};
+  parts.slice(1).forEach(x => { const key = SHARE_F[x[0]]; if (!key) return;
+    const v = decS(x.slice(1)); f[key] = SHARE_STR.includes(key) ? v : num(v); });
+  const c = shareBase(parts[0], i, f.age);
+  if (!c) return null;
+  if (parts[0][0]==='e') return c;
+  Object.entries(f).forEach(([key,v]) => { if (key!=='age') c[key] = v; });
+  if (parts.includes('U')) c.autoFuel = false;
+  return c;
+}
+function carToShare(c, i){
+  if (c.exAuto && c.ex) return 'e'+c.ex.slot;
+  const budget = num($('budget').value, 12000);
+  const base = (c.ex && c.picked && exampleCar(c.ex.slot, budget).picked===c.picked) ? 'x'+c.ex.slot
+    : c.picked ? 'p'+rowKey(c.picked) : 'n'+c.pt;
+  const b = shareBase(base, i, c.age), age0 = shareBase(base, i).age; // b: sama ikä, jotta johdetut kentät täsmäävät
+  const toks = [base];
+  Object.entries(SHARE_F).forEach(([l,key]) => {
+    if (sameV(c[key], key==='age' ? age0 : b[key])) return;
+    toks.push(l + (SHARE_STR.includes(key) ? escS(String(c[key]??'')) : numS(c[key])));
+  });
+  if (c.autoFuel===false) toks.push('U'); // käyttäjä muutti kulutusta: ikä ei enää päivitä sitä
+  return toks.join('_');
+}
 function shareState(){
   const g0 = {};
   GIDS.forEach(id => { const el = $(id);
     if (el.type==='select-one'){ const k = [...el.options].findIndex(o=>o.defaultSelected); if (el.selectedIndex !== (k<0?0:k)) g0[id] = el.selectedIndex; }
     else if (el.value !== el.defaultValue) g0[id] = el.value; });
-  const c = cars.map(car => { const o = {};
-    SHARE_KEYS.forEach(k => { if (car[k]!==undefined && car[k]!==null) o[k] = car[k]; });
-    if (car.picked) o.p = car.picked.slice(0,3);
-    return o; });
-  return {v:EX_VERSION, g:g0, c};
+  return {v:EX_VERSION, g:g0, y:cars.map(carToShare)};
 }
 const b64u = bytes => { let t=''; bytes.forEach(b => t += String.fromCharCode(b)); return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
 const unb64u = t => Uint8Array.from(atob(t.replace(/-/g,'+').replace(/_/g,'/')), ch => ch.charCodeAt(0));
 async function pipe(bytes, stream){ return new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(stream)).arrayBuffer()); }
 async function encodeShare(obj){
+  if (obj.y) return 'y' + obj.v + '~' + Object.entries(obj.g).map(([id,v]) => String.fromCharCode(97+GIDS.indexOf(id)) + escS(String(v))).join('_') + '~' + obj.y.join('~');
   const raw = new TextEncoder().encode(JSON.stringify(obj));
   try { if (window.CompressionStream) return 'z' + b64u(await pipe(raw, new CompressionStream('deflate-raw'))); } catch(e){}
   return 'j' + b64u(raw);
 }
 async function decodeShare(code){
+  if (code[0]==='y'){
+    const [v, g, ...y] = code.slice(1).split('~'), g0 = {};
+    if (g) g.split('_').forEach(x => { const id = GIDS[x.charCodeAt(0)-97]; if (id) g0[id] = decS(x.slice(1)); });
+    return {v:+v, g:g0, y};
+  }
   let bytes = unb64u(code.slice(1));
   if (code[0]==='z') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
   return JSON.parse(new TextDecoder().decode(bytes));
@@ -1071,7 +1128,8 @@ async function decodeShare(code){
 function applyShared(st){
   defaultInputs();
   Object.entries(st.g||{}).forEach(([id,v]) => { const el = $(id); if (!el || !GIDS.includes(id)) return;
-    if (el.type==='select-one') el.selectedIndex = v; else el.value = v; });
+    if (el.type==='select-one') el.selectedIndex = +v; else el.value = v; });
+  if (st.y){ cars = st.y.slice(0,4).map(carFromShare).filter(Boolean); return; }
   cars = migrateCars(st.c||[], st.v||0).slice(0,4).map(c => {
     const car = newCar({...c, brand:undefined, exAuto:false, ex:null});
     if (c.p){ const r = findRow(c.p); if (r) car.picked = r; }
@@ -1092,10 +1150,10 @@ $('share').onclick = async () => {
 };
 // Avattiin jaettu linkki: näytä se, mutta säilytä avaajan omat autot palautettaviksi
 (async () => {
-  const m = /^#s=([jz][A-Za-z0-9_-]+)$/.exec(location.hash);
+  const m = /^#s=([jz][A-Za-z0-9_-]+|y[A-Za-z0-9_.~%-]+)$/.exec(location.hash);
   if (!m) return;
   let st; try { st = await decodeShare(m[1]); } catch(e){ return; }
-  if (!st || !Array.isArray(st.c) || !st.c.length) return;
+  if (!st || !(Array.isArray(st.y) ? st.y : st.c) || !(st.y || st.c).length) return;
   history.replaceState(null, '', location.pathname + location.search);
   let prev = null; try { prev = localStorage.getItem('carfootprint.v1'); if (prev) localStorage.setItem('carfootprint.v1.prev', prev); } catch(e){}
   applyShared(st); renderCars(); update();

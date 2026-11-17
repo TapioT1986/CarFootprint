@@ -93,10 +93,13 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 
 - Browsers restore form values on reload by field position. The page resets every input to its
   HTML default (`defaultInputs()`) before applying saved settings. Keep it that way.
-- Shared links: `#s=` + 'z' (deflate-raw) or 'j' (plain) + base64url JSON {v: EX_VERSION, g: changed inputs only,
-  c: cars (SHARE_KEYS + p = picked [brand, model, pt])}. Opening one runs migrateCars() like saved state, backs up
-  the opener's save to `carfootprint.v1.prev` and offers a restore button. New car fields must go into SHARE_KEYS,
-  and a change that breaks old saves must also be handled in migrateCars() (it serves both).
+- Shared links: `#s=y<EX_VERSION>~<globals>~<car>~<car>...` (readable, no compression). Globals: changed GIDS only,
+  letter = GIDS index + value, `_`-separated. Car: base `eB/eE/eH` (untouched example, rebuilt from budget), `xB..`
+  (edited example), `p<row base36><2-char checksum>` (register model), `nB..` (own car), then only fields that differ
+  from that base (SHARE_F letters; `U` = consumption edited). Derived fields are recalculated, never stored.
+  A new user-editable car field needs a SHARE_F letter. Old 'z'/'j' links (base64url JSON, migrateCars()) must keep
+  opening: tests/old_share_links.json + smoke_checks.js check it; tests/share_states.js builds test states.
+  Opening a link backs up the opener's save to `carfootprint.v1.prev` and offers a restore button.
 - Saved state lives in localStorage `carfootprint.v1`. When defaults or examples change in a
   way old saves would break, bump `EX_VERSION` and handle older saves explicitly.
 - Default prices are tracked separately (PRICE_DEF) so untouched defaults update.

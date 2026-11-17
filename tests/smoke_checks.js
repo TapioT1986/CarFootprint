@@ -63,14 +63,23 @@ async () => {
   if (typeof encodeShare === 'function') {
     const names = () => [...document.querySelectorAll('#sums .nm')].map(e => e.innerText.trim());
     const totals = () => [...document.querySelectorAll('#sums .big')].map(e => e.textContent);
-    const before = [names(), totals()];
+    const fields = () => JSON.stringify(cars.map(c => SHARE_KEYS.map(k => typeof c[k] === 'number' ? +c[k].toFixed(6) : c[k])));
+    const before = [names(), totals(), fields()];
     const code = await encodeShare(shareState());
-    if (code.length > 3000) problems.push(`${lang}: shared link is very long (${code.length} characters)`);
+    if (code.length > 300) problems.push(`${lang}: shared link is long (${code.length} characters): ${code}`);
     applyShared(await decodeShare(code)); renderCars(); update(); await wait(50);
-    const after = [names(), totals()];
+    const after = [names(), totals(), fields()];
     if (JSON.stringify(before) !== JSON.stringify(after))
-      problems.push(`${lang}: shared link gives ${JSON.stringify(after)} instead of ${JSON.stringify(before)}`);
+      problems.push(`${lang}: shared link ${code} gives ${JSON.stringify(after)} instead of ${JSON.stringify(before)}`);
     sameCars('after opening a shared link');
+    // Old links (before the short 'y' format) still open with the same cars
+    const old = await (await fetch('tests/old_share_links.json')).json();
+    for (const o of old) {
+      applyShared(await decodeShare(o.code)); renderCars(); update(); await wait(50);
+      if (JSON.stringify(names()) !== JSON.stringify(o.cars))
+        problems.push(`${lang}: old link "${o.name}" opens ${JSON.stringify(names())} instead of ${JSON.stringify(o.cars)}`);
+      sameCars(`after opening the old link "${o.name}"`);
+    }
   }
   return problems;
 }
