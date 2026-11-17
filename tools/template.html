@@ -829,7 +829,7 @@ document.querySelectorAll('[data-reset]').forEach(b => b.onclick = () => {
 $('budget').addEventListener('input', () => {
   let changed = false;
   cars = cars.map(c => { if (!c.exAuto || !c.ex) return c; changed = true; return exampleCar(c.ex.slot, num($('budget').value, 12000)); });
-  if (changed) renderCars();
+  if (changed){ renderCars(); update(); } // update() ajettiin jo vanhoilla autoilla: laske uudelleen
 });
 
 // Kirjoita oletushinnat kenttiin aina itse: selain voi muuten palauttaa
