@@ -161,6 +161,9 @@ svg text{font-family:var(--body)}
 .notes ul{padding-left:18px;margin:6px 0}
 .notes a{color:var(--accent)}
 .rowbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.sharebar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0 4px}
+.sharebar .hint{margin:0;min-width:0;flex:1 1 220px}
+.sharelink{font-family:var(--mono);font-size:12px;margin-top:4px}
 .btn{font:600 13.5px var(--body);border:1px solid var(--line);background:var(--input);color:var(--ink);padding:8px 12px;border-radius:6px;cursor:pointer}
 .btn:hover{border-color:var(--accent)}
 .btn.sm{font-size:12.5px;padding:5px 9px}
@@ -265,6 +268,7 @@ svg text{font-family:var(--body)}
 
       <section class="results" aria-live="polite">
         <div class="sumrow" id="sums"></div>
+        <div class="sharebar"><button class="btn" type="button" id="share" data-i="share"></button><span class="hint" id="shareMsg" role="status"></span></div>
         <div class="charts">
           <div class="chart">
             <h3 data-i="cost_h"></h3>
@@ -333,6 +337,8 @@ fi: {
   lg_dep:'Arvonalenema', lg_cap:'Rahoitus', lg_en:'Energia', lg_oth:'Vero, vakuutus, huolto, renkaat',
   em_h:'Päästöt vuodessa', em_lead:'kg CO₂e vuodessa. Auton valmistus jaetaan sen koko käyttöiälle.',
   lg_drive:'Ajo (polttoaine tai sähkö)', lg_make:'Valmistus',
+  share:'Jaa vertailu', share_text:'Mitä autot oikeasti maksavat ja paljonko ne päästävät', share_ok:'Linkki kopioitu. Siinä on vain asetukset ja autot.',
+  share_copy:'Kopioi linkki:', share_loaded:'Näytetään jaettu vertailu.', share_restore:'Palauta omat autosi',
   notes_h:'Näin laskenta toimii', reset:'Nollaa asetukset', reset_q:'Palautetaanko kaikki asetukset ja esimerkkiautot oletuksiin? Itse lisäämäsi ja muuttamasi autot poistuvat.',
   notes:`<li><b>Arvonalenema:</b> jäännösarvo = hinta × (1 − arvonalenema-%)<sup>vuodet</sup>. Jos jätät prosentin tyhjäksi, se valitaan auton keski-iän mukaan: alle 3 v 17 %, 3–5 v 10 %, 6–9 v 11 %, 10–19 v 12 %, 20 v tai yli 10 %. Prosentit on laskettu <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Verohallinnon verotusarvoista</a> (114 000 käytettynä tuotua autoa 2024–2026) vertaamalla saman mallin eri-ikäisiä autoja. Keskimääräistä suurempi ajomäärä (yli 15 000 km/v) laskee jäännösarvoa 0,2 % per 1 000 km vuodessa.</li>
 <li><b>Esimerkkiautot</b> valitaan enimmäishinnan mukaan: bensiiniauto on aina Golf (Suomen yleisin keski-ikäinen auto), hybridi Toyota Corolla, Auris tai Yaris ja sähköauto rekisterissä yleisin malli, johon budjetti riittää. Kustakin valitaan nuorin vuosimalli, jonka arvioitu hinta mahtuu budjettiin. Hinta-arviot perustuvat <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Verohallinnon verotusarvoihin</a> ja mittarilukema mallin keskimääräiseen ajomäärään. Kun muutat esimerkkiautoa, se lakkaa seuraamasta budjettia.</li>
@@ -348,6 +354,7 @@ fi: {
 <li><b>Ajoneuvovero</b> lasketaan vuoden 2026 verotaulukoista (<a href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814" target="_blank" rel="noopener">ajoneuvoverolaki, muutos 814/2024</a>). Perusvero määräytyy auton virallisen CO₂-päästön mukaan, ja se on 106–654 €/v. Päästö lasketaan mallin virallisesta kulutuksesta: vuosimallit 2017 ja vanhemmat NEDC-taulukolla 1, uudemmat WLTP-taulukolla 1 A. Sähköautoista, jotka on otettu käyttöön 1.10.2021 tai myöhemmin, perusvero on 171 €/v; laskuri pitää vuosimallia 2022 ja uudempia tällaisina. Lataushybridien perusvero on alin porras, koska niiden WLTP-päästö on lähes aina alle 103 g/km. Diesel-, sähkö- ja lataushybridiautoista maksetaan lisäksi käyttövoimaveroa: 5,5, 1,9 tai 0,95 senttiä päivässä jokaiselta kokonaismassan alkavalta 100 kg:lta. Kokonaismassa ei ole vielä malliluettelossa, joten se on oletus (diesel 2 000 kg, sähkö 2 200 kg, lataushybridi 2 300 kg). Oman auton kokonaismassa löytyy rekisteröintitodistuksesta, ja sen voi vaihtaa kohdassa Lisää oletuksia. Hallituksen esitys HE 173/2026 alentaisi yli 10-vuotiaiden polttomoottoriautojen perusveroa keskimäärin noin 6 €/v. Esitys on vielä eduskunnan käsittelyssä, eikä sitä ole otettu huomioon.</li>
 <li><b>Katsastus ja elinikä</b> (tietoa autokortilla, ei vaikuta laskelmaan) tulevat <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficomin katsastuksen vikatilastoista</a> (määräaikaiskatsastukset 2017–2025, avoin data CC BY 4.0). Traficom tilastoi mallisarjoittain, eli kaikki saman mallin käyttövoimat ja sukupolvet ovat yhdessä. Hylkäysprosentti on uusimmalta vuodelta auton ostoiän mukaan, tai lähimmältä iältä, josta on vähintään 50 katsastusta. Viat ovat hylkäykseen johtaneiden vikojen osuudet kaikista ikäluokista. Elinikä lasketaan katsastusmääristä: 10 vuoden iästä alkaen autot katsastetaan joka vuosi, joten saman vuoden autojen katsastusmäärä kertoo, montako on vielä liikenteessä. Ennen 10 vuoden ikää poistuneet autot (kolarit, vienti) eivät näy luvussa. Käytettynä tuodut autot kasvattavat lukuja, ja jos katsastusmäärät kasvavat iän mukana, elinikää ei arvioida. Kun yli puolet on vielä liikenteessä 20-vuotiaana, ikä, jossa puolet on poistunut, on arvio: vuosittainen poistumaosuus jatketaan suorana viivana iän 10–19 havainnoista. Kenttä Käyttöikä (päästöjen jakaminen) on edelleen oletus 18–20 vuotta.</li>
 <li><b>Valmistuspäästöt</b> ovat <a href="https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/" target="_blank" rel="noopener">ICCT:n</a> EU:n elinkaaritutkimuksesta (2025) keskikokoiselle autolle, kuten Golfille. Auton valmistus ja kierrätys ilman akkua: bensiini-, diesel- ja hybridiauto 8,2 t, lataushybridi 8,6 t ja sähköauto 7,5 t CO₂e. Akun valmistus on 72,8 kg CO₂e/kWh, kun painotetaan solujen valmistusmaita (30 % Eurooppa, 56 % Kiina). Oletusakku on EU:ssa 2023 myytyjen keskikokoisten autojen keskiarvo: sähköauto 53,4 kWh (3,9 t), lataushybridi 13,3 kWh (1,0 t). Akun koon voi vaihtaa oman auton mukaiseksi kohdassa Lisää oletuksia. Pienen auton valmistus tuottaa vähemmän ja ison enemmän päästöjä. Valmistuspäästöt jaetaan auton koko käyttöiälle. ICCT:n mukaan akut kestävät yleensä auton käyttöiän: alle 1 %:ssa vuoden 2016 jälkeen myydyistä sähköautoista akku on vaihdettu (Recurrent, 20 000 autoa).</li>
+<li><b>Jaa vertailu</b> tekee linkin, johon asetukset ja autot on pakattu. Ne ovat linkin #-merkin jälkeisessä osassa, jota selain ei lähetä palvelimelle, eikä sivu kerää mitään tietoa. Linkkiin tallentuvat vain muutetut asetukset, joten avaaja näkee ajantasaiset polttoaineen ja sähkön hinnat, ellet ole muuttanut niitä. Jaetun linkin avaaminen ei hävitä avaajan omia autoja: ne voi palauttaa.</li>
 <li>Vakuutus ja huollon lähtötaso ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
@@ -421,6 +428,8 @@ en: {
   lg_dep:'Depreciation', lg_cap:'Financing', lg_en:'Energy', lg_oth:'Tax, insurance, servicing, tyres',
   em_h:'Emissions per year', em_lead:'kg CO₂e per year. Manufacturing is spread over the car\'s whole lifetime.',
   lg_drive:'Driving (fuel or electricity)', lg_make:'Manufacturing',
+  share:'Share comparison', share_text:'What cars really cost and how much they emit', share_ok:'Link copied. It holds only the settings and cars.',
+  share_copy:'Copy the link:', share_loaded:'Showing a shared comparison.', share_restore:'Restore your own cars',
   notes_h:'How the calculation works', reset:'Reset all', reset_q:'Reset all settings and example cars to the defaults? Cars you added or changed will be removed.',
   notes:`<li><b>Finland only, for now:</b> fuel and electricity prices, taxes, grid emissions and the model list describe Finland. The method works for any EU country once those inputs are changed.</li>
 <li><b>Depreciation:</b> residual value = price × (1 − depreciation %)<sup>years</sup>. If you leave the percentage blank, it is chosen by the car's average age during ownership: under 3 years 17%, 3–5 years 10%, 6–9 years 11%, 10–19 years 12%, 20 years or more 10%. The rates come from the <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Finnish Tax Administration's taxation values</a> (114,000 cars imported used in 2024–2026), comparing cars of the same model at different ages. Above-average mileage (over 15,000 km/yr) lowers the residual value by 0.2% per 1,000 km per year.</li>
@@ -437,6 +446,7 @@ en: {
 <li><b>Vehicle tax</b> follows the 2026 tax tables (<a href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814" target="_blank" rel="noopener">Vehicle Tax Act, amendment 814/2024</a>). The base tax depends on the car's official CO₂ emissions and is €106–654 a year. The emissions are worked out from the model's official consumption: model years 2017 and older use the NEDC table 1, newer cars the WLTP table 1 A. Electric cars first registered on or after 1 October 2021 pay €171 a year; the calculator treats model years 2022 and newer as such. Plug-in hybrids pay the lowest band, as their WLTP emissions are almost always below 103 g/km. Diesel, electric and plug-in hybrid cars also pay a propulsion tax: 5.5, 1.9 or 0.95 cents a day for every started 100 kg of total mass. Total mass is not yet in the model list, so it is an assumption (diesel 2,000 kg, electric 2,200 kg, plug-in hybrid 2,300 kg). Your own car's total mass is on its registration certificate; change it under More assumptions. Government proposal HE 173/2026 would lower the base tax of combustion cars over 10 years old by about €6 a year on average. It is still before Parliament and is not included.</li>
 <li><b>Inspections and lifetime</b> (information on the car card, not used in the calculation) come from <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficom's periodic inspection statistics</a> (inspections 2017–2025, open data CC BY 4.0). Traficom groups cars by model series, so all powertrains and generations of a model are together. The failure rate is for the latest year at the car's age at purchase, or the nearest age with at least 50 inspections. The faults are shares of the faults that caused a failure, all ages together. Lifetime is worked out from inspection counts: from 10 years on, cars are inspected every year, so the count for one model year shows how many are still on the road. Cars that left the road before 10 years (crashes, exports) do not show in the figure. Cars imported used raise the counts, and if the counts rise with age, no lifetime is estimated. When more than half are still on the road at 20, the age at which half have left is an estimate: the yearly drop-out rate is continued as a straight line from ages 10–19. The Lifetime field (spreading manufacturing emissions) is still the 18–20-year assumption.</li>
 <li><b>Manufacturing emissions</b> come from the <a href="https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/" target="_blank" rel="noopener">ICCT</a> EU life-cycle study (2025) for a medium-size car such as the Golf. Making and recycling the car without its battery: petrol, diesel and hybrid cars 8.2 t, plug-in hybrids 8.6 t and electric cars 7.5 t CO₂e. Battery production is 72.8 kg CO₂e per kWh, weighted by where the cells are made (30% Europe, 56% China). The default battery is the average of medium-size cars sold in the EU in 2023: 53.4 kWh for electric cars (3.9 t) and 13.3 kWh for plug-in hybrids (1.0 t). You can set your own car's battery size under More assumptions. A small car takes less to make and a large one more. Manufacturing emissions are spread over the car's whole lifetime. According to the ICCT, batteries usually outlast the car: fewer than 1% of electric cars sold after 2016 have had their battery replaced (Recurrent, 20,000 cars).</li>
+<li><b>Share comparison</b> makes a link that packs in the settings and cars. They sit after the # sign, which browsers never send to the server, and the page collects nothing. Only settings you changed go into the link, so whoever opens it sees current fuel and electricity prices unless you changed them. Opening a shared link does not lose the opener's own cars: they can be restored.</li>
 <li>Insurance and the starting level of servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
   new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
@@ -1002,6 +1012,12 @@ $('budget').addEventListener('input', () => {
 // päivitettäessä edellisen käynnin arvot lomakkeeseen.
 document.querySelectorAll('input,select').forEach(el => el.autocomplete = 'off');
 defaultInputs();
+// Vanhojen tallennusten ja linkkien autot nykyiseen muotoon (EX_VERSION-historia)
+function migrateCars(list, ev){
+  return list.map(c=>ev<5 ? {...c, other:Math.max(0,num(c.other,0)-(OLD_TAX[c.pt]||0))} : c) // vero erotettiin muista kuluista
+    .map(c=>ev<6 && PT_DEF[c.pt] ? {...c, other:Math.max(0,num(c.other,0)-PT_DEF[c.pt].serv)} : c) // samoin huolto (EX_VERSION 6)
+    .map(c=>ev<7 ? (num(c.make,NaN)===OLD_MAKE[c.pt] ? {...c, make:undefined} : {...c, batt:0}) : c); // valmistus: akku erikseen (EX_VERSION 7)
+}
 const saved = load();
 // Koskemattomat vanhat esimerkkiautot korvataan uusilla; omat autot säilyvät.
 const oldExamples = saved && saved.ev !== EX_VERSION && Array.isArray(saved.cars) && saved.cars.every(c => c.exKey || c.exAuto);
@@ -1015,11 +1031,72 @@ if (saved){ // asetukset ensin, jotta esimerkkiautot osataan valita enimmäishin
     if($(id).type==='select-one') $(id).selectedIndex=v; else $(id).value=v; }); }catch(e){}
 }
 if (saved && Array.isArray(saved.cars) && saved.cars.length && !oldExamples)
-  cars = saved.cars.map(c=>(saved.ev||0)<5 ? {...c, other:Math.max(0,num(c.other,0)-(OLD_TAX[c.pt]||0))} : c) // vero erotettiin muista kuluista
-    .map(c=>(saved.ev||0)<6 && PT_DEF[c.pt] ? {...c, other:Math.max(0,num(c.other,0)-PT_DEF[c.pt].serv)} : c) // samoin huolto (EX_VERSION 6)
-    .map(c=>(saved.ev||0)<7 ? (num(c.make,NaN)===OLD_MAKE[c.pt] ? {...c, make:undefined} : {...c, batt:0}) : c) // valmistus: akku erikseen (EX_VERSION 7)
+  cars = migrateCars(saved.cars, saved.ev||0)
     .map(c=>newCar({...c,brand:undefined})).map((c,i)=>Object.assign(c,{picked:saved.cars[i].picked}));
 else cars = examples();
+
+// --- jaettava linkki: asetukset ja autot linkin #-osaan (selain ei lähetä sitä palvelimelle) ---
+const SHARE_KEYS = ['name','pt','price','age','odo','dep','fuel','kwh','share','other','serv','tax','mass','make','batt','life','real','autoFuel','std','rw'];
+function shareState(){
+  const g0 = {};
+  GIDS.forEach(id => { const el = $(id);
+    if (el.type==='select-one'){ const k = [...el.options].findIndex(o=>o.defaultSelected); if (el.selectedIndex !== (k<0?0:k)) g0[id] = el.selectedIndex; }
+    else if (el.value !== el.defaultValue) g0[id] = el.value; });
+  const c = cars.map(car => { const o = {};
+    SHARE_KEYS.forEach(k => { if (car[k]!==undefined && car[k]!==null) o[k] = car[k]; });
+    if (car.picked) o.p = car.picked.slice(0,3);
+    return o; });
+  return {v:EX_VERSION, g:g0, c};
+}
+const b64u = bytes => { let t=''; bytes.forEach(b => t += String.fromCharCode(b)); return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+const unb64u = t => Uint8Array.from(atob(t.replace(/-/g,'+').replace(/_/g,'/')), ch => ch.charCodeAt(0));
+async function pipe(bytes, stream){ return new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(stream)).arrayBuffer()); }
+async function encodeShare(obj){
+  const raw = new TextEncoder().encode(JSON.stringify(obj));
+  try { if (window.CompressionStream) return 'z' + b64u(await pipe(raw, new CompressionStream('deflate-raw'))); } catch(e){}
+  return 'j' + b64u(raw);
+}
+async function decodeShare(code){
+  let bytes = unb64u(code.slice(1));
+  if (code[0]==='z') bytes = await pipe(bytes, new DecompressionStream('deflate-raw'));
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+function applyShared(st){
+  defaultInputs();
+  Object.entries(st.g||{}).forEach(([id,v]) => { const el = $(id); if (!el || !GIDS.includes(id)) return;
+    if (el.type==='select-one') el.selectedIndex = v; else el.value = v; });
+  cars = migrateCars(st.c||[], st.v||0).slice(0,4).map(c => {
+    const car = newCar({...c, brand:undefined, exAuto:false, ex:null});
+    if (c.p){ const r = findRow(c.p); if (r) car.picked = r; }
+    return car; });
+}
+$('share').onclick = async () => {
+  const url = location.origin + location.pathname + '#s=' + await encodeShare(shareState());
+  const msg = $('shareMsg'); msg.textContent = '';
+  if (navigator.share && matchMedia('(pointer:coarse)').matches){
+    try { await navigator.share({title:document.title, text:T('share_text'), url}); return; }
+    catch(e){ if (e.name==='AbortError') return; }
+  }
+  try { await navigator.clipboard.writeText(url); msg.textContent = T('share_ok'); }
+  catch(e){ // leikepöytä ei käytettävissä: näytä linkki valmiiksi valittuna kenttänä
+    const inp = document.createElement('input'); inp.readOnly = true; inp.value = url; inp.className = 'sharelink';
+    inp.setAttribute('aria-label', T('share_copy')); msg.append(T('share_copy') + ' ', inp); inp.focus(); inp.select();
+  }
+};
+// Avattiin jaettu linkki: näytä se, mutta säilytä avaajan omat autot palautettaviksi
+(async () => {
+  const m = /^#s=([jz][A-Za-z0-9_-]+)$/.exec(location.hash);
+  if (!m) return;
+  let st; try { st = await decodeShare(m[1]); } catch(e){ return; }
+  if (!st || !Array.isArray(st.c) || !st.c.length) return;
+  history.replaceState(null, '', location.pathname + location.search);
+  let prev = null; try { prev = localStorage.getItem('carfootprint.v1'); if (prev) localStorage.setItem('carfootprint.v1.prev', prev); } catch(e){}
+  applyShared(st); renderCars(); update();
+  const msg = $('shareMsg'); msg.textContent = T('share_loaded') + ' ';
+  if (prev){ const b = document.createElement('button'); b.type = 'button'; b.className = 'btn sm'; b.textContent = T('share_restore');
+    b.onclick = () => { try { localStorage.setItem('carfootprint.v1', prev); localStorage.removeItem('carfootprint.v1.prev'); } catch(e){} location.reload(); };
+    msg.append(b); }
+})();
 applyLang(LANG);
 </script>
 </body>

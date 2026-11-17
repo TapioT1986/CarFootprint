@@ -93,6 +93,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 
 - Browsers restore form values on reload by field position. The page resets every input to its
   HTML default (`defaultInputs()`) before applying saved settings. Keep it that way.
+- Shared links: `#s=` + 'z' (deflate-raw) or 'j' (plain) + base64url JSON {v: EX_VERSION, g: changed inputs only,
+  c: cars (SHARE_KEYS + p = picked [brand, model, pt])}. Opening one runs migrateCars() like saved state, backs up
+  the opener's save to `carfootprint.v1.prev` and offers a restore button. New car fields must go into SHARE_KEYS,
+  and a change that breaks old saves must also be handled in migrateCars() (it serves both).
 - Saved state lives in localStorage `carfootprint.v1`. When defaults or examples change in a
   way old saves would break, bump `EX_VERSION` and handle older saves explicitly.
 - Default prices are tracked separately (PRICE_DEF) so untouched defaults update.
@@ -102,6 +106,8 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - On the owner's Windows PC Python runs as `py` (Python install manager), and Smart App Control
   blocks pandas DLLs. So the default build must stay free of third-party packages; do not ask him
   to turn Smart App Control off.
+- tests/smoke.py runs on GitHub after every push (.github/workflows/test.yml): build check + tests/smoke_checks.js
+  in headless Chromium. The same checks can be run in the built-in browser by evaluating smoke_checks.js.
 - Test in a real browser (FI and EN, phone width 390 px) and check the numbers by hand for at
   least one car before committing.
 

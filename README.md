@@ -31,6 +31,7 @@ Every assumption is visible and editable.
 - **Electric cars:** WLTP electricity consumption per model from the EEA register (Finnish registrations 2025; 2020–2022 for models no longer sold new). Measured consumption is not collected from battery-electric cars, so the real-world factor of 1.20 is an assumption. Battery wear is not modelled; the page reminds users to check the battery of an older car.
 - **Manufacturing emissions** follow the ICCT's 2025 EU life-cycle study for a medium-size car: making and recycling the car without its battery is 8.2 t CO₂e for petrol, diesel and hybrid cars, 8.6 t for plug-in hybrids and 7.5 t for electric cars. The battery adds 72.8 kg CO₂e per kWh (NMC622 cells weighted by where they are made). Default battery sizes are the EU 2023 averages for medium-size cars (53.4 kWh electric, 13.3 kWh plug-in hybrid), or the size in the model name where the register gives one (e.g. Nissan Leaf 40 kWh); users can change it.
 - **Electricity:** no source counts as zero-emission. Lifecycle values per generation type follow IPCC and UNECE.
+- **Shareable link:** "Share comparison" packs the changed settings and the cars into the part of the link after `#`, compressed (deflate) and base64url-encoded. Browsers never send that part to the server, and the page collects nothing. Opening a shared link keeps the opener's own saved cars so they can be restored.
 
 ## Known limitations
 

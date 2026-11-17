@@ -59,5 +59,18 @@ async () => {
       sameCars('after picking a model'); fits('after picking a model');
     }
   }
+  // 5. A shared link brings back the same cars and results
+  if (typeof encodeShare === 'function') {
+    const names = () => [...document.querySelectorAll('#sums .nm')].map(e => e.innerText.trim());
+    const totals = () => [...document.querySelectorAll('#sums .big')].map(e => e.textContent);
+    const before = [names(), totals()];
+    const code = await encodeShare(shareState());
+    if (code.length > 3000) problems.push(`${lang}: shared link is very long (${code.length} characters)`);
+    applyShared(await decodeShare(code)); renderCars(); update(); await wait(50);
+    const after = [names(), totals()];
+    if (JSON.stringify(before) !== JSON.stringify(after))
+      problems.push(`${lang}: shared link gives ${JSON.stringify(after)} instead of ${JSON.stringify(before)}`);
+    sameCars('after opening a shared link');
+  }
   return problems;
 }
