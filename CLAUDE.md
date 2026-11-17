@@ -45,6 +45,7 @@ data/catalog.json     588 models: [brand, model, pt, WLTP l/100km, count, "years
                       kWh/100km, kWh n, model real-world factor, its n, [[year, NEDC l/100km]...]]
 data/realworld.json   brand/fleet real-world factors (EEA OBFCM)
 data/prices.json      default prices; the page shows their month
+data/version.json     page version number and date (header); raised by build.py --release
 data/depreciation.json  depreciation by age from Tax Administration values, with method
 data/budget_cars.json   example-car candidates and value-when-new (v0)
 data/vehicle_tax.json   vehicle tax tables 1 / 1 A (c/day per g CO2) + propulsion rates;
@@ -112,8 +113,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Phones show stale cached pages (restored tabs), while GitHub Pages only sends max-age=600. build.py puts a
   hash of the page into `const BUILD`; checkFresh() fetches the page with cache:'reload' on load and when the tab
   becomes visible, and reloads once (sessionStorage guard) if the BUILD differs. Keep the `const BUILD = '...'` form.
-- The header says "Beta – updated <month year>": build.py takes the month from data/prices.json `checked` (set by
-  the monthly price workflow), not today's date, so CI's rebuild check stays deterministic. <title> and the meta
+- The header says "Beta 0.N – updated <date>" from data/version.json. Before each push that changes the page, run
+  `py tools/build.py --release` once (raises N by one, sets today's date) and include version.json in the last
+  commit. A plain build only reads the file, so CI's rebuild check stays deterministic; the monthly price workflow
+  does not bump it (the price note shows the price month). <title> and the meta
   description follow the language (applyLang). Feedback goes to GitHub issues only (no e-mail address on the page).
 - Phone layout (≤ 900 px): `#dock` is a fixed summary bar filled in update(), hidden (class `off`) by an
   IntersectionObserver while `#sums` is on screen; its height goes to `--dockh` (body padding, scroll-padding).

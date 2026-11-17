@@ -35,7 +35,7 @@ Every assumption is visible and editable.
 - **On phones:** a summary bar at the bottom shows each car's yearly cost (and which is cheapest and lowest-emission) until the result cards are on screen; tapping it scrolls to them. Financing and energy settings sit in one collapsed "More settings" section, whose heading says how many values differ from the defaults. On a computer the section is open, as before.
 - **Simple start:** "Your driving" asks only for annual mileage, maximum price and payment: cash (own money = maximum price), partly on loan (the default €6,000) or fully on loan (0). The choice only sets the own-money field, so it is worked out from that field and needs no saved value of its own; ownership period, monthly budget and the exact amount are under More settings.
 
-Feedback and bug reports: [GitHub issues](https://github.com/TapioT1986/CarFootprint/issues/new). The page is a beta; its header shows the month the data was last refreshed.
+Feedback and bug reports: [GitHub issues](https://github.com/TapioT1986/CarFootprint/issues/new). The page is a beta; its header shows the version number and the date of the latest release (`data/version.json`, raised by `python tools/build.py --release`).
 
 ## Known limitations
 
@@ -88,6 +88,7 @@ tools/render_og.py                   renders og-image.png (needs playwright)
 .github/workflows/update-prices.yml  monthly price refresh
 data/catalog.json                    588 car models
 data/prices.json                     latest fuel and electricity prices
+data/version.json                    page version number and release date
 data/eea_obfcm_2024_models.csv       measured consumption per model
 data/realworld.json                  measured consumption per brand
 data/eea_obfcm_2024_aggregated.csv   EEA measured-consumption table (source data)

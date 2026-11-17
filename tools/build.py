@@ -440,14 +440,6 @@ def apply_prices(page, root):
     for token, key in (("__P_PETROL__", "petrol"), ("__P_DIESEL__", "diesel"),
                        ("__P_ELEC__", "electricity")):
         page = page.replace(token, str(prices[key]["value"]))
-    # "Beta - updated <month year>": the month the data was last refreshed (prices.json "checked",
-    # set by the monthly price workflow), so a rebuild of the same commit gives the same page.
-    checked = str(prices.get("checked", ""))
-    upd_fi = month_name(checked[:4] + "M" + checked[5:7], MONTHS_FI) if len(checked) >= 7 else ""
-    upd_en = month_name(checked[:4] + "M" + checked[5:7], MONTHS_EN) if len(checked) >= 7 else ""
-    upd_fi = upd_fi.replace("kuu ", "kuussa ") if upd_fi else upd_fi
-    page = page.replace("Beta – päivitetty __UPDATED_FI__", f"Beta – päivitetty {upd_fi}" if upd_fi else "Beta")
-    page = page.replace("Beta – updated __UPDATED_EN__", f"Beta – updated {upd_en}" if upd_en else "Beta")
     return page.replace("__PRICES_NOTE_FI__", fi).replace("__PRICES_NOTE_EN__", en)
 
 
@@ -502,12 +494,40 @@ def inspection_for_page(catalog, root):
             "m": {n: doc["models"][n] for n in used}, "idx": idx}
 
 
+# --- page version -------------------------------------------------------------
+
+def page_version(root, release=False):
+    """Version number and date shown in the page header (data/version.json).
+
+    `--release` raises the number by one and sets today's date; a plain build only
+    reads the file, so rebuilding the same commit (as the GitHub test does) gives
+    the same page."""
+    path = root / "data" / "version.json"
+    v = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"version": 0, "date": ""}
+    if release:
+        import datetime
+        v = {"version": int(v.get("version", 0)) + 1, "date": datetime.date.today().isoformat(),
+             "note": v.get("note", "")}
+        path.write_text(json.dumps(v, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
+    return v
+
+
+def apply_version(page, v):
+    y, m, d = (str(v.get("date", "")).split("-") + ["", "", ""])[:3]
+    fi = f"{int(d)}.{int(m)}.{y}" if d else ""
+    en = f"{int(d)} {MONTHS_EN[int(m) - 1]} {y}" if d else ""
+    page = page.replace("__VERSION__", f"0.{v.get('version', 0)}")
+    return page.replace("__UPDATED_FI__", fi).replace("__UPDATED_EN__", en)
+
+
 # --- step 3: assemble the page ----------------------------------------------
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=pathlib.Path(__file__).resolve().parent.parent)
     ap.add_argument("--sources", default=None, help="folder holding the large source CSVs")
+    ap.add_argument("--release", action="store_true",
+                    help="raise the version number in data/version.json and set today's date")
     args = ap.parse_args()
     root = pathlib.Path(args.root)
     sources = pathlib.Path(args.sources) if args.sources else root / "sources"
@@ -546,6 +566,9 @@ def main():
     print("3. index.html", file=sys.stderr)
     page = (root / "tools" / "template.html").read_text(encoding="utf-8")
     page = apply_prices(page, root)
+    version = page_version(root, args.release)
+    page = apply_version(page, version)
+    print(f"   version 0.{version['version']} ({version['date']})", file=sys.stderr)
     page = page.replace("__CATALOG__", json.dumps(catalog, ensure_ascii=False, separators=(",", ":")))
     page = page.replace("__RW__", json.dumps(realworld, ensure_ascii=False, separators=(",", ":")))
     # Vehicle tax tables, fetched by tools/vehicle_tax.py from Finlex
