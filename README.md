@@ -10,7 +10,7 @@ CarFootprint is a single-page calculator for people choosing between cars: new o
 
 For up to four cars side by side:
 
-- **Annual cost** (€/year, €/month, €/km): depreciation, cost of capital, energy, and other costs (tax, insurance, servicing, tyres).
+- **Annual cost** (€/year, €/month, €/km): depreciation, financing, energy, and other costs (tax, insurance, servicing, tyres).
 - **Annual emissions** (kg CO₂e/year, g/km): driving emissions plus manufacturing emissions spread over the car's lifetime.
 - **Break-even mileage:** the annual mileage at which one car becomes cheaper than another.
 
@@ -20,6 +20,7 @@ Every assumption is visible and editable.
 
 - **Depreciation:** residual value = price × (1 − rate)^years. If no rate is given, it is chosen by the car's average age during ownership: 17% a year under 3 years, 10–12% from 3 to 19 years, 10% after that. The rates are estimated from the Finnish Tax Administration's taxation values of 114,000 used cars imported in 2024–2026, comparing cars of the same model at different ages (method in `data/depreciation.json`). Above-average mileage lowers the residual value further.
 - **Real-world consumption:** the WLTP figure is multiplied by a factor measured from cars' on-board fuel consumption meters (EEA data, cars registered in the EU 2021–2024). The factor is model-specific for 367 of the 588 models; the rest fall back to a brand or powertrain average, and the page says which one it used. On average petrol cars use 20% and diesels 18% more than WLTP, but individual models range from about 5% to over 40%.
+- **Financing:** the part of the price not covered by your own money and trade-in is an annuity loan. Its cost is the interest and monthly fees paid during ownership; a loan still running when the car is sold is repaid from the sale. Own money tied up in the car is charged the return it would earn elsewhere. Defaults: 4.1% loan interest (Bank of Finland, new vehicle loans, May 2026), €12.50/month in fees, 2.5% return on own money (Bank of Finland, new term deposits, June 2026). Cars above your maximum price are flagged.
 - **Older cars:** cars first registered up to 2017 were rated on the old NEDC test. For them the page uses the model's own NEDC figure for that year from the Finnish register, and adds the NEDC-to-real-world gap measured by the ICCT (8% for 2001 cars, 38% for 2014, 40% for 2016, linear in between).
 - **Plug-in hybrids:** default consumption matches the measured brand average (6.0 l/100 km across the EU, against a WLTP figure of 1.4).
 - **Electric cars:** WLTP electricity consumption per model from the EEA register (Finnish registrations 2025; 2020–2022 for models no longer sold new). Measured consumption is not collected from battery-electric cars, so the real-world factor of 1.20 is an assumption. Battery wear is not modelled; the page reminds users to check the battery of an older car.
