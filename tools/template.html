@@ -403,6 +403,7 @@ details.info a{color:var(--accent)}
 const BUILD = '__BUILD__'; // sivun versio (build.py), uuden version tunnistamiseen
 const CATALOG = __CATALOG__;
 const PRANGE = __PRANGE__; // energian hintojen vaihteluvälit (tools/update_prices.py, data/prices.json)
+const MV0 = __MODEL_V0__; // arvio arvosta uutena malliluettelon riveittäin, 0 = ei arviota (tools/budget_values.py, Verohallinto)
 const EVR = __EVRANGE__; // virallinen WLTP-toimintasäde sähköllä (km) malliluettelon riveittäin, 0 = ei tietoa (EEA)
 const VTAX = __VTAX__; // ajoneuvoveron taulukot 2026 (Finlex 814/2024, data/vehicle_tax.json)
 const INSP = __INSP__; // Traficom: määräaikaiskatsastukset ja elinikä malleittain (tools/update_inspection.py)
@@ -431,6 +432,7 @@ fi: {
   en_km:(v)=>`ajon energia ${v} €/km`, sumd:'Lisätietoja',
   all_km:(v)=>`Kaikki kulut kilometriä kohden: ${v} €/km (vuosikulu jaettuna ajomäärällä; suurin osa ei riipu ajetuista kilometreistä).`,
   parts:(d,c,e,o)=>`Vuodessa: arvonalenema ${d} €, rahoitus ${c} €, energia ${e} €, vero, vakuutus, huolto ja renkaat ${o} €.`,
+  price_est:'€, arvio Verohallinnon verotusarvoista: vaihda oikeaan hintaan', price_none:'€, tälle mallille ei ole hinta-arviota: tarkista hinta',
   sens_h:'Kuinka varma järjestys on?', sens_close:'Autot ovat lähes tasoissa. ', sens_if:(p)=>`Halvin vaihtuu, jos ${p}.`, sens_or:' tai ',
   sens_none:'Halvin pysyy samana, vaikka ajomäärä, energian hinnat, omistusaika tai arvonalenema muuttuisivat tutkituissa rajoissa (ks. Näin laskenta toimii).',
   sens_km:(d,v)=>`ajat ${d<0?'alle':'yli'} ${v} km/v`, sens_p:(k,d,v)=>`${{pB:'bensiini',pD:'diesel',pE:'sähkö'}[k]} maksaa ${d<0?'alle':'yli'} ${v} ${k==='pE'?'€/kWh':'€/l'}`,
@@ -486,6 +488,7 @@ fi: {
 <li><b>Toimintasäde sähköllä</b> näkyy rekisteristä valituille sähköautoille ja lataushybrideille: virallinen WLTP-toimintasäde on Suomessa 2025 rekisteröityjen saman mallin autojen mediaani (<a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA:n rekisteri</a>). Talven luvut ovat arvioita Norjan autoliiton El Prix -talvitesteistä: lauhassa talvessa (−6…+8 °C, 2025) autot jäivät keskimäärin 18 % ja kovassa pakkasessa (−7…−32 °C, 2026) 38 % alle WLTP-toimintasäteen (<a href="https://www.naf.no/elbil/elprix-nytt/elprix-vinter-2026-rekkeviddetest" target="_blank" rel="noopener">NAF</a>). Testit ajettiin sähköautoilla; lataushybridille sama suhde on oletus. Luvut ovat vuoden 2025 malleista, joten vanhemmissa mallivuosissa toimintasäde on usein lyhyempi; malleille, joita ei enää myyty uutena 2025 (esim. Nissan Leaf, Renault Zoe), lukua ei näytetä. Yksittäinen auto voi poiketa paljonkin, ja akun kuluminen lyhentää vanhemman auton toimintasädettä.</li>
 <li><b>€/km tuloskortissa on ajon energia:</b> polttoaine tai sähkö kilometriä kohden (kulutus × hinta), eli se, mitä ajaminen itse maksaa. Kaikki kulut kilometriä kohden (vuosikulu jaettuna ajomäärällä) löytyy kortin kohdasta Lisätietoja. Huollon kasvun ja arvon kilometrikohtaisen laskun lisääminen ajon hintaan odottaa parempia lähteitä.</li>
 <li><b>Lataushäviö:</b> WLTP-testissä sähkönkulutus mitataan pistorasiasta, joten latauksen tavanomaiset häviöt ovat jo virallisissa luvuissa. Oletuksena lisätään silti 10 %, koska moni lataa kotona tavallisesta pistorasiasta, jossa häviö on suurempi: <a href="https://www.adac.de/rund-ums-fahrzeug/elektromobilitaet/laden/ladeverluste-elektroauto-studie/" target="_blank" rel="noopener">ADAC:n mittauksessa</a> (8/2026, viisi autoa) häviöt olivat pistorasiasta (2,3 kW) noin 15 % ja yhdellä autolla 24 %, latausasemalla (11–22 kW) alle 7 %. Jos lataat latausasemalla, aseta lisähäviöksi 0.</li>
+<li><b>Mallin valinta</b> täyttää ostohinnan, iän ja mittarilukeman, ellet ole kirjoittanut niitä itse: ikä on nuorin mallivuosi, jonka arvioitu hinta mahtuu enimmäishintaan, hinta on mallin arvo uutena (Verohallinnon verotusarvoista, sama menetelmä kuin esimerkkiautoissa, vähintään 5 päätöstä) kerrottuna arvonaleneman kertoimella, ja mittarilukema on ikä kertaa mallin mediaaniajomäärä Traficomin rekisterissä. Arvio on suuntaa-antava: vaihda oikea hinta, kun tiedät sen. Noin 80 %:lle malleista on arvio.</li>
 <li><b>Vaihteluväli</b> tuloskorteissa näyttää vuosikulun 15 vuoden halvimmilla ja kalleimmilla energian hinnoilla (12 kuukauden keskihinnat nykyrahassa, Tilastokeskus). Lähteet ja oletukset ovat tulosten alla kohdassa Lisätietoja vaihteluväleistä.</li>
 <li><b>Kuinka varma järjestys on?</b> Sivu muuttaa yhtä asiaa kerrallaan ja etsii lähimmän arvon, jolla halvin auto vaihtuu, ja näyttää kaksi lähintä. Haun rajat: ajomäärä 2 000–50 000 km, polttoaineen ja sähkön hinta puolesta kaksinkertaiseen, omistusaika 1–20 vuotta ja arvonalenema puolesta kaksinkertaiseen (sama kerroin kaikille autoille). Rajat eivät ole ennusteita tai vaihteluvälejä, vaan sitä, kuinka kaukaa kääntöpistettä haetaan; kaukana olevaa kääntöpistettä ei näytetä.</li>
 <li><b>Vakuutus</b> on jaettu pakolliseen liikennevakuutukseen ja vapaaehtoiseen kaskoon. Avointa tilastoa henkilöauton vakuutusmaksuista ei löytynyt (<a href="https://www.finanssivalvonta.fi/en/publications-and-press-releases/news-releases/2025/statistical-survey-of-motor-liability-insurance-profitability-20192023-result-recorded-for-2023-was-excellent-despite-slight-decline-in-underwriting-result/" target="_blank" rel="noopener">Finanssivalvonta</a> kertoo vain koko markkinan maksutulon), joten oletukset ovat Taloustaidon hintavertailujen keskiarvoja, kustakin suurempi: <a href="https://www.taloustaito.fi/vapaalla/2026/taloustaito-vertaili-huimat-erot-autovakuutusten-hinnoissa/" target="_blank" rel="noopener">vertailu 24.9.2026</a> (neljä yhtiötä, 12 kolme vuotta vanhaa autoa): liikennevakuutus bensiini- ja hybridiautoilla 167, lataushybrideillä 198 ja sähköautoilla 204 €/v, kasko 482, 701 ja 833 €/v; <a href="https://www.taloustaito.fi/vapaalla/sahkoautoilija-nain-paljon-autosi-kayttovoima-korottaa-vakuutusmaksuja/" target="_blank" rel="noopener">vertailu 20.10.2022</a> (Kia Niro 2021–2022, kolme yhtiötä): kevythybridi liikenne 198 ja kasko 520 €/v, täyssähkö 196 ja 771 €/v. Oletukset: liikennevakuutus 200 €/v (sähkö 205), kasko 520 €/v (bensiini, diesel, hybridi), 700 (lataushybridi) ja 835 (sähkö); dieselistä ei ollut omaa lukua. Vertailujen vakuutuksenottaja oli 59-vuotias täysillä bonuksilla pääkaupunkiseudun ympäristökunnassa: nuoremmalle tai bonuksettomalle hinta on usein selvästi suurempi. Kasko riippuu myös auton arvosta, ja vanhaa halpaa autoa ei usein kaskoteta. Kirjoita omat tarjouksesi kohtaan Tarkenna.</li>
@@ -561,6 +564,7 @@ en: {
   en_km:(v)=>`driving energy €${v}/km`, sumd:'More details',
   all_km:(v)=>`All costs per kilometre: €${v}/km (yearly cost divided by mileage; most of it does not depend on the kilometres driven).`,
   parts:(d,c,e,o)=>`Per year: depreciation €${d}, financing €${c}, energy €${e}, tax, insurance, servicing and tyres €${o}.`,
+  price_est:'€, estimate from Tax Administration values: change to the real price', price_none:'€, no price estimate for this model: check the price',
   sens_h:'How firm is the ranking?', sens_close:'The cars are nearly even. ', sens_if:(p)=>`The cheapest car changes if ${p}.`, sens_or:' or ',
   sens_none:'The cheapest car stays the same even if mileage, energy prices, ownership period or depreciation change within the tested limits (see How the calculation works).',
   sens_km:(d,v)=>`you drive ${d<0?'under':'over'} ${v} km/yr`, sens_p:(k,d,v)=>`${{pB:'petrol',pD:'diesel',pE:'electricity'}[k]} costs ${d<0?'under':'over'} ${v} ${k==='pE'?'€/kWh':'€/l'}`,
@@ -617,6 +621,7 @@ en: {
 <li><b>Electric range</b> is shown for electric and plug-in hybrid cars picked from the register: the official WLTP range is the median of the same model registered in Finland in 2025 (<a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA register</a>). The winter figures are estimates from the Norwegian Automobile Federation's El Prix winter tests: in a mild winter (−6…+8 °C, 2025) cars fell on average 18% and in hard frost (−7…−32 °C, 2026) 38% short of their WLTP range (<a href="https://www.naf.no/elbil/elprix-nytt/elprix-vinter-2026-rekkeviddetest" target="_blank" rel="noopener">NAF</a>). The tests used electric cars; applying the same ratio to plug-in hybrids is an assumption. The figures are for 2025 models, so older model years often have a shorter range; models no longer sold new in 2025 (e.g. Nissan Leaf, Renault Zoe) get no figure. Individual cars can differ a lot, and battery wear shortens an older car's range.</li>
 <li><b>€/km on the result card is the driving energy:</b> fuel or electricity per kilometre (consumption × price), i.e. what driving itself costs. All costs per kilometre (yearly cost divided by mileage) are under More details on the card. Adding the rise in servicing and the mileage-related loss of value to the driving cost waits for better sources.</li>
 <li><b>Charging losses:</b> in the WLTP test, electricity consumption is measured at the socket, so normal charging losses are already in the official figures. The default still adds 10%, because many people charge at home from an ordinary socket, where losses are higher: in <a href="https://www.adac.de/rund-ums-fahrzeug/elektromobilitaet/laden/ladeverluste-elektroauto-studie/" target="_blank" rel="noopener">ADAC's measurements</a> (8/2026, five cars) losses from a household socket (2.3 kW) were about 15%, and 24% for one car, and below 7% from a wallbox (11–22 kW). If you charge from a wallbox, set the extra loss to 0.</li>
+<li><b>Picking a model</b> fills in the purchase price, age and odometer unless you typed them yourself: the age is the youngest model year whose estimated price fits the maximum price, the price is the model's value when new (from Tax Administration taxation values, the same method as for the example cars, at least 5 decisions) times the depreciation factor, and the odometer is age times the model's median annual mileage in Traficom's register. The estimate is indicative: change it to the real price when you know it. About 80% of models have an estimate.</li>
 <li><b>The range</b> on the result cards shows the yearly cost at the cheapest and dearest energy prices of the last 15 years (12-month averages in today's money, Statistics Finland). Sources and assumptions are under the results in More about the ranges.</li>
 <li><b>How firm is the ranking?</b> The page changes one thing at a time, finds the nearest value at which the cheapest car changes, and shows the two nearest. Search limits: mileage 2,000–50,000 km, fuel and electricity prices from half to double, ownership 1–20 years and depreciation from half to double (the same factor for every car). The limits are not forecasts or ranges, only how far the page looks for a tipping point; one further away is not shown.</li>
 <li><b>Insurance</b> is split into compulsory motor liability insurance and optional comprehensive cover. No open statistics give a premium per car (<a href="https://www.finanssivalvonta.fi/en/publications-and-press-releases/news-releases/2025/statistical-survey-of-motor-liability-insurance-profitability-20192023-result-recorded-for-2023-was-excellent-despite-slight-decline-in-underwriting-result/" target="_blank" rel="noopener">the Financial Supervisory Authority</a> reports only market totals), so the defaults are averages from Taloustaito's price comparisons, taking the higher one: <a href="https://www.taloustaito.fi/vapaalla/2026/taloustaito-vertaili-huimat-erot-autovakuutusten-hinnoissa/" target="_blank" rel="noopener">24 Sept 2026</a> (four insurers, 12 three-year-old cars): motor liability €167 for petrol and hybrid cars, €198 for plug-in hybrids and €204 for electric cars, comprehensive €482, €701 and €833; <a href="https://www.taloustaito.fi/vapaalla/sahkoautoilija-nain-paljon-autosi-kayttovoima-korottaa-vakuutusmaksuja/" target="_blank" rel="noopener">20 Oct 2022</a> (Kia Niro 2021–2022, three insurers): mild hybrid €198 and €520, full electric €196 and €771. Defaults: motor liability €200/yr (electric €205), comprehensive €520/yr (petrol, diesel, hybrid), €700 (plug-in hybrid) and €835 (electric); there was no diesel figure. The policyholder in the comparisons was 59 years old with full bonus, living near Helsinki: younger drivers or those without bonus usually pay clearly more. Comprehensive cover also depends on the car's value, and old cheap cars are often not covered. Enter your own quotes under Fine-tune.</li>
@@ -824,6 +829,27 @@ function newCar(o={}){
   return c;
 }
 
+// Valitun mallin hinta-arvio: arvo uutena (Verohallinnon verotusarvoista) × arvonalenema iän mukaan
+const estPrice = (r, age) => { const v0 = MV0[CATALOG.indexOf(r)]; return v0 ? Math.floor(v0*depFactor(age)/100)*100 : 0; };
+// Mallin valinta täyttää ikä-, hinta- ja mittarilukemakentät mallin mukaan, ellei käyttäjä ole itse kirjoittanut niitä:
+// ikä = nuorin mallivuosi, jonka arvioitu hinta mahtuu enimmäishintaan (kuten esimerkkiautoissa), mittarilukema = ikä × mallin
+// mediaaniajomäärä (Traficom). Jos arviota ei ole, ikä rajataan mallin vuosiin ja hinta jää ennalleen.
+function autoPriceAge(c, r){
+  const own = c.own || {}, [y0, y1] = String(r[5]).split('–').map(Number);
+  const minAge = Math.max(0, CUR_YEAR - (y1||CUR_YEAR)), maxAge = Math.max(minAge, CUR_YEAR - (y0||CUR_YEAR));
+  const budget = num($('budget').value, 0);
+  if (!own.age){
+    let a = Math.min(maxAge, Math.max(minAge, Math.round(c.age||0)));
+    if (MV0[CATALOG.indexOf(r)] && budget > 0){
+      a = maxAge;
+      for (let x = minAge; x <= maxAge; x++) if (estPrice(r, x) <= budget){ a = x; break; }
+    }
+    c.age = a;
+  }
+  if (!own.price){ const v = estPrice(r, c.age); c.priceAuto = !!v; if (v) c.price = v; }
+  if (!own.odo) c.odo = Math.round(c.age*(r[6]||14000)/1000)*1000;
+}
+
 // --- malliluettelo ---
 const labelOf = r => `${r[0]} ${r[1]} – ${T('pt')[r[2]]}`;
 let byLabel = new Map(), modelIdx = [];
@@ -933,7 +959,7 @@ function carCard(c,i){
       <input id="pick${i}" data-pick="${i}" placeholder="${T('pick_ph')}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sg${i}">
       <div class="sugg" id="sg${i}" role="listbox" aria-label="${T('pick_l')}" hidden></div></div>
     <div class="fields">
-      <div class="field full req"><label class="label" for="price${i}">${T('price_l')}</label><input type="number" id="price${i}" data-k="price" step="500" value="${c.price}"><span class="unit">€</span></div>
+      <div class="field full req"><label class="label" for="price${i}">${T('price_l')}</label><input type="number" id="price${i}" data-k="price" step="500" value="${c.price}"><span class="unit">${c.priceAuto ? T('price_est') : (c.picked && !(c.own||{}).price && !MV0[CATALOG.indexOf(c.picked)] ? T('price_none') : '€')}</span></div>
       <div class="field req"><label class="label" for="age${i}">${T('age_l')}</label><input type="number" id="age${i}" data-k="age" min="0" step="1" value="${c.age}"><span class="unit">${T('age_u')}</span></div>
       <div class="field req"><label class="label" for="odo${i}">${T('odo_l')}</label><input type="number" id="odo${i}" data-k="odo" step="1000" value="${c.odo}"><span class="unit">${T('odo_u')}</span></div>
     </div>
@@ -986,7 +1012,7 @@ $('cars').addEventListener('input', e => {
     const d = PT_DEF[r[2]];
     Object.assign(c, {name:`${r[0]} ${r[1]}`, exKey:null, pt:r[2], kwh:d.kwh, share:d.share,
       other:d.tyre, traf:d.traf, kasko:d.kasko, serv:d.serv, tax:'', mass:d.mass, make:d.make, batt:d.batt, life:d.life});
-    c.picked = r; fromRow(c, r); c.batt = battFromName(r) ?? d.batt;
+    c.picked = r; autoPriceAge(c, r); fromRow(c, r); c.batt = battFromName(r) ?? d.batt;
     renderCars(); update(); return;
   }
   const k = el.dataset.k; if (!k) return;
@@ -995,6 +1021,11 @@ $('cars').addEventListener('input', e => {
   else if (k==='dep'||k==='tax') c[k] = el.value;
   else {
     c[k] = num(el.value);
+    if (k==='price'||k==='age'||k==='odo'){ c.own = {...(c.own||{}), [k]:true}; if (k==='price') c.priceAuto = false; }
+    if (k==='age' && c.priceAuto && c.picked){ // arvioitu hinta seuraa ikää
+      const v = estPrice(c.picked, c.age); if (v){ c.price = v; const pe = $('price'+i); if (pe) pe.value = v; } }
+    if (k==='age' && c.picked && !(c.own||{}).odo){ // mittarilukema seuraa ikää, ellei sitä ole kirjoitettu itse
+      c.odo = Math.round(c.age*(c.picked[6]||14000)/1000)*1000; const oe = $('odo'+i); if (oe) oe.value = c.odo; }
     if (k==='fuel'||k==='real') c.autoFuel = false;
     if (k==='age'){ // päivitä kulutus ja yksiköt paikallaan, ettei kenttä menetä kohdistusta
       refreshStd(c);

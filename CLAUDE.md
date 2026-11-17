@@ -86,6 +86,12 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   without Corolla Cross, Leaf 110 kW = 40 kWh, Golf eTSI = 'Bensiini ja sähkö' with tax rate ≥ 6 %), writes v0 with
   --write and prints real median value per model year vs the page's estimate. build.py injects BUDGET_CARS from the
   JSON (`__BUDGET_CARS__`); do not hard-code values in the template.
+- Picking a model (autoPriceAge): fills age (youngest model year whose estimate fits the budget), price (MV0 = v0 per
+  catalogue row from data/model_values.json, made by tools/budget_values.py --write with name matching incl. BMW
+  "320D" -> "320", "I 30" = "I30"; >= 5 decisions, else 0) and odometer (age x the model's median km/yr), unless the
+  user typed them (car.own.{price,age,odo}). c.priceAuto marks an estimate (unit text says so); age edits move an
+  auto price and an auto odometer. Rerun budget_values.py --write when the catalogue changes (build zeroes a
+  length mismatch).
   Each candidate also has `list_price` (importer price list, cheapest version, source and date) as a cross-check only;
   check by hand about once a year (Toyota PDFs use obfuscated fonts, VW lists are on api.k-auto.fi, Tesla's configurator
   needs JS).

@@ -15,6 +15,13 @@ v0 x depreciation(median age), as a check.
 
     py tools/budget_values.py            # print the results
     py tools/budget_values.py --write    # also write v0 and decisions into data/budget_cars.json
+
+The same run also estimates v0 for every model in data/catalog.json (data/model_values.json), so that
+picking any model on the page can fill in an estimated price: same make, powertrain from the fuel
+("Bensiini", "Diesel", "Sähkö"; "Bensiini ja sähkö" with a tax rate of 6 % or more = hybrid incl. mild
+hybrids, under 6 % = plug-in hybrid), and the Tax Administration's model name equal to the catalogue
+name, else sharing its first word (the model family: "ID.3 PRO 150 KW" -> "ID.3"). At least 5 decisions,
+or no estimate.
 """
 import datetime as dt
 import json
@@ -99,6 +106,59 @@ def match(r, f):
     return True
 
 
+def norm_name(t):
+    return " ".join(str(t).upper().replace("-", " ").split())
+
+
+def fuel_ok(r, pt):
+    f = r["fuel"]
+    if pt == "B":
+        return f == "Bensiini"
+    if pt == "D":
+        return f == "Diesel"
+    if pt == "E":
+        return f == "Sähkö"
+    if pt == "H":
+        return f in ("Bensiini ja sähkö", "Diesel ja sähkö") and r["pct"] >= 6
+    if pt == "P":
+        return f in ("Bensiini ja sähkö", "Diesel ja sähkö") and 0 < r["pct"] < 6
+    return False
+
+
+def model_values(rows):
+    """v0 and number of decisions for every catalogue row (0 = no estimate)."""
+    sys.path.insert(0, str(ROOT / "tools"))
+    from build import EEA_BRAND_ALIASES, norm  # noqa: E402
+    catalog = json.loads((ROOT / "data" / "catalog.json").read_text(encoding="utf-8"))
+    by_make = {}
+    for r in rows:
+        if r["value"] > 0 and r["age"] >= 0:
+            by_make.setdefault(norm(r["make"]), []).append(r)
+    v0s, ns = [], []
+    for c in catalog:
+        make = norm(c[0])
+        make = EEA_BRAND_ALIASES.get(make, make)
+        name = norm_name(norm(c[1]))
+        if name.startswith(make + " ") or (name.startswith(make) and name[len(make):].isdigit()):
+            name = name[len(make):].strip() or name  # "MAZDA6" -> "6"
+        cand = [r for r in by_make.get(make, []) if fuel_ok(r, c[2])]
+        nospace = name.replace(" ", "")
+        exact = [r for r in cand if norm_name(r["model"]).replace(" ", "") == nospace]  # "I 30" = "I30"
+        first = name.split(" ")[0]
+        fams = {first, nospace}
+        if len(first) > 3 and first[:-1].isdigit() and first[-1] in "IDE":
+            fams.add(first[:-1])  # BMW "320D", "118I" -> "320", "118"
+        family = [r for r in cand if norm_name(r["model"]).split(" ")[0] in fams]
+        sel = exact if len(exact) >= 5 else family if len(family) >= 5 else []
+        if sel:
+            v0s.append(round(statistics.median(r["value"] / dep_factor(r["age"]) for r in sel) / 100) * 100)
+            ns.append(len(sel))
+        else:
+            v0s.append(0)
+            ns.append(0)
+    return catalog, v0s, ns
+
+
 def main():
     path = ROOT / "data" / "budget_cars.json"
     data = json.loads(path.read_text(encoding="utf-8"))
@@ -134,6 +194,15 @@ def main():
                           "includes later imports.")
         path.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
         print(f"\nwrote {path.relative_to(ROOT)}")
+    catalog, v0s, ns = model_values(rows)
+    print(f"\nestimated v0 for {sum(1 for v in v0s if v)} of {len(catalog)} catalogue models")
+    if "--write" in sys.argv:
+        mv = ROOT / "data" / "model_values.json"
+        mv.write_text(json.dumps({
+            "description": "Estimated value when new (v0, EUR) for each row of data/catalog.json, same order; 0 = fewer than 5 matching tax decisions.",
+            "source": data["source"], "method": "tools/budget_values.py model_values(); see its docstring.",
+            "v0": v0s, "decisions": ns}, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
+        print(f"wrote {mv.relative_to(ROOT)}")
     return 0
 
 

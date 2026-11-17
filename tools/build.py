@@ -633,6 +633,12 @@ def main():
     page = page.replace("__BUDGET_CARS__", json.dumps(
         [[c["slot"], c["make"], c["model"], c["label"], c["v0"], c.get("last_model_year"), c.get("register_pt")]
          for c in bc], ensure_ascii=False, separators=(",", ":")))
+    # Estimated value when new for every catalogue row (tools/budget_values.py), for prices when a model is picked
+    mvp = root / "data" / "model_values.json"
+    mv0 = json.loads(mvp.read_text(encoding="utf-8"))["v0"] if mvp.exists() else []
+    if len(mv0) != len(catalog):
+        mv0 = [0] * len(catalog)  # catalogue changed: rerun tools/budget_values.py --write
+    page = page.replace("__MODEL_V0__", json.dumps(mv0, separators=(",", ":")))
     evr = ev_range_for_page(catalog, root)
     print(f"   WLTP electric range for {sum(1 for x in evr if x)} of "
           f"{sum(1 for r in catalog if r[2] in 'EP')} electric and plug-in models", file=sys.stderr)
