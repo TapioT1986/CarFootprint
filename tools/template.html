@@ -1067,12 +1067,18 @@ function payState(){
   return own <= 0 ? 'loan' : (budget > 0 && own >= budget) ? 'cash' : 'part';
 }
 let payNow = 'part';
+// Käyttäjän valinta (tai latauksen jälkeen päätelty): vain valittu käteinen seuraa enimmäishintaa.
+// Jos osittain lainalla oleva hinta lasketaan oman rahan tasolle, tila näyttää käteiseltä, mutta oma raha ei saa
+// sen jälkeen nousta enimmäishinnan mukana.
+let payPick = null;
 function renderPay(){
   payNow = payState();
+  if (payPick === null) payPick = payNow;
   document.querySelectorAll('[data-pay]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.pay===payNow)));
   $('payNote').textContent = (payNow==='part' ? T('pay_n_part')(fmt(num($('own').value,0))) : T('pay_n_'+payNow)) + T('pay_n_more');
 }
 function setPay(mode){
+  payPick = mode;
   const own = $('own'), budget = num($('budget').value, 0), def = num(own.defaultValue, 0);
   if (mode==='cash') own.value = String(budget > 0 ? budget : Math.max(...cars.map(c => num(c.price, 0)), def));
   else if (mode==='loan') own.value = '0';
@@ -1081,7 +1087,8 @@ function setPay(mode){
 }
 document.querySelectorAll('[data-pay]').forEach(b => b.onclick = () => setPay(b.dataset.pay));
 // Käteinen seuraa enimmäishintaa (ajetaan ennen update():a)
-$('budget').addEventListener('input', () => { if (payNow==='cash') $('own').value = $('budget').value; });
+$('budget').addEventListener('input', () => { if (payPick==='cash') $('own').value = $('budget').value; });
+$('own').addEventListener('input', () => { payPick = null; }); // käsin muutettu summa: päätellään uudelleen
 function moreCount(){
   // oma raha lasketaan muutetuksi vain, jos se ei ole maksutavan valinnan suora seuraus
   const n = GIDS.filter(id => $('more').contains($(id)) && isChanged($(id)) && (id!=='own' || payState()==='part')).length;
@@ -1117,6 +1124,7 @@ GIDS.forEach(id => $(id).addEventListener('input', update));
 document.querySelectorAll('.chip').forEach(b => b.onclick = () => { $('km').value = b.dataset.km; update(); });
 // Kaikki kentät HTML:n oletusarvoihin (myös selaimen palauttamat lomakearvot ohitetaan)
 function defaultInputs(){
+  payPick = null;
   GIDS.forEach(id => { const el = $(id);
     if (el.type==='select-one'){ const k = [...el.options].findIndex(o=>o.defaultSelected); el.selectedIndex = k<0?0:k; }
     else el.value = el.defaultValue; });
