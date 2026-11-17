@@ -1146,7 +1146,8 @@ if (saved){ // asetukset ensin, jotta esimerkkiautot osataan valita enimmäishin
 }
 if (saved && Array.isArray(saved.cars) && saved.cars.length && !oldExamples)
   cars = migrateCars(saved.cars, saved.ev||0)
-    .map(c=>newCar({...c,brand:undefined})).map((c,i)=>Object.assign(c,{picked:saved.cars[i].picked}));
+    .map(c=>newCar({...c,brand:undefined})).map((c,i)=>{ const p = saved.cars[i].picked; // tallennettu kopio -> luettelon rivi
+      return Object.assign(c,{picked: Array.isArray(p) ? (findRow(p) || p) : null}); });
 else cars = examples();
 
 // --- jaettava linkki: asetukset ja autot linkin #-osaan (selain ei lähetä sitä palvelimelle) ---
@@ -1168,7 +1169,7 @@ const sameV = (a, b) => (typeof a==='number' && typeof b==='number') ? Math.abs(
 const rowChk = r => { let h = 0; for (const ch of r[0]+'|'+r[1]+'|'+r[2]) h = (h*31 + ch.charCodeAt(0)) % 1296; return h.toString(36).padStart(2,'0'); };
 const rowKey = r => CATALOG.indexOf(r).toString(36) + rowChk(r);
 function rowFromKey(k){
-  const chk = k.slice(-2), r = CATALOG[parseInt(k.slice(0,-2), 36)];
+  const chk = k.slice(-2), n = parseInt(k.slice(0,-2), 36), r = n >= 0 ? CATALOG[n] : null;
   return (r && rowChk(r)===chk) ? r : CATALOG.find(x => rowChk(x)===chk) || null;
 }
 // Auton pohja tunnisteesta; age = auton ikä ennen kuin kulutus lasketaan uudelleen
@@ -1196,7 +1197,7 @@ function carToShare(c, i){
   if (c.exAuto && c.ex) return 'e'+c.ex.slot;
   const budget = num($('budget').value, 12000);
   const base = (c.ex && c.picked && exampleCar(c.ex.slot, budget).picked===c.picked) ? 'x'+c.ex.slot
-    : c.picked ? 'p'+rowKey(c.picked) : 'n'+c.pt;
+    : (c.picked && CATALOG.includes(c.picked)) ? 'p'+rowKey(c.picked) : 'n'+c.pt; // poistunut malli -> oma auto
   const b = shareBase(base, i, c.age), age0 = shareBase(base, i).age; // b: sama ikä, jotta johdetut kentät täsmäävät
   const toks = [base];
   Object.entries(SHARE_F).forEach(([l,key]) => {
