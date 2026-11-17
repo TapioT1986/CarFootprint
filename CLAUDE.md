@@ -76,6 +76,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   without Corolla Cross, Leaf 110 kW = 40 kWh, Golf eTSI = 'Bensiini ja sähkö' with tax rate ≥ 6 %), writes v0 with
   --write and prints real median value per model year vs the page's estimate. build.py injects BUDGET_CARS from the
   JSON (`__BUDGET_CARS__`); do not hard-code values in the template.
+  Each candidate also has `list_price` (importer price list, cheapest version, source and date) as a cross-check only;
+  check by hand about once a year (Toyota PDFs use obfuscated fonts, VW lists are on api.k-auto.fi, Tesla's configurator
+  needs JS).
 - Vehicle tax (`vehicleTax()`): base tax from CO2 = official l/100km × 23.3 (petrol) / 26.4 (diesel),
   table 1 if NEDC (model year ≤ 2017) else 1 A; EV model year ≥ 2022 + 17.80 c/day; PHEV lowest band.
   Propulsion tax D 5.5 / E 1.9 / P 0.95 c/day per started 100 kg of total mass; mass is a per-powertrain

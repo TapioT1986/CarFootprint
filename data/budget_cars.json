@@ -31,7 +31,14 @@
     "fuel": "Bensiini",
     "kw_max": 110
    },
-   "note": "Up to 110 kW, so GTI and R models do not raise the value."
+   "note": "Up to 110 kW, so GTI and R models do not raise the value.",
+   "list_price": {
+    "base_version": "Comfort 1,5 TSI 85 kW, manual",
+    "price": 32647,
+    "date": "2026-10-27",
+    "source": "Volkswagen (K Auto Oy) price list no. 72",
+    "url": "https://media.volkswagen.fi/pricelists/golf"
+   }
   },
   {
    "slot": "B",
@@ -50,6 +57,13 @@
     "fuel": "Bensiini ja sähkö",
     "pct_min": 6,
     "reg_from": 2020
+   },
+   "list_price": {
+    "base_version": "Comfort 1,5 eTSI 85 kW (MHEV) DSG",
+    "price": 35786,
+    "date": "2026-10-27",
+    "source": "Volkswagen (K Auto Oy) price list no. 72",
+    "url": "https://media.volkswagen.fi/pricelists/golf"
    }
   },
   {
@@ -66,7 +80,14 @@
     ],
     "fuel": "Bensiini ja sähkö"
    },
-   "note": "Corolla Cross (a separate, dearer SUV) is left out; the old value 39 200 included it."
+   "note": "Corolla Cross (a separate, dearer SUV) is left out; the old value 39 200 included it.",
+   "list_price": {
+    "base_version": "Hatchback 1.8 Hybrid Active (Style 36 216)",
+    "price": 32841,
+    "date": "2026-09-01",
+    "source": "Toyota Auto Finland price list, Corolla Hatchback model year 2027",
+    "url": "https://www.toyota.fi/hinnastot"
+   }
   },
   {
    "slot": "H",
@@ -85,6 +106,10 @@
      "AURIS"
     ],
     "fuel": "Bensiini ja sähkö"
+   },
+   "list_price": {
+    "price": null,
+    "note": "No longer sold new."
    }
   },
   {
@@ -100,6 +125,13 @@
      "YARIS HYBRID"
     ],
     "fuel": "Bensiini ja sähkö"
+   },
+   "list_price": {
+    "base_version": "1.5 Hybrid 116 Life (dearest 30 590)",
+    "price": 24647,
+    "date": "2026-08-01",
+    "source": "Toyota Auto Finland price list, Yaris model year 2026",
+    "url": "https://www.toyota.fi/hinnastot"
    }
   },
   {
@@ -115,6 +147,13 @@
      "MODEL Y"
     ],
     "fuel": "Sähkö"
+   },
+   "list_price": {
+    "base_version": "Standard (Premium AWD 55 090)",
+    "price": 42090,
+    "date": "2026-03",
+    "source": "Moottori news article (not an official price list; Tesla's configurator did not load)",
+    "url": "https://moottori.fi/uutinen/halpis-teslan-suomen-hinnat-julki-jopa-10-000-euron-ero-seuraavaan-versioon/"
    }
   },
   {
@@ -130,6 +169,13 @@
      "MODEL 3"
     ],
     "fuel": "Sähkö"
+   },
+   "list_price": {
+    "base_version": "Standard",
+    "price": 36990,
+    "date": "2025-12",
+    "source": "Moottori news article (not an official price list)",
+    "url": "https://moottori.fi/uutinen/teslan-hintapommi-model-3-standard-kilpailee-jo-kiinalaishalpisten-kanssa/"
    }
   },
   {
@@ -148,6 +194,10 @@
      "ID.3"
     ],
     "fuel": "Sähkö"
+   },
+   "list_price": {
+    "price": null,
+    "note": "Not in Volkswagen's current Finnish price lists (2026-11); the model is being replaced."
    }
   },
   {
@@ -166,6 +216,13 @@
      "KONA"
     ],
     "fuel": "Sähkö"
+   },
+   "list_price": {
+    "base_version": "Kona Electric 65 kWh Style Edition (only version, new generation)",
+    "price": 41999,
+    "date": "2026-05-05",
+    "source": "Hyundai Motor Finland price list 04-2026",
+    "url": "https://www.hyundai.fi/wp-content/uploads/hyundai-kona-electric-my27-hinnasto-04-2026-05-05-2026.pdf"
    }
   },
   {
@@ -182,6 +239,13 @@
      "E-NIRO"
     ],
     "fuel": "Sähkö"
+   },
+   "list_price": {
+    "base_version": "Niro EV",
+    "price": 38590,
+    "date": null,
+    "source": "Kia Finland model page (search result; date not shown)",
+    "url": "https://www.kia.com/fi/mallisto/niro-sg2/"
    }
   },
   {
@@ -201,7 +265,11 @@
      110.0
     ]
    },
-   "note": "110 kW = the 40 kWh model, as in the catalogue row LEAF 40KWH."
+   "note": "110 kW = the 40 kWh model, as in the catalogue row LEAF 40KWH.",
+   "list_price": {
+    "price": null,
+    "note": "No longer sold new."
+   }
   },
   {
    "slot": "E",
@@ -217,6 +285,10 @@
      "E-GOLF"
     ],
     "fuel": "Sähkö"
+   },
+   "list_price": {
+    "price": null,
+    "note": "No longer sold new."
    }
   },
   {
@@ -232,7 +304,12 @@
      "ZOE"
     ],
     "fuel": "Sähkö"
+   },
+   "list_price": {
+    "price": null,
+    "note": "No longer sold new."
    }
   }
- ]
+ ],
+ "list_prices": "list_price = importer's price for the cheapest version incl. car tax and VAT, without dealer delivery costs or options, checked 2026-11-17. For comparison only; the page uses v0 from the Tax Administration's values, which describe the cars actually imported (usually better equipped). Golf and Niro agree within 1-2%; Corolla and Yaris v0 are near the dearest trim; Tesla and Kona list prices are for newer cheaper versions or a new generation."
 }
