@@ -171,12 +171,12 @@ def build_realworld(root):
 
 def build_catalog(sources):
     """One row per brand + model + powertrain, from the Finnish register."""
+    reg = next(iter(sorted(sources.glob("TieliikenneAvoinData_*.csv"))), None)
+    if reg is None:
+        return None  # checked before importing pandas: sources/ may hold only small extracts
     import numpy as np
     import pandas as pd
 
-    reg = next(iter(sorted(sources.glob("TieliikenneAvoinData_*.csv"))), None)
-    if reg is None:
-        return None
     print(f"  reading {reg.name} (slow, ~2.6 M rows)", file=sys.stderr)
 
     cols = ["ajoneuvoluokka", "ensirekisterointipvm", "kayttovoima", "sahkohybridinluokka",
@@ -494,6 +494,50 @@ def inspection_for_page(catalog, root):
             "m": {n: doc["models"][n] for n in used}, "idx": idx}
 
 
+# --- electric range -----------------------------------------------------------
+
+def ev_range_for_page(catalog, root):
+    """Official WLTP electric range (km) per catalogue row, 0 when unknown.
+
+    data/eea_ev_range_fi_2025.csv comes from tools/ev_range.py (EEA register, Finland
+    2025). Matching follows add_electricity(): same make and powertrain, model equal to
+    or starting with the catalogue name, else the model family ("ID.4 PRO" -> "ID.4")
+    when at least 5 cars match. Several matches give the car-weighted median."""
+    path = root / "data" / "eea_ev_range_fi_2025.csv"
+    if not path.exists():
+        return [0] * len(catalog)
+    table = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("#") or line.startswith("make|") or not line.strip():
+            continue
+        b, m, p, km, n = line.split("|")
+        table.setdefault((b, p), []).append((m, int(km), int(n)))
+
+    def wmedian(hits):
+        vals = sorted(hits, key=lambda h: h[1])
+        half, acc = sum(h[2] for h in vals) / 2, 0
+        for _, km, n in vals:
+            acc += n
+            if acc >= half:
+                return km
+        return 0
+
+    out = []
+    for r in catalog:
+        if r[2] not in "EP":
+            out.append(0)
+            continue
+        brand = EEA_BRAND_ALIASES.get(norm(r[0]), norm(r[0]))
+        model, same = norm(r[1]), table.get((brand, r[2]), [])
+        hits = [h for h in same if h[0] == model or h[0].startswith(model + " ")]
+        if not hits:
+            family = model.split(" ")[0]
+            wider = [h for h in same if len(family) >= 2 and (h[0] == family or h[0].startswith(family + " "))]
+            hits = wider if sum(h[2] for h in wider) >= 5 else []
+        out.append(wmedian(hits) if hits else 0)
+    return out
+
+
 # --- page version -------------------------------------------------------------
 
 def page_version(root, release=False):
@@ -584,6 +628,10 @@ def main():
         print(f"   inspection data for {sum(1 for n in insp['idx'] if n)} of {len(catalog)} models "
               f"({len(insp['m'])} model series, {insp['y']})", file=sys.stderr)
     page = page.replace("__INSP__", json.dumps(insp, ensure_ascii=False, separators=(",", ":")))
+    evr = ev_range_for_page(catalog, root)
+    print(f"   WLTP electric range for {sum(1 for x in evr if x)} of "
+          f"{sum(1 for r in catalog if r[2] in 'EP')} electric and plug-in models", file=sys.stderr)
+    page = page.replace("__EVRANGE__", json.dumps(evr, separators=(",", ":")))
     # Version id = hash of the page; the page compares it with the server copy to escape stale caches
     page = page.replace("__BUILD__", hashlib.sha256(page.encode("utf-8")).hexdigest()[:12])
     (root / "index.html").write_text(page, encoding="utf-8", newline="\n")
