@@ -1,0 +1,28 @@
+{
+ "description": "Candidate example cars and their estimated value when new (v0). The page picks, for each slot, the youngest model year whose estimated value fits the user's maximum price: value(age) = v0 x the page's depreciation curve (AGE_DEP).",
+ "source": {
+  "name": "Verohallinto / Finnish Tax Administration: applied taxation values of passenger cars, 2025 and 2026 (January-September)",
+  "url": "https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/",
+  "read": "2026-11-17"
+ },
+ "method": "v0 = median over the model's tax decisions of value / depreciation(age). Model years available come from the Traficom register (catalogue field 'years', 5th-95th percentile of first registration). Mileage = age x the model's median annual mileage in the register.",
+ "rules": {
+  "petrol": "Always the Volkswagen Golf, Finland's most common car of median age.",
+  "hybrid": "Toyota Corolla if it fits the budget, else Auris, else Yaris (the most common full hybrids).",
+  "electric": "Of the candidates that fit the budget, the one with the most cars in the Finnish register. If none fits, the cheapest one, flagged as over budget."
+ },
+ "candidates": [
+  {"slot": "B", "make": "Volkswagen", "model": "GOLF", "label": "Golf", "v0": 33400, "decisions": 116},
+  {"slot": "H", "make": "Toyota", "model": "Corolla", "label": "Corolla", "v0": 39200, "decisions": 837},
+  {"slot": "H", "make": "Toyota", "model": "Auris", "label": "Auris", "v0": 38900, "decisions": 81},
+  {"slot": "H", "make": "Toyota", "model": "Yaris", "label": "Yaris", "v0": 28900, "decisions": 98},
+  {"slot": "E", "make": "Tesla", "model": "Model Y", "label": "Tesla Model Y", "v0": 53800, "decisions": 1995},
+  {"slot": "E", "make": "Tesla", "model": "MODEL 3", "label": "Tesla Model 3", "v0": 47000, "decisions": 2157},
+  {"slot": "E", "make": "Volkswagen", "model": "ID.3 PRO 150 KW", "label": "VW ID.3", "v0": 37000, "decisions": 902},
+  {"slot": "E", "make": "Hyundai", "model": "KONA", "label": "Hyundai Kona", "v0": 37600, "decisions": 393},
+  {"slot": "E", "make": "Kia", "model": "NIRO", "label": "Kia Niro", "v0": 39000, "decisions": 569},
+  {"slot": "E", "make": "Nissan", "model": "LEAF 40KWH", "label": "Nissan Leaf", "v0": 24500, "decisions": 151},
+  {"slot": "E", "make": "Volkswagen", "model": "GOLF", "label": "VW e-Golf", "v0": 29000, "decisions": 25},
+  {"slot": "E", "make": "Renault", "model": "ZOE", "label": "Renault Zoe", "v0": 24700, "decisions": 40}
+ ]
+}

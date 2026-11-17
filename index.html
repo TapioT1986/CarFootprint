@@ -291,7 +291,7 @@ fi: {
   chipB:'Bensa-auto 11 800', chipAll:'Kaikki 14 500', chipD:'Diesel 20 800',
   km_hint:'Pikavalinnat ovat suomalaisten autojen toteutuneita ajomääriä (mediaani, Traficom 30.6.2026).',
   years_l:'Omistusaika', years_u:'vuotta', rate_u:'% / vuosi',
-  budget_l:'Enimmäishinta', budget_u:'€, budjettisi autolle',
+  budget_l:'Enimmäishinta', budget_u:'€; esimerkkiautot valitaan tämän mukaan',
   fin_h:'Rahoitus', own_l:'Oma raha ja vaihtohyvitys', own_u:'€ käteistä + vanhasta autosta saatava hyvitys; loppu lainaa',
   loanRate_l:'Lainan korko', loanRate_u:'% / vuosi (nimellinen)', loanFee_l:'Lainan kulut', loanFee_u:'€ / kk, tilinhoito ja laskutus',
   loanYears_l:'Laina-aika', ownRate_l:'Oman rahan tuotto',
@@ -308,6 +308,7 @@ fi: {
   lg_drive:'Ajo (polttoaine tai sähkö)', lg_make:'Valmistus',
   notes_h:'Näin laskenta toimii', reset:'Palauta esimerkkiautot',
   notes:`<li><b>Arvonalenema:</b> jäännösarvo = hinta × (1 − arvonalenema-%)<sup>vuodet</sup>. Jos jätät prosentin tyhjäksi, se valitaan auton keski-iän mukaan: alle 3 v 17 %, 3–5 v 10 %, 6–9 v 11 %, 10–19 v 12 %, 20 v tai yli 10 %. Prosentit on laskettu <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Verohallinnon verotusarvoista</a> (114 000 käytettynä tuotua autoa 2024–2026) vertaamalla saman mallin eri-ikäisiä autoja. Keskimääräistä suurempi ajomäärä (yli 15 000 km/v) laskee jäännösarvoa 0,2 % per 1 000 km vuodessa.</li>
+<li><b>Esimerkkiautot</b> valitaan enimmäishinnan mukaan: bensiiniauto on aina Golf (Suomen yleisin keski-ikäinen auto), hybridi Toyota Corolla, Auris tai Yaris ja sähköauto rekisterissä yleisin malli, johon budjetti riittää. Kustakin valitaan nuorin vuosimalli, jonka arvioitu hinta mahtuu budjettiin. Hinta-arviot perustuvat <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Verohallinnon verotusarvoihin</a> ja mittarilukema mallin keskimääräiseen ajomäärään. Kun muutat esimerkkiautoa, se lakkaa seuraamasta budjettia.</li>
 <li><b>Rahoitus:</b> se osa hinnasta, jota oma raha ja vaihtohyvitys eivät kata, rahoitetaan tasaerälainalla. Lainan kustannus on omistusaikana maksettu korko ja kuukausimaksut. Jos auto myydään ennen kuin laina on maksettu, loppu maksetaan myyntihinnasta. Lisäksi autoon sitoutuneelle omalle rahalle lasketaan menetetty tuotto. Enimmäishintaa kalliimmat autot merkitään.</li>
 <li><b>Todellinen kulutus:</b> WLTP-arvo kerrotaan kertoimella, joka on mitattu autojen omista kulutusmittareista (luetaan mm. katsastuksissa). Kerroin on <b>mallikohtainen</b> 367 mallille; muille käytetään merkin tai käyttövoiman keskiarvoa, ja auton kortti kertoo kumman. Bensiiniautot kuluttavat keskimäärin 20 % ja dieselit 18 % yli WLTP:n, mutta mallien väliset erot ovat suuria. Luvut ovat koko EU:sta eivätkä huomioi Suomen talvea.</li>
 <li><b>Vanhat autot (vuosimalli 2017 tai vanhempi):</b> niiden virallinen kulutus on mitattu vanhalla NEDC-testillä, joka aliarvioi kulutusta selvästi enemmän kuin WLTP. Laskuri käyttää mallin ja vuosimallin omaa NEDC-arvoa Traficomin rekisteristä ja lisää siihen <a href="https://theicct.org/publication/from-laboratory-to-road-a-2018-update/" target="_blank" rel="noopener">ICCT:n</a> mittaaman eron: 8 % vuoden 2001 autoissa, 38 % vuoden 2014 ja 40 % vuoden 2016 autoissa. Välivuodet on interpoloitu suoraviivaisesti.</li>
@@ -316,7 +317,7 @@ fi: {
 <li><b>Sähkön päästöt:</b> Suomen tuotannon suorat päästöt 26 g/kWh (Energiateollisuus, 2025) + tuotantoketju 16 g/kWh (Ilmastopaneeli). Tuotantotapojen elinkaariarvot IPCC:n ja UNECE:n mukaan.</li>
 <li><b>Lähteet:</b> malliluettelo ja CO₂-arvot <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficomin avoimesta datasta</a> 30.6.2026, mitattu kulutus <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA:n OBFCM-aineistosta</a> ja sähkönkulutus <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA:n uusien autojen rekisteristä</a> (Suomessa 2020–2025 rekisteröidyt). Kaikki CC BY 4.0. Arvonalenema Verohallinnon verotusarvoista ja NEDC-korjaus ICCT:ltä. Koko laskentamalli ja käytetty data ovat <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">GitHubissa</a>.</li>
 <li>Valmistuspäästöt, vakuutus ja huolto ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
-  ex1:'Golf 2014, bensiini', ex2:'Nissan Leaf 2018', ex3:'Auris-hybridi 2016',
+  ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
   pick_l:'Hae malli rekisteristä', pick_ph:'esim. Volkswagen Golf', pt_l:'Käyttövoima',
   price_l:'Ostohinta', age_l:'Ikä ostaessa', age_u:'v (0 = uusi)', odo_l:'Mittarilukema', odo_u:'km ostaessa',
@@ -356,7 +357,7 @@ en: {
   chipB:'Petrol car 11,800', chipAll:'All cars 14,500', chipD:'Diesel 20,800',
   km_hint:'Shortcuts are actual annual mileages of cars in Finland (median, Traficom register, 30 June 2026).',
   years_l:'Ownership period', years_u:'years', rate_u:'% / year',
-  budget_l:'Maximum price', budget_u:'€, your budget for the car',
+  budget_l:'Maximum price', budget_u:'€; the example cars follow it',
   fin_h:'Financing', own_l:'Own money and trade-in', own_u:'€ cash + what you get for your old car; the rest is a loan',
   loanRate_l:'Loan interest', loanRate_u:'% / year (nominal)', loanFee_l:'Loan fees', loanFee_u:'€ / month, account and billing',
   loanYears_l:'Loan term', ownRate_l:'Return on own money',
@@ -374,6 +375,7 @@ en: {
   notes_h:'How the calculation works', reset:'Restore example cars',
   notes:`<li><b>Finland only, for now:</b> fuel and electricity prices, taxes, grid emissions and the model list describe Finland. The method works for any EU country once those inputs are changed.</li>
 <li><b>Depreciation:</b> residual value = price × (1 − depreciation %)<sup>years</sup>. If you leave the percentage blank, it is chosen by the car's average age during ownership: under 3 years 17%, 3–5 years 10%, 6–9 years 11%, 10–19 years 12%, 20 years or more 10%. The rates come from the <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Finnish Tax Administration's taxation values</a> (114,000 cars imported used in 2024–2026), comparing cars of the same model at different ages. Above-average mileage (over 15,000 km/yr) lowers the residual value by 0.2% per 1,000 km per year.</li>
+<li><b>Example cars</b> follow your maximum price: the petrol car is always a Golf (Finland's most common car of median age), the hybrid a Toyota Corolla, Auris or Yaris, and the electric car the most common model in the register that fits your budget. Each is the youngest model year whose estimated price fits. Price estimates come from the <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Tax Administration's taxation values</a>, mileage from the model's average annual mileage. Once you edit an example car, it stops following the budget.</li>
 <li><b>Financing:</b> whatever your own money and trade-in do not cover is financed with an annuity loan. Its cost is the interest and monthly fees paid during ownership. If the car is sold before the loan is repaid, the rest is paid from the sale. On top of that, own money tied up in the car is charged the return it would have earned elsewhere. Cars above your maximum price are flagged.</li>
 <li><b>Real-world consumption:</b> the WLTP figure is multiplied by a factor measured from the cars' own on-board fuel consumption meters (read at periodic inspections, among other ways). The factor is <b>model-specific</b> for 367 models; the rest fall back to a brand or powertrain average, and each car's card says which one is in use. On average petrol cars use 20% and diesels 18% more than WLTP, but models differ widely. The figures cover the whole EU and do not account for Finnish winters.</li>
 <li><b>Older cars (model year 2017 or earlier):</b> their official consumption was measured with the old NEDC test, which understates consumption far more than WLTP. The calculator uses the model's own NEDC figure for that model year from the Traficom register and adds the gap measured by the <a href="https://theicct.org/publication/from-laboratory-to-road-a-2018-update/" target="_blank" rel="noopener">ICCT</a>: 8% for 2001 cars, 38% for 2014 and 40% for 2016 cars, interpolated linearly in between.</li>
@@ -382,7 +384,7 @@ en: {
 <li><b>Electricity emissions:</b> direct emissions of Finnish generation 26 g/kWh (Finnish Energy, 2025) + supply chain 16 g/kWh (Finnish Climate Change Panel). Lifecycle values per generation type follow IPCC and UNECE.</li>
 <li><b>Sources:</b> model list and CO₂ values from <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficom open vehicle data</a> (30 June 2026), measured consumption from the <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA's OBFCM dataset</a> and electricity consumption from the <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA new-car register</a> (cars registered in Finland 2020–2025). All CC BY 4.0. Depreciation from the Finnish Tax Administration's taxation values and the NEDC correction from the ICCT. The full calculation model and the data behind it are <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">on GitHub</a>.</li>
 <li>Manufacturing emissions, insurance and servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
-  ex1:'Golf 2014, petrol', ex2:'Nissan Leaf 2018', ex3:'Auris hybrid 2016',
+  ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
   new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
   pick_l:'Find a model in the register', pick_ph:'e.g. Volkswagen Golf', pt_l:'Powertrain',
   price_l:'Purchase price', age_l:'Age at purchase', age_u:'years (0 = new)', odo_l:'Odometer', odo_u:'km at purchase',
@@ -458,11 +460,48 @@ const findRow = ([b,m,pt]) => CATALOG.find(r => r[0]===b && r[1].toUpperCase()==
 const COLORS = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)'];
 // Esimerkkiautot: Suomen tyypillinen auto ja samanhintaiset vaihtoehdot.
 // Perusteet ja lähteet: Traficomin rekisteri 30.6.2026 ja Verohallinnon verotusarvot 2025-2026.
-const EXAMPLES = [
-  {exKey:'ex1', pick:['Volkswagen','GOLF','B'], price:8000, age:12, odo:150000, dep:''},
-  {exKey:'ex2', pick:['Nissan','LEAF 40KWH','E'], price:11500, age:8, odo:95000, dep:''},
-  {exKey:'ex3', pick:['Toyota','AURIS','H'], price:11000, age:10, odo:110000, dep:''},
+// Esimerkkiautot valitaan enimmäishinnan mukaan (data/budget_cars.json):
+// [paikka, merkki, malli, nimi, arvo uutena (Verohallinnon verotusarvoista)]
+const BUDGET_CARS = [
+  ["B", "Volkswagen", "GOLF", "Golf", 33400],
+  ["H", "Toyota", "Corolla", "Corolla", 39200],
+  ["H", "Toyota", "Auris", "Auris", 38900],
+  ["H", "Toyota", "Yaris", "Yaris", 28900],
+  ["E", "Tesla", "Model Y", "Tesla Model Y", 53800],
+  ["E", "Tesla", "MODEL 3", "Tesla Model 3", 47000],
+  ["E", "Volkswagen", "ID.3 PRO 150 KW", "VW ID.3", 37000],
+  ["E", "Hyundai", "KONA", "Hyundai Kona", 37600],
+  ["E", "Kia", "NIRO", "Kia Niro", 39000],
+  ["E", "Nissan", "LEAF 40KWH", "Nissan Leaf", 24500],
+  ["E", "Volkswagen", "GOLF", "VW e-Golf", 29000],
+  ["E", "Renault", "ZOE", "Renault Zoe", 24700]
 ];
+const SLOTS = ['B','E','H'];
+const rateAt = a => { let r = AGE_DEP[0][1]; for (const [x,q] of AGE_DEP) if (a>=x) r=q; return r; };
+const depFactor = a => { let d = 1; for (let t=0; t<a; t++) d *= 1-rateAt(t); return d; };
+// Nuorin vuosimalli, jonka arvioitu hinta mahtuu budjettiin, tai null.
+function fitBudget(c, budget){
+  const r = findRow([c[1],c[2],c[0]]); if (!r) return null;
+  const [y0,y1] = String(r[5]).split('–').map(Number);
+  const minAge = Math.max(0, CUR_YEAR-y1), maxAge = CUR_YEAR-y0;
+  for (let a=minAge; a<=maxAge; a++){ const v = c[4]*depFactor(a); if (v <= budget) return {c, r, age:a, price:Math.floor(v/100)*100}; }
+  return {c, r, age:maxAge, price:Math.floor(c[4]*depFactor(maxAge)/100)*100, over:true};
+}
+function pickExample(slot, budget){
+  const opts = BUDGET_CARS.filter(c => c[0]===slot).map(c => fitBudget(c, budget)).filter(Boolean);
+  const ok = opts.filter(o => !o.over);
+  if (slot==='E') return ok.length ? ok.sort((a,b)=>b.r[4]-a.r[4])[0] : opts.sort((a,b)=>a.price-b.price)[0];
+  return ok[0] || opts[opts.length-1];
+}
+const exName = (ex, pt) => T('ex_name')(ex.label, ex.year, pt);
+function exampleCar(slot, budget){
+  const o = pickExample(slot, budget>0 ? budget : 12000);
+  const c = newCar({pick:[o.c[1],o.c[2],o.c[0]], price:o.price, age:o.age, dep:'',
+    odo:Math.round(o.age*(o.r[6]||14000)/1000)*1000});
+  c.ex = {slot, label:o.c[3], year:CUR_YEAR-o.age}; c.exAuto = true; c.name = exName(c.ex, c.pt);
+  return c;
+}
+const examples = () => SLOTS.map(sl => exampleCar(sl, num($('budget').value, 12000)));
 const $ = id => document.getElementById(id);
 const fmt = (n,d=0) => (isFinite(n)?n:0).toLocaleString(T('locale'),{maximumFractionDigits:d,minimumFractionDigits:d});
 const num = (v,def=0) => { const x = parseFloat(String(v).replace(',','.')); return isFinite(x)?x:def; };
@@ -489,7 +528,7 @@ function refreshStd(c){
 let cars = [];
 function newCar(o={}){
   const pt = o.pt || (o.pick && o.pick[2]) || 'B', d = PT_DEF[pt];
-  const c = {name:o.name||(o.exKey?T(o.exKey):T('new_car')), exKey:o.exKey||null, pt, price:o.price??20000, age:o.age??0, odo:o.odo??0, dep:o.dep??'',
+  const c = {name:o.name||T('new_car'), exKey:null, ex:o.ex??null, exAuto:o.exAuto??false, pt, price:o.price??20000, age:o.age??0, odo:o.odo??0, dep:o.dep??'',
     fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??(d.tax+d.ins+d.serv+d.tyre),
     make:o.make??d.make, life:o.life??d.life, real:o.real??d.real, rw:o.rw??null};
   c.std = o.std ?? null; c.autoFuel = o.autoFuel ?? (o.fuel===undefined);
@@ -513,7 +552,7 @@ function buildModels(){
 // muuttamat hinnat säilyvät mutta koskemattomat oletukset päivittyvät uusiin.
 const PRICE_DEF = {pBens:'2.28', pDies:'2.49', pEl:'0.1791'};
 const OLD_DEFS = ['1.85','1.75','0.15','2.09','2.15','0.1791']; // ennen tallennettuja oletuksia
-const EX_VERSION = 2; // kasvata, kun esimerkkiautot vaihtuvat
+const EX_VERSION = 3; // kasvata, kun esimerkkiautot vaihtuvat
 function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF, ev:EX_VERSION})); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
 const GIDS = ['km','years','budget','own','loanRate','loanFee','loanYears','ownRate','pBens','pDies','pEl','loss','elSrc','eBens','eDies'];
@@ -607,6 +646,7 @@ function renderCars(){
 $('cars').addEventListener('input', e => {
   const el = e.target, card = el.closest('.car'); if (!card) return;
   const i = +card.dataset.i, c = cars[i];
+  c.exAuto = false;
   if (el.dataset.pick!==undefined){
     const r = byLabel.get(el.value); if (!r) return;
     const d = PT_DEF[r[2]];
@@ -741,30 +781,36 @@ function applyLang(lang){
   document.documentElement.lang = LANG;
   document.querySelectorAll('[data-i]').forEach(el => { const v = T(el.dataset.i); if (typeof v === 'string') el.innerHTML = v; });
   document.querySelectorAll('.lang').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang===LANG)));
-  cars.forEach(c => { if (c.exKey && c.name===I18N[prev][c.exKey]) c.name = T(c.exKey); });
+  cars.forEach(c => { if (c.exAuto && c.ex) c.name = exName(c.ex, c.pt); });
   buildModels(); renderCars(); update();
 }
 document.querySelectorAll('.lang').forEach(b => b.onclick = () => applyLang(b.dataset.lang));
 
 GIDS.forEach(id => $(id).addEventListener('input', update));
 document.querySelectorAll('.chip').forEach(b => b.onclick = () => { $('km').value = b.dataset.km; update(); });
-$('reset').onclick = () => { cars = EXAMPLES.map(newCar); renderCars(); update(); };
+$('reset').onclick = () => { cars = examples(); renderCars(); update(); };
+// Enimmäishinta muuttui: vaihda koskemattomat esimerkkiautot budjettiin sopiviksi
+$('budget').addEventListener('input', () => {
+  let changed = false;
+  cars = cars.map(c => { if (!c.exAuto || !c.ex) return c; changed = true; return exampleCar(c.ex.slot, num($('budget').value, 12000)); });
+  if (changed) renderCars();
+});
 
 // Kirjoita oletushinnat kenttiin aina itse: selain voi muuten palauttaa
 // päivitettäessä edellisen käynnin arvot lomakkeeseen.
 Object.entries(PRICE_DEF).forEach(([id,v])=>{ const el=$(id); el.value=v; el.autocomplete='off'; });
 const saved = load();
 // Koskemattomat vanhat esimerkkiautot korvataan uusilla; omat autot säilyvät.
-const oldExamples = saved && saved.ev !== EX_VERSION && Array.isArray(saved.cars) && saved.cars.every(c => c.exKey);
-if (saved && Array.isArray(saved.cars) && saved.cars.length && !oldExamples)
-  cars = saved.cars.map(c=>newCar({...c,brand:undefined})).map((c,i)=>Object.assign(c,{picked:saved.cars[i].picked}));
-else cars = EXAMPLES.map(newCar);
-if (saved){
+const oldExamples = saved && saved.ev !== EX_VERSION && Array.isArray(saved.cars) && saved.cars.every(c => c.exKey || c.exAuto);
+if (saved){ // asetukset ensin, jotta esimerkkiautot osataan valita enimmäishinnan mukaan
   try{ GIDS.forEach(id=>{ const v=saved.g?.[id]; if(v===undefined) return;
     if (id in PRICE_DEF){ // oletushinta, jota ei ole muutettu -> käytä uusinta
       const wasDefault = (saved.d && String(v)===String(saved.d[id])) || OLD_DEFS.includes(String(v));
       if (wasDefault || v==='') return; }
     if($(id).type==='select-one') $(id).selectedIndex=v; else $(id).value=v; }); }catch(e){}
 }
+if (saved && Array.isArray(saved.cars) && saved.cars.length && !oldExamples)
+  cars = saved.cars.map(c=>newCar({...c,brand:undefined})).map((c,i)=>Object.assign(c,{picked:saved.cars[i].picked}));
+else cars = examples();
 applyLang(LANG);
 </script>
