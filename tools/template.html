@@ -483,6 +483,7 @@ fi: {
 <li><b>Kuinka varma järjestys on?</b> Sivu muuttaa yhtä asiaa kerrallaan ja etsii lähimmän arvon, jolla halvin auto vaihtuu, ja näyttää kaksi lähintä. Haun rajat: ajomäärä 2 000–50 000 km, polttoaineen ja sähkön hinta puolesta kaksinkertaiseen, omistusaika 1–20 vuotta ja arvonalenema puolesta kaksinkertaiseen (sama kerroin kaikille autoille). Rajat eivät ole ennusteita tai vaihteluvälejä, vaan sitä, kuinka kaukaa kääntöpistettä haetaan; kaukana olevaa kääntöpistettä ei näytetä.</li>
 <li><b>Vakuutus</b> on jaettu pakolliseen liikennevakuutukseen ja vapaaehtoiseen kaskoon. Avointa tilastoa henkilöauton vakuutusmaksuista ei löytynyt: <a href="https://www.finanssivalvonta.fi/en/publications-and-press-releases/news-releases/2025/statistical-survey-of-motor-liability-insurance-profitability-20192023-result-recorded-for-2023-was-excellent-despite-slight-decline-in-underwriting-result/" target="_blank" rel="noopener">Finanssivalvonnan tilastotutkimus</a> kertoo vain koko markkinan maksutulon (754 milj. € vuonna 2023), ei hintaa autoa kohden. Siksi luvut ovat oletuksia: liikennevakuutus 200 €/v (lehtien vertailuissa yksittäisillä malleilla noin 160–230 €/v) ja kasko 400–500 €/v käyttövoiman mukaan. Hinta riippuu paljon kuljettajan iästä, asuinpaikasta ja bonuksista, ja vanhaa halpaa autoa ei usein kaskoteta. Kirjoita omat tarjouksesi kohtaan Tarkenna.</li>
 <li>Huollon lähtötaso on karkea oletus. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
+  ex_mild:' (kevythybridi)',
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
   pick_l:'Hae malli rekisteristä', pick_ph:'esim. Volkswagen Golf', pick_none:'Ei osumia', pt_l:'Käyttövoima',
@@ -608,6 +609,7 @@ en: {
 <li><b>How firm is the ranking?</b> The page changes one thing at a time, finds the nearest value at which the cheapest car changes, and shows the two nearest. Search limits: mileage 2,000–50,000 km, fuel and electricity prices from half to double, ownership 1–20 years and depreciation from half to double (the same factor for every car). The limits are not forecasts or ranges, only how far the page looks for a tipping point; one further away is not shown.</li>
 <li><b>Insurance</b> is split into compulsory motor liability insurance and optional comprehensive cover. No open statistics on car insurance premiums were found: <a href="https://www.finanssivalvonta.fi/en/publications-and-press-releases/news-releases/2025/statistical-survey-of-motor-liability-insurance-profitability-20192023-result-recorded-for-2023-was-excellent-despite-slight-decline-in-underwriting-result/" target="_blank" rel="noopener">the Financial Supervisory Authority's survey</a> gives only total premiums for the whole market (€754 million in 2023), not a price per car. So the figures are assumptions: motor liability €200/yr (magazine comparisons found about €160–230/yr for single models) and comprehensive cover €400–500/yr by powertrain. Prices depend a lot on the driver's age, home area and bonus, and old cheap cars are often not covered comprehensively. Enter your own quotes under Fine-tune.</li>
 <li>The starting level of servicing is a rough assumption. This is a draft, not a verified comparison.</li>`,
+  ex_mild:' (mild hybrid)',
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
   new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
   pick_l:'Find a model in the register', pick_ph:'e.g. Volkswagen Golf', pick_none:'No matches', pt_l:'Powertrain',
@@ -737,9 +739,12 @@ const COLORS = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)'];
 // Esimerkkiautot: Suomen tyypillinen auto ja samanhintaiset vaihtoehdot.
 // Perusteet ja lähteet: Traficomin rekisteri 30.6.2026 ja Verohallinnon verotusarvot 2025-2026.
 // Esimerkkiautot valitaan enimmäishinnan mukaan (data/budget_cars.json):
-// [paikka, merkki, malli, nimi, arvo uutena (Verohallinnon verotusarvoista), viimeinen vuosimalli]
+// [paikka, merkki, malli, nimi, arvo uutena (Verohallinnon verotusarvoista), viimeinen vuosimalli, rekisterin käyttövoima]
+// Golf eTSI: vuodesta 2020 Golfit ovat kevythybridejä, jotka Traficom luokittelee hybrideiksi; bensiini-Golf päättyy
+// rekisterissä vuoteen 2020. Arvo uutena tools/golf_etsi_value.py:stä (Verohallinto 2025-2026, 111 päätöstä).
 const BUDGET_CARS = [
   ["B", "Volkswagen", "GOLF", "Golf", 33400],
+  ["B", "Volkswagen", "GOLF", "Golf eTSI", 36500, null, "H"],
   ["H", "Toyota", "Corolla", "Corolla", 39200],
   ["H", "Toyota", "Auris", "Auris", 38900, 2019],
   ["H", "Toyota", "Yaris", "Yaris", 28900],
@@ -757,7 +762,7 @@ const rateAt = a => { let r = AGE_DEP[0][1]; for (const [x,q] of AGE_DEP) if (a>
 const depFactor = a => { let d = 1; for (let t=0; t<a; t++) d *= 1-rateAt(t); return d; };
 // Nuorin vuosimalli, jonka arvioitu hinta mahtuu budjettiin, tai null.
 function fitBudget(c, budget){
-  const r = findRow([c[1],c[2],c[0]]); if (!r) return null;
+  const r = findRow([c[1],c[2],c[6]||c[0]]); if (!r) return null;
   let [y0,y1] = String(r[5]).split('–').map(Number);
   if (c[5]) y1 = Math.min(y1, c[5]); // mallin valmistus päättyi (rekisterissä myöhempiä tuonteja)
   const minAge = Math.max(0, CUR_YEAR-y1), maxAge = CUR_YEAR-y0;
@@ -768,12 +773,14 @@ function pickExample(slot, budget){
   const opts = BUDGET_CARS.filter(c => c[0]===slot).map(c => fitBudget(c, budget)).filter(Boolean);
   const ok = opts.filter(o => !o.over);
   if (slot==='E') return ok.length ? ok.sort((a,b)=>b.r[4]-a.r[4])[0] : opts.sort((a,b)=>a.price-b.price)[0];
+  // bensiini: nuorin budjettiin mahtuva Golf (tasatilanteessa bensiini-Golf); jos mikään ei mahdu, halvin
+  if (slot==='B') return ok.length ? ok.sort((a,b)=>a.age-b.age)[0] : opts.sort((a,b)=>a.price-b.price)[0];
   return ok[0] || opts[opts.length-1];
 }
-const exName = (ex, pt) => T('ex_name')(ex.label, ex.year, pt);
+const exName = (ex, pt) => T('ex_name')(ex.label, ex.year, ex.slot==='B' ? 'B' : pt) + (ex.slot==='B' && pt==='H' ? T('ex_mild') : '');
 function exampleCar(slot, budget){
   const o = pickExample(slot, budget>0 ? budget : 12000);
-  const c = newCar({pick:[o.c[1],o.c[2],o.c[0]], price:o.price, age:o.age, dep:'',
+  const c = newCar({pick:[o.c[1],o.c[2],o.c[6]||o.c[0]], price:o.price, age:o.age, dep:'',
     odo:Math.round(o.age*(o.r[6]||14000)/1000)*1000});
   c.ex = {slot, label:o.c[3], year:CUR_YEAR-o.age}; c.exAuto = true; c.name = exName(c.ex, c.pt);
   return c;

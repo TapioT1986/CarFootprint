@@ -7,7 +7,7 @@
  },
  "method": "v0 = median over the model's tax decisions of value / depreciation(age). Model years available come from the Traficom register (catalogue field 'years', 5th-95th percentile of first registration). Mileage = age x the model's median annual mileage in the register. Where a model was discontinued, its last model year caps the range (e-Golf 2020, Auris 2019), because the register's 95th percentile also includes later imports.",
  "rules": {
-  "petrol": "Always the Volkswagen Golf, Finland's most common car of median age.",
+  "petrol": "Volkswagen Golf: the petrol Golf (model years up to 2020) or, when the budget fits a younger car, the Golf eTSI mild hybrid (2020-); the youngest that fits, the petrol Golf on a tie.",
   "hybrid": "Toyota Corolla if it fits the budget, else Auris, else Yaris (the most common full hybrids).",
   "electric": "Of the candidates that fit the budget, the one with the most cars in the Finnish register. If none fits, the cheapest one, flagged as over budget."
  },
@@ -19,6 +19,16 @@
    "label": "Golf",
    "v0": 33400,
    "decisions": 116
+  },
+  {
+   "slot": "B",
+   "make": "Volkswagen",
+   "model": "GOLF",
+   "register_pt": "H",
+   "label": "Golf eTSI",
+   "v0": 36500,
+   "decisions": 111,
+   "note": "Mild hybrid (2020-), which Traficom classes as a hybrid; the petrol Golf ends at model year 2020 in the register. v0 from tools/golf_etsi_value.py: 'Bensiini ja sähkö' Golfs with a tax rate of 6% or more (plug-in hybrids pay about 3%), first registered 2020 or later, tax decisions 2025-2026, fractional age. The same script gives 39 900 for the petrol Golf (184 decisions), not the 33 400 above, whose calculation was not recorded."
   },
   {
    "slot": "H",

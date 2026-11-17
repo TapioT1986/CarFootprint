@@ -69,6 +69,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   Cars of model year ≤ 2017 use their own NEDC figure × (1 + ICCT gap by year).
 - Electric: WLTP kWh from the EEA register (2025, or 2020–2022 for discontinued models) × 1.20.
 - Example cars follow the maximum price (budget): Golf petrol, Toyota hybrid, most common EV that fits.
+  Petrol slot: petrol Golf (register ends at 2020) or Golf eTSI (BUDGET_CARS 7th field = register pt 'H'),
+  youngest that fits, petrol Golf on a tie; name gets "(kevythybridi)". eTSI v0 36 500 from
+  tools/golf_etsi_value.py (xlrd, pure Python). That script gives 39 900 for the petrol Golf, not the old 33 400
+  (method not recorded); recomputing all v0 with one script would change the default examples - ask first.
 - Vehicle tax (`vehicleTax()`): base tax from CO2 = official l/100km × 23.3 (petrol) / 26.4 (diesel),
   table 1 if NEDC (model year ≤ 2017) else 1 A; EV model year ≥ 2022 + 17.80 c/day; PHEV lowest band.
   Propulsion tax D 5.5 / E 1.9 / P 0.95 c/day per started 100 kg of total mass; mass is a per-powertrain
@@ -160,4 +164,3 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Per-model total mass from the Traficom register (needs the ~200 MB source file) for the propulsion tax.
 - A Finnish or European source for the servicing-and-repair rise (now US Consumer Reports factors).
 - A "what the same yearly money buys" view, once the above exist.
-- Golf mild-hybrids (2020+) as the petrol example for large budgets.
