@@ -310,10 +310,10 @@ details.info a{color:var(--accent)}
         <h2 data-i="fin_h"></h2>
         <div class="fields">
           <div class="field full"><label class="label" for="own" data-i="own_l"></label><input type="number" id="own" min="0" step="500" value="6000"><span class="unit" data-i="own_u"></span></div>
-          <div class="field"><label class="label" for="loanRate" data-i="loanRate_l"></label><input type="number" id="loanRate" min="0" max="40" step="0.1" value="4.1"><span class="unit" data-i="loanRate_u"></span></div>
+          <div class="field"><label class="label" for="loanRate" data-i="loanRate_l"></label><input type="number" id="loanRate" min="0" max="40" step="0.01" value="4.4"><span class="unit" data-i="loanRate_u"></span></div>
           <div class="field"><label class="label" for="loanFee" data-i="loanFee_l"></label><input type="number" id="loanFee" min="0" step="0.5" value="12.5"><span class="unit" data-i="loanFee_u"></span></div>
           <div class="field"><label class="label" for="loanYears" data-i="loanYears_l"></label><input type="number" id="loanYears" min="1" max="10" step="1" value="5"><span class="unit" data-i="years_u"></span></div>
-          <div class="field"><label class="label" for="ownRate" data-i="ownRate_l"></label><input type="number" id="ownRate" min="0" max="20" step="0.5" value="2.5"><span class="unit" data-i="rate_u"></span></div>
+          <div class="field"><label class="label" for="ownRate" data-i="ownRate_l"></label><input type="number" id="ownRate" min="0" max="20" step="0.01" value="2.48"><span class="unit" data-i="rate_u"></span></div>
         </div>
         <p class="hint" data-i="fin_hint"></p>
         </div>
@@ -449,7 +449,7 @@ fi: {
   fin_h:'Rahoitus', own_l:'Oma raha ja vaihtohyvitys', own_u:'€ käteistä + vanhasta autosta saatava hyvitys; loppu lainaa',
   loanRate_l:'Lainan korko', loanRate_u:'% / vuosi (nimellinen)', loanFee_l:'Lainan kulut', loanFee_u:'€ / kk, tilinhoito ja laskutus',
   loanYears_l:'Laina-aika', ownRate_l:'Oman rahan tuotto',
-  fin_hint:'Oletukset: uusien ajoneuvolainojen keskikorko 4,1 % (toukokuu 2026) ja uusien määräaikaistalletusten 2,5 % (kesäkuu 2026), <a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/" target="_blank" rel="noopener">Suomen Pankki</a>. Kuukausimaksun esimerkki: Nordean autolaina 12,50 €/kk. Oman rahan tuotto kuvaa, mitä rahat tuottaisivat muualla; 0, jos ne olisivat korottomalla tilillä.',
+  fin_hint:'Oletukset, kun on valittava, autolle epäedullisempi luku: <b>lainan korko 4,40 %</b> = pankkien ajoneuvolainakannan keskikorko toukokuun 2026 lopussa (<a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/" target="_blank" rel="noopener">Suomen Pankki 30.6.2026</a>; uusien ajoneuvolainojen korko oli 4,08 %). <b>Oman rahan tuotto 2,48 %</b> = uusien määräaikaistalletusten keskikorko toukokuussa 2026 (<a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/" target="_blank" rel="noopener">sama tiedote</a>; talletuskannan keskikorko oli 0,82 %). <b>Lainan kulut 12,50 €/kk</b> = Nordean autolainan esimerkkilaskelman tilinhoitomaksu (<a href="https://www.nordea.fi/henkiloasiakkaat/palvelumme/lainat/kulutusluotot/autolaina.html" target="_blank" rel="noopener">Nordea</a>). Oman rahan tuotto kuvaa, mitä rahat tuottaisivat muualla; 0, jos ne olisivat korottomalla tilillä.',
   over:'Yli budjetin', over_mo:'Yli kuukausibudjetin', cash:m=>`Kuukausimenot ${m} €/kk`, cash_after:m=>`, lainan jälkeen ${m} €/kk`, loan_tag:(l,m)=>` · laina ${l} €, ${m} €/kk`,
   energy_h:'Energia', petrol:'Bensiini', diesel:'Diesel', el_home:'Sähkö kotona', el_home_u:'€ / kWh, siirto ja verot mukana',
   loss:'Lataushäviö', elsrc:'Sähkön alkuperä',
@@ -574,7 +574,7 @@ en: {
   fin_h:'Financing', own_l:'Own money and trade-in', own_u:'€ cash + what you get for your old car; the rest is a loan',
   loanRate_l:'Loan interest', loanRate_u:'% / year (nominal)', loanFee_l:'Loan fees', loanFee_u:'€ / month, account and billing',
   loanYears_l:'Loan term', ownRate_l:'Return on own money',
-  fin_hint:'Defaults: average rate on new vehicle loans 4.1% (May 2026) and on new term deposits 2.5% (June 2026), <a href="https://www.suomenpankki.fi/en/statistics/" target="_blank" rel="noopener">Bank of Finland</a>. Example monthly fee: Nordea car loan €12.50. Return on own money is what the money would earn elsewhere; 0 if it would sit in an account without interest.',
+  fin_hint:'Defaults, taking the figure less favourable to the car where there is a choice: <b>loan interest 4.40%</b> = average rate on the stock of vehicle loans at the end of May 2026 (<a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/" target="_blank" rel="noopener">Bank of Finland, 30 June 2026, in Finnish</a>; new vehicle loans 4.08%). <b>Return on own money 2.48%</b> = average rate on new term deposits in May 2026 (<a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/" target="_blank" rel="noopener">same release</a>; all deposits 0.82%). <b>Loan fees €12.50/month</b> = the account fee in the Nordea car loan example (<a href="https://www.nordea.fi/en/personal/our-services/loans/consumer-credit/autolaina.html" target="_blank" rel="noopener">Nordea</a>). Return on own money is what the money would earn elsewhere; 0 if it would sit in an account without interest.',
   over:'Over budget', over_mo:'Over monthly budget', cash:m=>`Monthly outgoings €${m}`, cash_after:m=>`, after the loan €${m}`, loan_tag:(l,m)=>` · loan €${l}, €${m}/month`,
   energy_h:'Energy', petrol:'Petrol', diesel:'Diesel', el_home:'Home electricity', el_home_u:'€ / kWh, incl. grid fees and taxes',
   loss:'Charging losses', elsrc:'Electricity source',
@@ -839,6 +839,8 @@ function choose(inp, label){ inp.value = label; closeSugg(inp); inp.dispatchEven
 // muuttamat hinnat säilyvät mutta koskemattomat oletukset päivittyvät uusiin.
 const PRICE_DEF = {pBens:'__P_PETROL__', pDies:'__P_DIESEL__', pEl:'__P_ELEC__'};
 const OLD_DEFS = ['1.85','1.75','0.15','2.09','2.15','0.1791']; // ennen tallennettuja oletuksia
+// Korko-oletukset, jotka ovat vaihtuneet: koskematon vanha oletus tallennuksessa -> käytä uutta
+const OLD_RATE_DEFS = {loanRate:['4.1'], ownRate:['2.5']};
 const EX_VERSION = 8; // kasvata, kun esimerkkiautot vaihtuvat
 function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF, ev:EX_VERSION})); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
@@ -846,8 +848,8 @@ const GIDS = ['km','years','budget','monthly','own','loanRate','loanFee','loanYe
 function readGlobalsRaw(){ const o={}; GIDS.forEach(id=>o[id]=$(id).type==='select-one'?$(id).selectedIndex:$(id).value); return o; }
 function g(){
   return {km:num($('km').value,15000), years:Math.max(1,num($('years').value,5)),
-    budget:num($('budget').value,0), monthly:Math.max(0,num($('monthly').value,0)), own:Math.max(0,num($('own').value,0)), loanRate:num($('loanRate').value,4.1)/100,
-    loanFee:num($('loanFee').value,0), loanYears:Math.max(1,num($('loanYears').value,5)), rate:num($('ownRate').value,2.5)/100,
+    budget:num($('budget').value,0), monthly:Math.max(0,num($('monthly').value,0)), own:Math.max(0,num($('own').value,0)), loanRate:num($('loanRate').value,4.4)/100,
+    loanFee:num($('loanFee').value,0), loanYears:Math.max(1,num($('loanYears').value,5)), rate:num($('ownRate').value,2.48)/100,
     pB:num($('pBens').value,__P_PETROL__), pD:num($('pDies').value,__P_DIESEL__), pE:num($('pEl').value,__P_ELEC__), loss:num($('loss').value,10)/100,
     eEl:num($('elSrc').value,42)/1000, eB:num($('eBens').value,2.8), eD:num($('eDies').value,3.2)};
 }
@@ -1364,6 +1366,7 @@ if (saved){ // asetukset ensin, jotta esimerkkiautot osataan valita enimmäishin
     if (id in PRICE_DEF){ // oletushinta, jota ei ole muutettu -> käytä uusinta
       const wasDefault = (saved.d && String(v)===String(saved.d[id])) || OLD_DEFS.includes(String(v));
       if (wasDefault || v==='') return; }
+    if ((OLD_RATE_DEFS[id]||[]).includes(String(v))) return; // vanha oletuskorko -> uusi oletus
     if($(id).type==='select-one') $(id).selectedIndex=v; else $(id).value=v; }); }catch(e){}
 }
 if (saved && Array.isArray(saved.cars) && saved.cars.length && !oldExamples)

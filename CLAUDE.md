@@ -31,6 +31,14 @@ plug-in hybrid and electric. Prices, taxes, grid emissions and the model list de
   toimii" section, hints under inputs). Every new number needs a source or is labelled an
   assumption.
 - Be honest about uncertainty and about results that do not favour electric cars.
+- **Direct links to the exact source.** Every claim, assumption and average on the page links as directly as possible
+  to the reliable source it comes from: the specific release, table, PDF or page that states the number (e.g. the Bank
+  of Finland release of 30.6.2026 for the vehicle-loan rate), not a site's front page or a statistics index. Give the
+  date of the figure and, where the source offers alternatives, name them ("new loans 4.08 %").
+- **Pessimistic default when choosing.** When sources give several defensible values, use by default the one less
+  favourable to the car (higher cost or emissions), say so on the page and show the other value. Example: loan rate
+  4.40 % (stock of vehicle loans) rather than 4.08 % (new loans); return on own money 2.48 % (new term deposits)
+  rather than 0.82 % (all deposits), because a higher return makes tied-up money cost more.
 
 ## Layout
 
@@ -134,6 +142,7 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Saved state lives in localStorage `carfootprint.v1`. When defaults or examples change in a
   way old saves would break, bump `EX_VERSION` and handle older saves explicitly.
 - Default prices are tracked separately (PRICE_DEF) so untouched defaults update.
+- Changed rate defaults: OLD_RATE_DEFS lists old default loanRate/ownRate values; a save holding one gets the new default.
 - Line endings are LF (.gitattributes). Keep files UTF-8, LF.
 - index.html julkaistaan GitHub Pagesissa sellaisenaan – doctype, charset ja viewport-meta on oltava
   templatessa itsessään.
