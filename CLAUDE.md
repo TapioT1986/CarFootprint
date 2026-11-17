@@ -76,6 +76,8 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Real-world consumption: WLTP × EEA OBFCM factor (model, else brand, else fleet).
   Cars of model year ≤ 2017 use their own NEDC figure × (1 + ICCT gap by year).
 - Electric: WLTP kWh from the EEA register (2025, or 2020–2022 for discontinued models) × 1.20.
+  WLTP consumption is measured at the socket, so it already includes normal charging losses; the `loss` field (10 %)
+  is an extra for household-socket charging (ADAC 8/2026: socket ~15 %, wallbox < 7 %), labelled as such on the page.
 - Example cars follow the maximum price (budget): Golf petrol, Toyota hybrid, most common EV that fits.
   Petrol slot: petrol Golf (register ends at 2020) or Golf eTSI (BUDGET_CARS 7th field = register pt 'H'),
   youngest that fits, petrol Golf on a tie; name gets "(kevythybridi)".
