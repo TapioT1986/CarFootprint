@@ -161,8 +161,14 @@ svg text{font-family:var(--body)}
 .notes ul{padding-left:18px;margin:6px 0}
 .notes a{color:var(--accent)}
 .rowbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.sharebar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0 4px}
+.sharebar{display:flex;gap:10px 14px;flex-wrap:wrap;align-items:center;margin:16px 0 4px;padding:12px 14px;border:1px solid var(--accent);border-radius:8px;background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
 .sharebar .hint{margin:0;min-width:0;flex:1 1 220px}
+.sharebar .shareinv{font-size:14px;color:var(--ink)}
+.sharebar #shareMsg:empty{display:none}
+.btn.share{display:inline-flex;align-items:center;gap:8px;font-size:16px;padding:11px 18px;background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.share:hover{filter:brightness(1.1)}
+.btn.share svg{width:18px;height:18px;flex:none}
+@media (max-width:560px){.btn.share{width:100%;justify-content:center}}
 .sharelink{font-family:var(--mono);font-size:12px;margin-top:4px}
 .btn{font:600 13.5px var(--body);border:1px solid var(--line);background:var(--input);color:var(--ink);padding:8px 12px;border-radius:6px;cursor:pointer}
 .btn:hover{border-color:var(--accent)}
@@ -268,7 +274,7 @@ svg text{font-family:var(--body)}
 
       <section class="results" aria-live="polite">
         <div class="sumrow" id="sums"></div>
-        <div class="sharebar"><button class="btn" type="button" id="share" data-i="share"></button><span class="hint" id="shareMsg" role="status"></span></div>
+        <div class="sharebar"><button class="btn share" type="button" id="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span data-i="share"></span></button><span class="hint shareinv" data-i="share_inv"></span><span class="hint" id="shareMsg" role="status"></span></div>
         <div class="charts">
           <div class="chart">
             <h3 data-i="cost_h"></h3>
@@ -338,7 +344,7 @@ fi: {
   lg_dep:'Arvonalenema', lg_cap:'Rahoitus', lg_en:'Energia', lg_oth:'Vero, vakuutus, huolto, renkaat',
   em_h:'Päästöt vuodessa', em_lead:'kg CO₂e vuodessa. Auton valmistus jaetaan sen koko käyttöiälle.',
   lg_drive:'Ajo (polttoaine tai sähkö)', lg_make:'Valmistus',
-  share:'Jaa vertailu', share_text:'Mitä autot oikeasti maksavat ja paljonko ne päästävät', share_ok:'Linkki kopioitu. Siinä on vain asetukset ja autot.',
+  share:'Jaa vertailu', share_inv:'Valitsetteko autoa yhdessä? Lähetä vertailu puolisolle, perheelle tai kaverille: he näkevät samat autot ja voivat kokeilla omia lukujaan.', share_text:'Mitä autot oikeasti maksavat ja paljonko ne päästävät', share_ok:'Linkki kopioitu. Siinä on vain asetukset ja autot.',
   share_copy:'Kopioi linkki:', share_loaded:'Näytetään jaettu vertailu.', share_restore:'Palauta omat autosi',
   notes_h:'Näin laskenta toimii', reset:'Nollaa asetukset', reset_q:'Palautetaanko kaikki asetukset ja esimerkkiautot oletuksiin? Itse lisäämäsi ja muuttamasi autot poistuvat.',
   notes:`<li><b>Arvonalenema:</b> jäännösarvo = hinta × (1 − arvonalenema-%)<sup>vuodet</sup>. Jos jätät prosentin tyhjäksi, se valitaan auton keski-iän mukaan: alle 3 v 17 %, 3–5 v 10 %, 6–9 v 11 %, 10–19 v 12 %, 20 v tai yli 10 %. Prosentit on laskettu <a href="https://www.vero.fi/henkiloasiakkaat/omaisuus/autovero/autoveron-maara/ajoneuvojen-sovellettuja-verotusarvoja/" target="_blank" rel="noopener">Verohallinnon verotusarvoista</a> (114 000 käytettynä tuotua autoa 2024–2026) vertaamalla saman mallin eri-ikäisiä autoja. Keskimääräistä suurempi ajomäärä (yli 15 000 km/v) laskee jäännösarvoa 0,2 % per 1 000 km vuodessa.</li>
@@ -429,7 +435,7 @@ en: {
   lg_dep:'Depreciation', lg_cap:'Financing', lg_en:'Energy', lg_oth:'Tax, insurance, servicing, tyres',
   em_h:'Emissions per year', em_lead:'kg CO₂e per year. Manufacturing is spread over the car\'s whole lifetime.',
   lg_drive:'Driving (fuel or electricity)', lg_make:'Manufacturing',
-  share:'Share comparison', share_text:'What cars really cost and how much they emit', share_ok:'Link copied. It holds only the settings and cars.',
+  share:'Share comparison', share_inv:'Choosing a car together? Send the comparison to your partner, family or a friend: they see the same cars and can try their own numbers.', share_text:'What cars really cost and how much they emit', share_ok:'Link copied. It holds only the settings and cars.',
   share_copy:'Copy the link:', share_loaded:'Showing a shared comparison.', share_restore:'Restore your own cars',
   notes_h:'How the calculation works', reset:'Reset all', reset_q:'Reset all settings and example cars to the defaults? Cars you added or changed will be removed.',
   notes:`<li><b>Finland only, for now:</b> fuel and electricity prices, taxes, grid emissions and the model list describe Finland. The method works for any EU country once those inputs are changed.</li>
