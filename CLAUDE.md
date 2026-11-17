@@ -62,6 +62,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   Cars of model year ≤ 2017 use their own NEDC figure × (1 + ICCT gap by year).
 - Electric: WLTP kWh from the EEA register (2025, or 2020–2022 for discontinued models) × 1.20.
 - Example cars follow the maximum price (budget): Golf petrol, Toyota hybrid, most common EV that fits.
+- Monthly budget (optional, field `monthly`): cash flow = loan payment incl. fees + (energy + other)/12
+  while the loan runs; depreciation and return on own money are not cash. Shown on the summary
+  card and flagged only when a budget is entered.
 
 ## Gotchas learned the hard way
 
@@ -76,7 +79,6 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 
 ## Open ideas (not started)
 
-- Optional monthly budget flag based on cash flow (loan payment + energy + other costs).
 - Age-dependent repair costs and EV battery health in the model.
 - A "what the same yearly money buys" view, once the above exist.
 - Golf mild-hybrids (2020+) as the petrol example for large budgets.
