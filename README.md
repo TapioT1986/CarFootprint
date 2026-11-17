@@ -97,9 +97,9 @@ The page shows which month each price describes.
 
 ## Rebuilding the data
 
-`python3 tools/build.py` rebuilds `index.html` from the JSON files in `data/` and needs only pandas.
+`python3 tools/build.py` rebuilds `index.html` from the JSON files in `data/` and needs only Python 3.10+, no extra packages.
 
-To rebuild the model list from the original registers, download the two large source files into `sources/` and run `python3 tools/build.py --sources sources`:
+To rebuild the model list from the original registers, download the two large source files into `sources/` and run `python3 tools/build.py --sources sources` (this needs pandas):
 
 - `TieliikenneAvoinData_*.csv` — the Finnish vehicle register, from [Traficom](https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data) (about 200 MB zipped).
 - `eea_fi_*.csv` — [EEA new-car data](https://co2cars.apps.eea.europa.eu/) filtered to Country = FI. It carries the WLTP electricity consumption that the Finnish register does not record.

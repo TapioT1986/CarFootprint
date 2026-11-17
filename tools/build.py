@@ -118,40 +118,47 @@ def build_realworld(root):
     For plug-in hybrids the ratio is meaningless (WLTP assumes a full battery),
     so the measured litres/100 km is carried through instead.
     """
-    import pandas as pd
-
+    # Plain Python on purpose: the default build (without the large source CSVs)
+    # then needs no third-party packages at all.
     path = root / "data" / "eea_obfcm_2024_aggregated.csv"
-    rows = [l.rstrip("\n").split("|") for l in path.read_text().splitlines()
-            if l.strip() and not l.startswith("#") and not l.startswith("year|")]
-    df = pd.DataFrame(rows, columns=["year", "man", "fuel", "n", "obfcm", "wltp", "gap"])
-    df = df.astype({"n": int, "obfcm": float, "wltp": float, "gap": float})
+    df = []
+    for l in path.read_text(encoding="utf-8").splitlines():
+        if not l.strip() or l.startswith("#") or l.startswith("year|"):
+            continue
+        year, man, fuel, n, obfcm, wltp, gap = l.split("|")
+        df.append({"man": man, "fuel": fuel, "n": int(n),
+                   "obfcm": float(obfcm), "wltp": float(wltp), "gap": float(gap)})
 
     # Sanity check: every row's own gap % must follow from its two consumption
     # figures. A row that fails was mis-transcribed, so drop it.
-    implied = (df.obfcm / df.wltp - 1) * 100
-    rounding = ((0.006 / df.wltp + 0.006 / df.obfcm) * 100 * (df.obfcm / df.wltp) + 0.6).clip(lower=1.5)
-    bad = (implied - df.gap).abs() > rounding
-    if bad.any():
-        print(f"  dropped {int(bad.sum())} inconsistent row(s)", file=sys.stderr)
-    df = df[~bad]
+    def consistent(r):
+        implied = (r["obfcm"] / r["wltp"] - 1) * 100
+        rounding = max(1.5, (0.006 / r["wltp"] + 0.006 / r["obfcm"]) * 100
+                       * (r["obfcm"] / r["wltp"]) + 0.6)
+        return abs(implied - r["gap"]) <= rounding
+    bad = sum(1 for r in df if not consistent(r))
+    if bad:
+        print(f"  dropped {bad} inconsistent row(s)", file=sys.stderr)
+    df = [r for r in df if consistent(r)]
 
     def pooled(sub):
-        n = sub.n.sum()
-        return int(n), (sub.obfcm * sub.n).sum() / n, (sub.wltp * sub.n).sum() / n
+        n = sum(r["n"] for r in sub)
+        return (n, sum(r["obfcm"] * r["n"] for r in sub) / n,
+                sum(r["wltp"] * r["n"] for r in sub) / n)
 
     # "PE" pools plug-in petrol and plug-in diesel; both behave the same way.
     groups = {"P": ["P"], "D": ["D"], "PE": ["PE", "DE"]}
     fleet = {}
     for key, codes in groups.items():
-        n, ob, wl = pooled(df[df.fuel.isin(codes)])
+        n, ob, wl = pooled([r for r in df if r["fuel"] in codes])
         fleet[key] = {"n": n, "ob": round(ob, 2), "wl": round(wl, 2), "k": round(ob / wl, 3)}
 
     brands = {}
     for brand, makers in BRAND_TO_MANUFACTURERS.items():
         entry = {}
         for key, codes in groups.items():
-            sub = df[df.man.isin(makers) & df.fuel.isin(codes)]
-            if len(sub) and sub.n.sum() >= MIN_CARS_PER_BRAND_FUEL:
+            sub = [r for r in df if r["man"] in makers and r["fuel"] in codes]
+            if sub and sum(r["n"] for r in sub) >= MIN_CARS_PER_BRAND_FUEL:
                 n, ob, wl = pooled(sub)
                 entry[key] = [round(ob, 2) if key == "PE" else round(ob / wl, 3), n]
         if entry:
@@ -399,7 +406,7 @@ FALLBACK_PRICES = {"petrol": {"value": 1.85}, "diesel": {"value": 1.75},
 def apply_prices(page, root):
     """Put the latest official prices into the page as its default values."""
     path = root / "data" / "prices.json"
-    prices = json.loads(path.read_text()) if path.exists() else dict(FALLBACK_PRICES)
+    prices = json.loads(path.read_text(encoding="utf-8")) if path.exists() else dict(FALLBACK_PRICES)
 
     def month_name(period, names):
         # "2026M06" -> "kesäkuu 2026"
@@ -460,25 +467,28 @@ def main():
         catalog = attach_nedc(catalog, nedc)
     else:
         print("   no source CSVs found, keeping data/catalog.json", file=sys.stderr)
-        catalog = json.loads((root / "data" / "catalog.json").read_text())
+        catalog = json.loads((root / "data" / "catalog.json").read_text(encoding="utf-8"))
         nedc = {(r[0], r[1], r[2]): r[11] for r in catalog if len(r) > 11}
         catalog, filled = fill_old_electricity([r[:9] for r in catalog], root)
         catalog = attach_model_realworld(catalog, root)
         catalog = attach_nedc(catalog, nedc)
-        old = json.loads((root / "data" / "realworld.json").read_text())
+        old = json.loads((root / "data" / "realworld.json").read_text(encoding="utf-8"))
         realworld["evMedian"], realworld["phevMedian"] = old["evMedian"], old["phevMedian"]
     print(f"   electricity from the 2020-2022 register for {filled} older models", file=sys.stderr)
     print(f"   NEDC figures for {sum(1 for r in catalog if r[11])} models", file=sys.stderr)
 
-    (root / "data" / "catalog.json").write_text(json.dumps(catalog, ensure_ascii=False, indent=1))
-    (root / "data" / "realworld.json").write_text(json.dumps(realworld, ensure_ascii=False, indent=1))
+    # Explicit UTF-8 and LF, so a build on Windows gives the same files as on Linux.
+    (root / "data" / "catalog.json").write_text(
+        json.dumps(catalog, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n")
+    (root / "data" / "realworld.json").write_text(
+        json.dumps(realworld, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n")
 
     print("3. index.html", file=sys.stderr)
-    page = (root / "tools" / "template.html").read_text()
+    page = (root / "tools" / "template.html").read_text(encoding="utf-8")
     page = apply_prices(page, root)
     page = page.replace("__CATALOG__", json.dumps(catalog, ensure_ascii=False, separators=(",", ":")))
     page = page.replace("__RW__", json.dumps(realworld, ensure_ascii=False, separators=(",", ":")))
-    (root / "index.html").write_text(page)
+    (root / "index.html").write_text(page, encoding="utf-8", newline="\n")
     print(f"   {len(catalog)} models, {len(realworld['brand'])} brands, "
           f"{len(page) // 1024} KiB", file=sys.stderr)
 

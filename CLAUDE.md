@@ -37,7 +37,7 @@ plug-in hybrid and electric. Prices, taxes, grid emissions and the model list de
 ```
 index.html            BUILT FILE – never edit by hand; run tools/build.py
 tools/template.html   the page source: HTML, CSS, JS, FI/EN texts (I18N), placeholders
-tools/build.py        builds data/*.json and index.html (needs pandas)
+tools/build.py        builds data/*.json and index.html (plain Python; pandas only with --sources)
 tools/update_prices.py  fuel and electricity prices from StatFin (khi/11xx, ehi/13rb)
 .github/workflows/update-prices.yml  runs update_prices + build on the 5th of each month
 data/catalog.json     588 models: [brand, model, pt, WLTP l/100km, count, "years", km/yr,
@@ -74,6 +74,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   way old saves would break, bump `EX_VERSION` and handle older saves explicitly.
 - Default prices are tracked separately (PRICE_DEF) so untouched defaults update.
 - Line endings are LF (.gitattributes). Keep files UTF-8, LF.
+- On the owner's Windows PC Python runs as `py` (Python install manager), and Smart App Control
+  blocks pandas DLLs. So the default build must stay free of third-party packages; do not ask him
+  to turn Smart App Control off.
 - Test in a real browser (FI and EN, phone width 390 px) and check the numbers by hand for at
   least one car before committing.
 
