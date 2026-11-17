@@ -16,8 +16,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CarFootprint</title>
-<meta name="description" content="Mitä auto oikeasti maksaa vuodessa ja paljonko se päästää. Suomen hinnoilla, veroilla ja rekisteritiedoilla. Uudet ja käytetyt autot, todellinen kulutus ja arvonalenema.">
+<title>CarFootprint – auton todelliset vuosikulut ja päästöt</title>
+<meta name="description" id="metaDesc" content="Mitä auto oikeasti maksaa vuodessa ja paljonko se päästää. Suomen hinnoilla, veroilla ja rekisteritiedoilla. Uudet ja käytetyt autot, todellinen kulutus ja arvonalenema.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CarFootprint">
 <meta property="og:title" content="CarFootprint – autojen kustannukset ja päästöt">
@@ -213,6 +213,8 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 .dock .db:empty{display:none}
 .foot{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 .foot a{color:var(--accent)}
+.foot .feedback{margin:8px 0 0}
+.disclaim{margin:10px 0 0}
 .topright{display:flex;flex-direction:column;gap:10px;align-items:flex-end;max-width:46ch}
 .langs{display:flex;gap:6px}
 .lang{padding:5px 10px;font-size:13px}
@@ -319,6 +321,7 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 
       <section class="results" aria-live="polite">
         <div class="sumrow" id="sums"></div>
+        <p class="hint disclaim" data-i="disclaim"></p>
         <div class="sharebar"><button class="btn share" type="button" id="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span data-i="share"></span></button><span class="hint shareinv" data-i="share_inv"></span><span class="hint" id="shareMsg" role="status"></span></div>
         <div class="charts">
           <div class="chart">
@@ -354,6 +357,7 @@ details.more[open]>summary::before{transform:rotate(45deg)}
   <footer class="foot">
     <span data-i="foot"></span>
     <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">github.com/TapioT1986/CarFootprint</a>
+    <p class="feedback" data-i="feedback"></p>
   </footer>
 </div>
 
@@ -370,7 +374,10 @@ fi: {
   locale:'fi-FI', yr:'v', mo:'kk', and:'ja',
   pt:{B:'Bensiini',D:'Diesel',H:'Hybridi',P:'Ladattava hybridi',E:'Sähkö'},
   tagline:'Mitä auto oikeasti maksaa vuodessa – ja paljonko se päästää',
-  meta:'Ensimmäinen toimiva versio. Laskee arvonaleneman, rahoituksen, energian ja muut kulut sekä elinkaaren päästöt omalla ajomäärälläsi. Esimerkkiautot ovat esimerkkejä – vaihda omasi.',
+  title:'CarFootprint – auton todelliset vuosikulut ja päästöt', desc:'Mitä auto oikeasti maksaa vuodessa ja paljonko se päästää. Suomen hinnoilla, veroilla ja rekisteritiedoilla. Uudet ja käytetyt autot, todellinen kulutus ja arvonalenema.',
+  disclaim:'Laskelma on arvio avoimen datan ja oletusten pohjalta, ei osto- tai rahoitusneuvo.',
+  feedback:'Palaute ja virheilmoitukset: <a href="https://github.com/TapioT1986/CarFootprint/issues/new" target="_blank" rel="noopener">kirjoita GitHubiin</a> (vaatii ilmaisen GitHub-tunnuksen).',
+  meta:'Beta – päivitetty __UPDATED_FI__. Laskee arvonaleneman, rahoituksen, energian ja muut kulut sekä elinkaaren päästöt omalla ajomäärälläsi. Esimerkkiautot ovat esimerkkejä – vaihda omasi.',
   drive_h:'Oma ajosi', km_label:'Vuotuinen ajomäärä', km_unit:'km / vuosi',
   chipB:'Bensa-auto 11 800', chipAll:'Kaikki 14 500', chipD:'Diesel 20 800',
   km_hint:'Pikavalinnat ovat suomalaisten autojen toteutuneita ajomääriä (mediaani, Traficom 30.6.2026).',
@@ -465,7 +472,10 @@ en: {
   locale:'en-GB', yr:'yr', mo:'mo', and:'and',
   pt:{B:'Petrol',D:'Diesel',H:'Hybrid',P:'Plug-in hybrid',E:'Electric'},
   tagline:'What a car really costs per year, and how much it emits',
-  meta:'First working version. Calculates depreciation, financing, energy and other costs plus lifecycle emissions at your own annual mileage. Prices, taxes and the model list are for Finland. The example cars are examples, so swap in your own.',
+  title:'CarFootprint – what a car really costs per year and emits', desc:'What a car really costs per year and how much it emits, with Finnish prices, taxes and register data. New and used cars, real-world consumption and depreciation.',
+  disclaim:'The calculation is an estimate based on open data and assumptions, not purchasing or financial advice.',
+  feedback:'Feedback and bug reports: <a href="https://github.com/TapioT1986/CarFootprint/issues/new" target="_blank" rel="noopener">write on GitHub</a> (needs a free GitHub account).',
+  meta:'Beta – updated __UPDATED_EN__. Calculates depreciation, financing, energy and other costs plus lifecycle emissions at your own annual mileage. Prices, taxes and the model list are for Finland. The example cars are examples, so swap in your own.',
   drive_h:'Your driving', km_label:'Annual mileage', km_unit:'km / year',
   chipB:'Petrol car 11,800', chipAll:'All cars 14,500', chipD:'Diesel 20,800',
   km_hint:'Shortcuts are actual annual mileages of cars in Finland (median, Traficom register, 30 June 2026).',
@@ -1095,6 +1105,7 @@ function applyLang(lang){
   const prev = LANG; LANG = I18N[lang] ? lang : 'fi';
   try { localStorage.setItem('carfootprint.lang', LANG); } catch(e){}
   document.documentElement.lang = LANG;
+  document.title = T('title'); $('metaDesc').content = T('desc');
   document.querySelectorAll('[data-i]').forEach(el => { const v = T(el.dataset.i); if (typeof v === 'string') el.innerHTML = v; });
   document.querySelectorAll('.lang').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang===LANG)));
   cars.forEach(c => { if (c.exAuto && c.ex) c.name = exName(c.ex, c.pt); });

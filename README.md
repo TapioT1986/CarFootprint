@@ -35,6 +35,8 @@ Every assumption is visible and editable.
 - **On phones:** a summary bar at the bottom shows each car's yearly cost (and which is cheapest and lowest-emission) until the result cards are on screen; tapping it scrolls to them. Financing and energy settings sit in one collapsed "More settings" section, whose heading says how many values differ from the defaults. On a computer the section is open, as before.
 - **Simple start:** "Your driving" asks only for annual mileage, maximum price and payment: cash (own money = maximum price), partly on loan (the default €6,000) or fully on loan (0). The choice only sets the own-money field, so it is worked out from that field and needs no saved value of its own; ownership period, monthly budget and the exact amount are under More settings.
 
+Feedback and bug reports: [GitHub issues](https://github.com/TapioT1986/CarFootprint/issues/new). The page is a beta; its header shows the month the data was last refreshed.
+
 ## Known limitations
 
 - Real-world factors are EU-wide and do not account for Finnish winters.

@@ -440,6 +440,14 @@ def apply_prices(page, root):
     for token, key in (("__P_PETROL__", "petrol"), ("__P_DIESEL__", "diesel"),
                        ("__P_ELEC__", "electricity")):
         page = page.replace(token, str(prices[key]["value"]))
+    # "Beta - updated <month year>": the month the data was last refreshed (prices.json "checked",
+    # set by the monthly price workflow), so a rebuild of the same commit gives the same page.
+    checked = str(prices.get("checked", ""))
+    upd_fi = month_name(checked[:4] + "M" + checked[5:7], MONTHS_FI) if len(checked) >= 7 else ""
+    upd_en = month_name(checked[:4] + "M" + checked[5:7], MONTHS_EN) if len(checked) >= 7 else ""
+    upd_fi = upd_fi.replace("kuu ", "kuussa ") if upd_fi else upd_fi
+    page = page.replace("Beta – päivitetty __UPDATED_FI__", f"Beta – päivitetty {upd_fi}" if upd_fi else "Beta")
+    page = page.replace("Beta – updated __UPDATED_EN__", f"Beta – updated {upd_en}" if upd_en else "Beta")
     return page.replace("__PRICES_NOTE_FI__", fi).replace("__PRICES_NOTE_EN__", en)
 
 

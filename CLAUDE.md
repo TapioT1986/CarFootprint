@@ -112,6 +112,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Phones show stale cached pages (restored tabs), while GitHub Pages only sends max-age=600. build.py puts a
   hash of the page into `const BUILD`; checkFresh() fetches the page with cache:'reload' on load and when the tab
   becomes visible, and reloads once (sessionStorage guard) if the BUILD differs. Keep the `const BUILD = '...'` form.
+- The header says "Beta – updated <month year>": build.py takes the month from data/prices.json `checked` (set by
+  the monthly price workflow), not today's date, so CI's rebuild check stays deterministic. <title> and the meta
+  description follow the language (applyLang). Feedback goes to GitHub issues only (no e-mail address on the page).
 - Phone layout (≤ 900 px): `#dock` is a fixed summary bar filled in update(), hidden (class `off`) by an
   IntersectionObserver while `#sums` is on screen; its height goes to `--dockh` (body padding, scroll-padding).
   `#more` (<details>) holds the financing and energy panels: closed on phones, opened by JS above 900 px;
