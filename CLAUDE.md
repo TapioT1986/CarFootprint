@@ -46,6 +46,8 @@ data/realworld.json   brand/fleet real-world factors (EEA OBFCM)
 data/prices.json      default prices; the page shows their month
 data/depreciation.json  depreciation by age from Tax Administration values, with method
 data/budget_cars.json   example-car candidates and value-when-new (v0)
+data/vehicle_tax.json   vehicle tax tables 1 / 1 A (c/day per g CO2) + propulsion rates;
+                      from tools/vehicle_tax.py (Finlex open data, act 814/2024). Re-run when the law changes.
 data/eea_*.csv        source tables with provenance headers
 ```
 
@@ -62,6 +64,11 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   Cars of model year ≤ 2017 use their own NEDC figure × (1 + ICCT gap by year).
 - Electric: WLTP kWh from the EEA register (2025, or 2020–2022 for discontinued models) × 1.20.
 - Example cars follow the maximum price (budget): Golf petrol, Toyota hybrid, most common EV that fits.
+- Vehicle tax (`vehicleTax()`): base tax from CO2 = official l/100km × 23.3 (petrol) / 26.4 (diesel),
+  table 1 if NEDC (model year ≤ 2017) else 1 A; EV model year ≥ 2022 + 17.80 c/day; PHEV lowest band.
+  Propulsion tax D 5.5 / E 1.9 / P 0.95 c/day per started 100 kg of total mass; mass is a per-powertrain
+  assumption (c.mass, editable). Car field `tax` empty = automatic. "Other costs" no longer include tax
+  (EX_VERSION 5 subtracts the old tax default from older saves).
 - Monthly budget (optional, field `monthly`): cash flow = loan payment incl. fees + (energy + other)/12
   while the loan runs; depreciation and return on own money are not cash. Shown on the summary
   card and flagged only when a budget is entered.
@@ -84,6 +91,7 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 
 ## Open ideas (not started)
 
+- Per-model total mass from the Traficom register (needs the ~200 MB source file) for the propulsion tax.
 - Age-dependent repair costs and EV battery health in the model.
 - A "what the same yearly money buys" view, once the above exist.
 - Golf mild-hybrids (2020+) as the petrol example for large budgets.

@@ -488,6 +488,10 @@ def main():
     page = apply_prices(page, root)
     page = page.replace("__CATALOG__", json.dumps(catalog, ensure_ascii=False, separators=(",", ":")))
     page = page.replace("__RW__", json.dumps(realworld, ensure_ascii=False, separators=(",", ":")))
+    # Vehicle tax tables, fetched by tools/vehicle_tax.py from Finlex
+    vtax = json.loads((root / "data" / "vehicle_tax.json").read_text(encoding="utf-8"))
+    vtax = {k: vtax[k] for k in ("t1", "t1a", "ev_new_add", "propulsion_per_100kg")}
+    page = page.replace("__VTAX__", json.dumps(vtax, separators=(",", ":")))
     (root / "index.html").write_text(page, encoding="utf-8", newline="\n")
     print(f"   {len(catalog)} models, {len(realworld['brand'])} brands, "
           f"{len(page) // 1024} KiB", file=sys.stderr)
