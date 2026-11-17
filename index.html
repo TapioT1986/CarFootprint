@@ -113,6 +113,13 @@ details.adv .fields{margin-top:10px}
 .car .x{border:0;background:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px}
 .car .x:hover{color:var(--ink);background:var(--input)}
 .car .fields{gap:9px}
+/* Mallihaun ehdotuslista: oma lista, koska selaimen datalist näkyy osassa puhelimia läpinäkyvänä */
+.pickwrap{position:relative}
+.sugg{position:absolute;left:0;right:0;top:100%;margin-top:4px;z-index:20;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.22);max-height:min(50vh,320px);overflow-y:auto;overscroll-behavior:contain;padding:4px}
+.sugg[hidden]{display:none}
+.sugg button{display:block;width:100%;text-align:left;padding:9px 10px;border:0;background:none;color:var(--ink);font:inherit;font-size:14px;border-radius:6px;cursor:pointer}
+.sugg button:hover,.sugg button[aria-selected="true"]{background:var(--input)}
+.sugg .none{padding:9px 10px;color:var(--muted);font-size:14px}
 .addcar{border:1.5px dashed var(--line);border-radius:10px;background:transparent;color:var(--muted);font:600 15px var(--body);cursor:pointer;min-height:120px}
 .addcar:hover{border-color:var(--accent);color:var(--accent)}
 .tag{font-size:11.5px;color:var(--muted)}
@@ -252,7 +259,6 @@ svg text{font-family:var(--body)}
 
     <main style="min-width:0">
       <div class="cars" id="cars"></div>
-      <datalist id="models"></datalist>
 
       <section class="results" aria-live="polite">
         <div class="sumrow" id="sums"></div>
@@ -338,7 +344,7 @@ fi: {
 <li>Valmistuspäästöt, vakuutus ja huolto ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
-  pick_l:'Hae malli rekisteristä', pick_ph:'esim. Volkswagen Golf', pt_l:'Käyttövoima',
+  pick_l:'Hae malli rekisteristä', pick_ph:'esim. Volkswagen Golf', pick_none:'Ei osumia', pt_l:'Käyttövoima',
   price_l:'Ostohinta', age_l:'Ikä ostaessa', age_u:'v (0 = uusi)', odo_l:'Mittarilukema', odo_u:'km ostaessa',
   dep_l:'Arvonalenema', dep_u:'% / v, tyhjä = iän mukaan',
   fuel_l:'Polttoaine', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, vanha mittaus)', fuel_u_p:'l / 100 km polttoaineella ajaessa',
@@ -411,7 +417,7 @@ en: {
 <li>Manufacturing emissions, insurance and servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
   new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
-  pick_l:'Find a model in the register', pick_ph:'e.g. Volkswagen Golf', pt_l:'Powertrain',
+  pick_l:'Find a model in the register', pick_ph:'e.g. Volkswagen Golf', pick_none:'No matches', pt_l:'Powertrain',
   price_l:'Purchase price', age_l:'Age at purchase', age_u:'years (0 = new)', odo_l:'Odometer', odo_u:'km at purchase',
   dep_l:'Depreciation', dep_u:'% / yr, blank = by age',
   fuel_l:'Fuel', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, old test)', fuel_u_p:'l / 100 km when running on fuel',
@@ -580,13 +586,30 @@ function newCar(o={}){
 }
 
 // --- malliluettelo ---
-const dl = $('models');
 const labelOf = r => `${r[0]} ${r[1]} – ${T('pt')[r[2]]}`;
-let byLabel = new Map();
+let byLabel = new Map(), modelIdx = [];
+const normS = t => normB(t).replace(/[^A-Z0-9]+/g,' ');
 function buildModels(){
-  dl.innerHTML = CATALOG.map(r => `<option value="${labelOf(r).replace(/"/g,'&quot;')}"></option>`).join('');
   byLabel = new Map(CATALOG.map(r => [labelOf(r), r]));
+  // yleisimmät mallit ensin (rekisterissä olevien autojen määrä)
+  modelIdx = CATALOG.map(r => [labelOf(r), normS(labelOf(r)), r[4]||0]).sort((a,b)=>b[2]-a[2]);
 }
+// Ehdotuslista: kaikki kirjoitetut sanat löytyvät mallin nimestä
+function suggest(inp){
+  const i = inp.dataset.pick, box = $('sg'+i); if (!box) return;
+  const words = normS(inp.value).split(' ').filter(Boolean);
+  if (!words.length) return closeSugg(inp);
+  const hits = modelIdx.filter(m => words.every(w => m[1].includes(w))).slice(0,40);
+  box.innerHTML = hits.length ? hits.map((m,j)=>`<button type="button" role="option" tabindex="-1" id="sg${i}_${j}" aria-selected="false">${esc(m[0])}</button>`).join('')
+    : `<div class="none">${T('pick_none')}</div>`;
+  box.hidden = false; box.scrollTop = 0;
+  inp.setAttribute('aria-expanded','true'); inp.removeAttribute('aria-activedescendant');
+}
+function closeSugg(inp){
+  const box = $('sg'+inp.dataset.pick); if (box){ box.hidden = true; box.innerHTML = ''; }
+  inp.setAttribute('aria-expanded','false'); inp.removeAttribute('aria-activedescendant');
+}
+function choose(inp, label){ inp.value = label; closeSugg(inp); inp.dispatchEvent(new Event('input',{bubbles:true})); }
 
 // --- tallennus (vain tämän selaimen mukavuus) ---
 // Hinnat, jotka sivu tarjosi oletuksena. Tallennetaan mukaan, jotta käyttäjän itse
@@ -662,8 +685,9 @@ function carCard(c,i){
     <div class="head"><span class="dot" style="--cc:${COLORS[i]}"></span>
       <input aria-label="${T('car_name')}" id="name${i}" data-k="name" value="${c.name.replace(/"/g,'&quot;')}">
       ${cars.length>1?`<button class="x" type="button" data-del="${i}" aria-label="${T('del')}">×</button>`:''}</div>
-    <div class="field"><label class="label" for="pick${i}">${T('pick_l')}</label>
-      <input id="pick${i}" list="models" data-pick="${i}" placeholder="${T('pick_ph')}" autocomplete="off"></div>
+    <div class="field pickwrap"><label class="label" for="pick${i}">${T('pick_l')}</label>
+      <input id="pick${i}" data-pick="${i}" placeholder="${T('pick_ph')}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sg${i}">
+      <div class="sugg" id="sg${i}" role="listbox" aria-label="${T('pick_l')}" hidden></div></div>
     <div class="fields">
       <div class="field full"><label class="label" for="pt${i}">${T('pt_l')}</label>
         <select id="pt${i}" data-k="pt">${Object.entries(T('pt')).map(([k,v])=>`<option value="${k}" ${k===c.pt?'selected':''}>${v}</option>`).join('')}</select></div>
@@ -696,7 +720,7 @@ $('cars').addEventListener('input', e => {
   const i = +card.dataset.i, c = cars[i];
   c.exAuto = false;
   if (el.dataset.pick!==undefined){
-    const r = byLabel.get(el.value); if (!r) return;
+    const r = byLabel.get(el.value); if (!r){ suggest(el); return; }
     const d = PT_DEF[r[2]];
     Object.assign(c, {name:`${r[0]} ${r[1]}`, exKey:null, pt:r[2], kwh:d.kwh, share:d.share,
       other:d.ins+d.serv+d.tyre, tax:'', mass:d.mass, make:d.make, life:d.life});
@@ -719,6 +743,27 @@ $('cars').addEventListener('input', e => {
     }
   }
   update();
+});
+// Ehdotuslistan valinta hiirellä, kosketuksella ja näppäimillä
+$('cars').addEventListener('mousedown', e => { if (e.target.closest('.sugg')) e.preventDefault(); }); // kenttä pitää kohdistuksen
+$('cars').addEventListener('click', e => {
+  const o = e.target.closest('.sugg button'); if (!o) return;
+  const inp = $('pick'+o.closest('.sugg').id.slice(2)); if (inp) choose(inp, o.textContent);
+});
+$('cars').addEventListener('keydown', e => {
+  const inp = e.target; if (inp.dataset.pick===undefined) return;
+  const box = $('sg'+inp.dataset.pick); if (!box || box.hidden){ if (e.key==='ArrowDown') suggest(inp); return; }
+  const opts = [...box.querySelectorAll('button')], cur = opts.findIndex(o => o.getAttribute('aria-selected')==='true');
+  if (e.key==='ArrowDown' || e.key==='ArrowUp'){
+    e.preventDefault(); if (!opts.length) return;
+    const nx = e.key==='ArrowDown' ? (cur+1)%opts.length : (cur<=0 ? opts.length-1 : cur-1);
+    opts.forEach((o,j)=>o.setAttribute('aria-selected', String(j===nx)));
+    inp.setAttribute('aria-activedescendant', opts[nx].id); opts[nx].scrollIntoView({block:'nearest'});
+  } else if (e.key==='Enter'){ const o = opts[cur>=0?cur:0]; if (o){ e.preventDefault(); choose(inp, o.textContent); } }
+  else if (e.key==='Escape') closeSugg(inp);
+});
+$('cars').addEventListener('focusout', e => {
+  const inp = e.target; if (inp.dataset && inp.dataset.pick!==undefined) setTimeout(() => { if (document.activeElement!==inp) closeSugg(inp); }, 150);
 });
 $('cars').addEventListener('click', e => {
   const b = e.target.closest('[data-del]'); if (!b) return;
