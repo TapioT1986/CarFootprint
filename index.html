@@ -468,11 +468,11 @@ const COLORS = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)'];
 // Esimerkkiautot: Suomen tyypillinen auto ja samanhintaiset vaihtoehdot.
 // Perusteet ja lähteet: Traficomin rekisteri 30.6.2026 ja Verohallinnon verotusarvot 2025-2026.
 // Esimerkkiautot valitaan enimmäishinnan mukaan (data/budget_cars.json):
-// [paikka, merkki, malli, nimi, arvo uutena (Verohallinnon verotusarvoista)]
+// [paikka, merkki, malli, nimi, arvo uutena (Verohallinnon verotusarvoista), viimeinen vuosimalli]
 const BUDGET_CARS = [
   ["B", "Volkswagen", "GOLF", "Golf", 33400],
   ["H", "Toyota", "Corolla", "Corolla", 39200],
-  ["H", "Toyota", "Auris", "Auris", 38900],
+  ["H", "Toyota", "Auris", "Auris", 38900, 2019],
   ["H", "Toyota", "Yaris", "Yaris", 28900],
   ["E", "Tesla", "Model Y", "Tesla Model Y", 53800],
   ["E", "Tesla", "MODEL 3", "Tesla Model 3", 47000],
@@ -480,7 +480,7 @@ const BUDGET_CARS = [
   ["E", "Hyundai", "KONA", "Hyundai Kona", 37600],
   ["E", "Kia", "NIRO", "Kia Niro", 39000],
   ["E", "Nissan", "LEAF 40KWH", "Nissan Leaf", 24500],
-  ["E", "Volkswagen", "GOLF", "VW e-Golf", 29000],
+  ["E", "Volkswagen", "GOLF", "VW e-Golf", 29000, 2020],
   ["E", "Renault", "ZOE", "Renault Zoe", 24700]
 ];
 const SLOTS = ['B','E','H'];
@@ -489,7 +489,8 @@ const depFactor = a => { let d = 1; for (let t=0; t<a; t++) d *= 1-rateAt(t); re
 // Nuorin vuosimalli, jonka arvioitu hinta mahtuu budjettiin, tai null.
 function fitBudget(c, budget){
   const r = findRow([c[1],c[2],c[0]]); if (!r) return null;
-  const [y0,y1] = String(r[5]).split('–').map(Number);
+  let [y0,y1] = String(r[5]).split('–').map(Number);
+  if (c[5]) y1 = Math.min(y1, c[5]); // mallin valmistus päättyi (rekisterissä myöhempiä tuonteja)
   const minAge = Math.max(0, CUR_YEAR-y1), maxAge = CUR_YEAR-y0;
   for (let a=minAge; a<=maxAge; a++){ const v = c[4]*depFactor(a); if (v <= budget) return {c, r, age:a, price:Math.floor(v/100)*100}; }
   return {c, r, age:maxAge, price:Math.floor(c[4]*depFactor(maxAge)/100)*100, over:true};
