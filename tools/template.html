@@ -481,7 +481,8 @@ fi: {
 <li><b>Toimintasäde sähköllä</b> näkyy rekisteristä valituille sähköautoille ja lataushybrideille: virallinen WLTP-toimintasäde on Suomessa 2025 rekisteröityjen saman mallin autojen mediaani (<a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA:n rekisteri</a>). Talven luvut ovat arvioita Norjan autoliiton El Prix -talvitesteistä: lauhassa talvessa (−6…+8 °C, 2025) autot jäivät keskimäärin 18 % ja kovassa pakkasessa (−7…−32 °C, 2026) 38 % alle WLTP-toimintasäteen (<a href="https://www.naf.no/elbil/elprix-nytt/elprix-vinter-2026-rekkeviddetest" target="_blank" rel="noopener">NAF</a>). Testit ajettiin sähköautoilla; lataushybridille sama suhde on oletus. Luvut ovat vuoden 2025 malleista, joten vanhemmissa mallivuosissa toimintasäde on usein lyhyempi; malleille, joita ei enää myyty uutena 2025 (esim. Nissan Leaf, Renault Zoe), lukua ei näytetä. Yksittäinen auto voi poiketa paljonkin, ja akun kuluminen lyhentää vanhemman auton toimintasädettä.</li>
 <li><b>Vaihteluväli</b> tuloskorteissa näyttää vuosikulun 15 vuoden halvimmilla ja kalleimmilla energian hinnoilla (12 kuukauden keskihinnat nykyrahassa, Tilastokeskus). Lähteet ja oletukset ovat tulosten alla kohdassa Lisätietoja vaihteluväleistä.</li>
 <li><b>Kuinka varma järjestys on?</b> Sivu muuttaa yhtä asiaa kerrallaan ja etsii lähimmän arvon, jolla halvin auto vaihtuu, ja näyttää kaksi lähintä. Haun rajat: ajomäärä 2 000–50 000 km, polttoaineen ja sähkön hinta puolesta kaksinkertaiseen, omistusaika 1–20 vuotta ja arvonalenema puolesta kaksinkertaiseen (sama kerroin kaikille autoille). Rajat eivät ole ennusteita tai vaihteluvälejä, vaan sitä, kuinka kaukaa kääntöpistettä haetaan; kaukana olevaa kääntöpistettä ei näytetä.</li>
-<li>Vakuutus ja huollon lähtötaso ovat karkeita oletuksia. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
+<li><b>Vakuutus</b> on jaettu pakolliseen liikennevakuutukseen ja vapaaehtoiseen kaskoon. Avointa tilastoa henkilöauton vakuutusmaksuista ei löytynyt: <a href="https://www.finanssivalvonta.fi/en/publications-and-press-releases/news-releases/2025/statistical-survey-of-motor-liability-insurance-profitability-20192023-result-recorded-for-2023-was-excellent-despite-slight-decline-in-underwriting-result/" target="_blank" rel="noopener">Finanssivalvonnan tilastotutkimus</a> kertoo vain koko markkinan maksutulon (754 milj. € vuonna 2023), ei hintaa autoa kohden. Siksi luvut ovat oletuksia: liikennevakuutus 200 €/v (lehtien vertailuissa yksittäisillä malleilla noin 160–230 €/v) ja kasko 400–500 €/v käyttövoiman mukaan. Hinta riippuu paljon kuljettajan iästä, asuinpaikasta ja bonuksista, ja vanhaa halpaa autoa ei usein kaskoteta. Kirjoita omat tarjouksesi kohtaan Tarkenna.</li>
+<li>Huollon lähtötaso on karkea oletus. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
   pick_l:'Hae malli rekisteristä', pick_ph:'esim. Volkswagen Golf', pick_none:'Ei osumia', pt_l:'Käyttövoima',
@@ -489,7 +490,9 @@ fi: {
   dep_l:'Arvonalenema', dep_u:'% / v, tyhjä = iän mukaan',
   fuel_l:'Polttoaine', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, vanha mittaus)', fuel_u_p:'l / 100 km polttoaineella ajaessa',
   el_l:'Sähkö', kwh_u:'kWh / 100 km (WLTP)', share_l:'Sähköllä ajettu', share_u:'% ajosta',
-  other_l:'Muut kulut', other_u:'€ / v: vakuutus ja renkaat',
+  other_l:'Renkaat ja muut', other_u:'€ / v', traf_l:'Liikennevakuutus (pakollinen)', traf_u:'€ / v, oletus: vaihda oma tarjouksesi',
+  kasko_l:'Kasko (vapaaehtoinen)', kasko_u:'€ / v, oletus; 0 = ei kaskoa',
+  ins_tag:(a,b)=>` · liikennevakuutus ${a} €/v, kasko ${b} €/v`,
   serv_l:'Huolto ja korjaukset', serv_u:'€ / v vähän ajetulle (alle 80 000 km); kasvaa ajon mukaan',
   tax_l:'Ajoneuvovero', tax_u:'€ / v; tyhjä = laskettu CO₂:sta ja massasta',
   mass_l:'Kokonaismassa', mass_u:'kg, oletus; käyttövoimavero lasketaan tästä', more:'Lisää oletuksia',
@@ -603,7 +606,8 @@ en: {
 <li><b>Electric range</b> is shown for electric and plug-in hybrid cars picked from the register: the official WLTP range is the median of the same model registered in Finland in 2025 (<a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA register</a>). The winter figures are estimates from the Norwegian Automobile Federation's El Prix winter tests: in a mild winter (−6…+8 °C, 2025) cars fell on average 18% and in hard frost (−7…−32 °C, 2026) 38% short of their WLTP range (<a href="https://www.naf.no/elbil/elprix-nytt/elprix-vinter-2026-rekkeviddetest" target="_blank" rel="noopener">NAF</a>). The tests used electric cars; applying the same ratio to plug-in hybrids is an assumption. The figures are for 2025 models, so older model years often have a shorter range; models no longer sold new in 2025 (e.g. Nissan Leaf, Renault Zoe) get no figure. Individual cars can differ a lot, and battery wear shortens an older car's range.</li>
 <li><b>The range</b> on the result cards shows the yearly cost at the cheapest and dearest energy prices of the last 15 years (12-month averages in today's money, Statistics Finland). Sources and assumptions are under the results in More about the ranges.</li>
 <li><b>How firm is the ranking?</b> The page changes one thing at a time, finds the nearest value at which the cheapest car changes, and shows the two nearest. Search limits: mileage 2,000–50,000 km, fuel and electricity prices from half to double, ownership 1–20 years and depreciation from half to double (the same factor for every car). The limits are not forecasts or ranges, only how far the page looks for a tipping point; one further away is not shown.</li>
-<li>Insurance and the starting level of servicing are rough assumptions. This is a draft, not a verified comparison.</li>`,
+<li><b>Insurance</b> is split into compulsory motor liability insurance and optional comprehensive cover. No open statistics on car insurance premiums were found: <a href="https://www.finanssivalvonta.fi/en/publications-and-press-releases/news-releases/2025/statistical-survey-of-motor-liability-insurance-profitability-20192023-result-recorded-for-2023-was-excellent-despite-slight-decline-in-underwriting-result/" target="_blank" rel="noopener">the Financial Supervisory Authority's survey</a> gives only total premiums for the whole market (€754 million in 2023), not a price per car. So the figures are assumptions: motor liability €200/yr (magazine comparisons found about €160–230/yr for single models) and comprehensive cover €400–500/yr by powertrain. Prices depend a lot on the driver's age, home area and bonus, and old cheap cars are often not covered comprehensively. Enter your own quotes under Fine-tune.</li>
+<li>The starting level of servicing is a rough assumption. This is a draft, not a verified comparison.</li>`,
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
   new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
   pick_l:'Find a model in the register', pick_ph:'e.g. Volkswagen Golf', pick_none:'No matches', pt_l:'Powertrain',
@@ -611,7 +615,9 @@ en: {
   dep_l:'Depreciation', dep_u:'% / yr, blank = by age',
   fuel_l:'Fuel', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, old test)', fuel_u_p:'l / 100 km when running on fuel',
   el_l:'Electricity', kwh_u:'kWh / 100 km (WLTP)', share_l:'Driven on electricity', share_u:'% of driving',
-  other_l:'Other costs', other_u:'€ / yr: insurance and tyres',
+  other_l:'Tyres and other', other_u:'€ / yr', traf_l:'Motor liability insurance (compulsory)', traf_u:'€ / yr, assumed: enter your own quote',
+  kasko_l:'Comprehensive cover (optional)', kasko_u:'€ / yr, assumed; 0 = none',
+  ins_tag:(a,b)=>` · motor liability insurance €${a}/yr, comprehensive €${b}/yr`,
   serv_l:'Servicing and repairs', serv_u:'€ / yr at low mileage (under 80,000 km); rises with mileage',
   tax_l:'Vehicle tax', tax_u:'€ / yr; empty = calculated from CO₂ and mass',
   mass_l:'Total mass', mass_u:'kg, assumed; the propulsion tax is based on it', more:'More assumptions',
@@ -664,6 +670,9 @@ const PT_DEF = { // oletukset käyttövoiman mukaan
   E:{fuel:0, kwh:17, share:100, mass:2200, ins:700, serv:250, tyre:250, make:7.5, batt:53.4, life:18, real:1.20}
 };
 PT_DEF.B.real = PT_DEF.H.real = RW.fleet.P.k; PT_DEF.D.real = RW.fleet.D.k;
+// Vakuutus: pakollinen liikennevakuutus ja vapaaehtoinen kasko (EX_VERSION 8). Avointa hintatilastoa ei ole,
+// joten luvut ovat oletuksia; summa on sama kuin ennen (ins).
+Object.values(PT_DEF).forEach(d => { d.traf = 200; d.kasko = d.ins - d.traf; });
 Object.assign(PT_DEF.P, {real:1, share:25, fuel:+(RW.fleet.PE.ob/0.75).toFixed(1), kwh:RW.phevMedian});
 PT_DEF.E.kwh = RW.evMedian;
 const OLD_TAX = {B:200, D:600, H:160, P:180, E:300};
@@ -797,7 +806,7 @@ let cars = [];
 function newCar(o={}){
   const pt = o.pt || (o.pick && o.pick[2]) || 'B', d = PT_DEF[pt];
   const c = {name:o.name||T('new_car'), exKey:null, ex:o.ex??null, exAuto:o.exAuto??false, pt, price:o.price??20000, age:o.age??0, odo:o.odo??0, dep:o.dep??'',
-    fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??(d.ins+d.tyre), serv:o.serv??d.serv, tax:o.tax??'', mass:o.mass??d.mass,
+    fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??d.tyre, traf:o.traf??d.traf, kasko:o.kasko??d.kasko, serv:o.serv??d.serv, tax:o.tax??'', mass:o.mass??d.mass,
     make:o.make??d.make, batt:o.batt??d.batt, life:o.life??d.life, real:o.real??d.real, rw:o.rw??null};
   c.std = o.std ?? null; c.autoFuel = o.autoFuel ?? (o.fuel===undefined);
   if (o.pick){ const r = findRow(o.pick); if (r){ c.picked = r; fromRow(c, r); if (o.batt===undefined) c.batt = battFromName(r) ?? c.batt; } }
@@ -837,7 +846,7 @@ function choose(inp, label){ inp.value = label; closeSugg(inp); inp.dispatchEven
 // muuttamat hinnat säilyvät mutta koskemattomat oletukset päivittyvät uusiin.
 const PRICE_DEF = {pBens:'__P_PETROL__', pDies:'__P_DIESEL__', pEl:'__P_ELEC__'};
 const OLD_DEFS = ['1.85','1.75','0.15','2.09','2.15','0.1791']; // ennen tallennettuja oletuksia
-const EX_VERSION = 7; // kasvata, kun esimerkkiautot vaihtuvat
+const EX_VERSION = 8; // kasvata, kun esimerkkiautot vaihtuvat
 function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF, ev:EX_VERSION})); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
 const GIDS = ['km','years','budget','monthly','own','loanRate','loanFee','loanYears','ownRate','pBens','pDies','pEl','loss','elSrc','eBens','eDies'];
@@ -889,7 +898,8 @@ function calc(c, G, km){
   const vt = vehicleTax(c), autoTax = c.tax===''||c.tax==null||!isFinite(num(c.tax,NaN));
   const tax = autoTax ? vt.total : num(c.tax);
   const servF = servFactor(c.pt, Math.max(0,num(c.odo,0)), Math.max(0,num(c.odo,0)) + km*n), serv = num(c.serv,0)*servF;
-  const other = c.other + tax + serv;
+  const ins = num(c.traf,0) + num(c.kasko,0); // liikennevakuutus + kasko
+  const other = num(c.other,0) + ins + tax + serv;
   const total = dep+cap+energy+other;
   const drive = litres*fuelEm + kwh*G.eEl;
   const makeT = num(c.make,0) + battT(c); // t CO2e: auto + akku
@@ -897,7 +907,7 @@ function calc(c, G, km){
   // Kuukausimenot (kassavirta): lainaerä kuluineen + energia ja muut kulut kuukautta kohden.
   // Arvonalenema ja oman rahan tuotto eivät ole kuukausittaisia maksuja.
   const runMo = (energy+other)/12, cash = L.pay + runMo, cashAfter = (L.pay>0 && G.loanYears<n) ? runMo : null;
-  return {rate,resid,dep,cap,loan,pay:L.pay,cash,cashAfter,energy,other,tax,vt,autoTax,serv,servF,total,drive,make,makeT,em:drive+make,litres,kwh,
+  return {ins,rate,resid,dep,cap,loan,pay:L.pay,cash,cashAfter,energy,other,tax,vt,autoTax,serv,servF,total,drive,make,makeT,em:drive+make,litres,kwh,
     endAge:c.age+n, endOdo:c.odo+km*n};
 }
 
@@ -925,6 +935,8 @@ function carCard(c,i){
       ${showFuel?`<div class="field"><label class="label" for="fuel${i}">${T('fuel_l')}</label><input type="number" id="fuel${i}" data-k="fuel" step="0.1" value="${c.fuel}"><span class="unit" id="fuelu${i}">${c.pt==='P'?T('fuel_u_p'):(isNedc(c)?T('fuel_u_nedc'):T('fuel_u'))}</span></div>`:''}
       ${showEl?`<div class="field"><label class="label" for="kwh${i}">${T('el_l')}</label><input type="number" id="kwh${i}" data-k="kwh" step="0.5" value="${c.kwh}"><span class="unit">${T('kwh_u')}</span></div>`:''}
       ${c.pt==='P'?`<div class="field"><label class="label" for="share${i}">${T('share_l')}</label><input type="number" id="share${i}" data-k="share" step="5" value="${c.share}"><span class="unit">${T('share_u')}</span></div>`:''}
+      <div class="field"><label class="label" for="traf${i}">${T('traf_l')}</label><input type="number" id="traf${i}" data-k="traf" step="10" min="0" value="${c.traf}"><span class="unit">${T('traf_u')}</span></div>
+      <div class="field"><label class="label" for="kasko${i}">${T('kasko_l')}</label><input type="number" id="kasko${i}" data-k="kasko" step="10" min="0" value="${c.kasko}"><span class="unit">${T('kasko_u')}</span></div>
       <div class="field"><label class="label" for="other${i}">${T('other_l')}</label><input type="number" id="other${i}" data-k="other" step="50" value="${c.other}"><span class="unit">${T('other_u')}</span></div>
       <div class="field"><label class="label" for="serv${i}">${T('serv_l')}</label><input type="number" id="serv${i}" data-k="serv" step="50" min="0" value="${c.serv}"><span class="unit">${T('serv_u')}</span></div>
       <div class="field"><label class="label" for="tax${i}">${T('tax_l')}</label><input type="number" id="tax${i}" data-k="tax" step="10" min="0" value="${c.tax}" placeholder="auto"><span class="unit">${T('tax_u')}</span></div>
@@ -962,7 +974,7 @@ $('cars').addEventListener('input', e => {
     const r = byLabel.get(el.value); if (!r){ suggest(el); return; }
     const d = PT_DEF[r[2]];
     Object.assign(c, {name:`${r[0]} ${r[1]}`, exKey:null, pt:r[2], kwh:d.kwh, share:d.share,
-      other:d.ins+d.tyre, serv:d.serv, tax:'', mass:d.mass, make:d.make, batt:d.batt, life:d.life});
+      other:d.tyre, traf:d.traf, kasko:d.kasko, serv:d.serv, tax:'', mass:d.mass, make:d.make, batt:d.batt, life:d.life});
     c.picked = r; fromRow(c, r); c.batt = battFromName(r) ?? d.batt;
     renderCars(); update(); return;
   }
@@ -1233,7 +1245,7 @@ function update(){
   cars.forEach((c,i)=>{ const e=$('evr'+i); if(e) e.innerHTML = evRangeText(c); });
   cars.forEach((c,i)=>{ const e=$('cc'+i); if(!e) return; const n = carChanged(c,i); e.textContent = n ? T('more_n')(n) : ''; });
   cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];
-    t.textContent = T('tag')(fmt(r.rate*100,0), fmt(r.endAge), fmt(r.endOdo), fmt(r.resid)) + (r.loan>0?T('loan_tag')(fmt(r.loan), fmt(r.pay)):'') + T('make_tag')(fmt(r.makeT,1), battT(c)) + T('serv_tag')(fmt(r.serv), fmt(r.servF,1)) + (r.autoTax?T('tax_tag')(fmt(r.tax), fmt(r.vt.base), fmt(r.vt.prop)):'') + (c.picked?T('reg')(fmt(c.picked[4]), c.picked[5]):'') + rwText(c);
+    t.textContent = T('tag')(fmt(r.rate*100,0), fmt(r.endAge), fmt(r.endOdo), fmt(r.resid)) + (r.loan>0?T('loan_tag')(fmt(r.loan), fmt(r.pay)):'') + T('make_tag')(fmt(r.makeT,1), battT(c)) + T('serv_tag')(fmt(r.serv), fmt(r.servF,1)) + (r.autoTax?T('tax_tag')(fmt(r.tax), fmt(r.vt.base), fmt(r.vt.prop)):'') + T('ins_tag')(fmt(num(c.traf,0)), fmt(num(c.kasko,0))) + (c.picked?T('reg')(fmt(c.picked[4]), c.picked[5]):'') + rwText(c);
     const tx=$('tax'+i); if (tx) tx.placeholder = fmt(r.vt.total); });
   const rows = cars.map((c,i)=>({name:c.name,color:COLORS[i],...R[i]}));
   hbars($('costChart'), rows.map(r=>({...r,en:r.energy,oth:r.other})), ['dep','cap','en','oth'], '€/'+yr);
@@ -1336,11 +1348,18 @@ $('budget').addEventListener('input', () => {
 // päivitettäessä edellisen käynnin arvot lomakkeeseen.
 document.querySelectorAll('input,select').forEach(el => el.autocomplete = 'off');
 defaultInputs();
+// EX_VERSION 8: "muut kulut" sisälsi vakuutuksen. Oletusarvo jaetaan liikennevakuutukseen, kaskoon ja renkaisiin;
+// itse muutettu summa jää kokonaan muihin kuluihin (vakuutukset 0), jotta vuosikulu ei muutu.
+function splitIns(c){
+  const d = PT_DEF[c.pt]; if (!d || c.traf !== undefined) return c;
+  return num(c.other, NaN) === d.ins + d.tyre ? {...c, other:d.tyre, traf:d.traf, kasko:d.kasko} : {...c, traf:0, kasko:0};
+}
 // Vanhojen tallennusten ja linkkien autot nykyiseen muotoon (EX_VERSION-historia)
 function migrateCars(list, ev){
   return list.map(c=>ev<5 ? {...c, other:Math.max(0,num(c.other,0)-(OLD_TAX[c.pt]||0))} : c) // vero erotettiin muista kuluista
     .map(c=>ev<6 && PT_DEF[c.pt] ? {...c, other:Math.max(0,num(c.other,0)-PT_DEF[c.pt].serv)} : c) // samoin huolto (EX_VERSION 6)
-    .map(c=>ev<7 ? (num(c.make,NaN)===OLD_MAKE[c.pt] ? {...c, make:undefined} : {...c, batt:0}) : c); // valmistus: akku erikseen (EX_VERSION 7)
+    .map(c=>ev<7 ? (num(c.make,NaN)===OLD_MAKE[c.pt] ? {...c, make:undefined} : {...c, batt:0}) : c) // valmistus: akku erikseen (EX_VERSION 7)
+    .map(c=>ev<8 ? splitIns(c) : c); // vakuutus omiksi kentikseen (EX_VERSION 8)
 }
 const saved = load();
 // Koskemattomat vanhat esimerkkiautot korvataan uusilla; omat autot säilyvät.
@@ -1368,8 +1387,8 @@ else cars = examples();
 //   xB/xE/xH  muokattu esimerkkiauto, pB3k7  rekisteristä valittu malli (rivi + tarkiste), nB  oma auto
 //  Johdettuja kenttiä (todellinen kulutus, NEDC-tiedot, lähdeselitteet) ei tallenneta: ne lasketaan uudelleen.
 // Vanhat linkit 'z' (pakattu JSON) ja 'j' (JSON) avautuvat edelleen.
-const SHARE_KEYS = ['name','pt','price','age','odo','dep','fuel','kwh','share','other','serv','tax','mass','make','batt','life','real','autoFuel','std','rw'];
-const SHARE_F = {N:'name',P:'price',A:'age',O:'odo',D:'dep',K:'kwh',S:'share',X:'other',V:'serv',T:'tax',M:'mass',W:'make',B:'batt',L:'life',F:'fuel',R:'real'};
+const SHARE_KEYS = ['name','pt','price','age','odo','dep','fuel','kwh','share','other','traf','kasko','serv','tax','mass','make','batt','life','real','autoFuel','std','rw'];
+const SHARE_F = {N:'name',P:'price',A:'age',O:'odo',D:'dep',K:'kwh',S:'share',X:'other',Y:'traf',Z:'kasko',V:'serv',T:'tax',M:'mass',W:'make',B:'batt',L:'life',F:'fuel',R:'real'};
 const SHARE_STR = ['name','dep','tax'];
 const escS = t => encodeURIComponent(t).replace(/[!'()*_~]/g, ch => '%'+ch.charCodeAt(0).toString(16).toUpperCase()).replace(/\.$/,'%2E');
 const decS = t => { try { return decodeURIComponent(t); } catch(e){ return t; } };
@@ -1392,13 +1411,15 @@ function shareBase(t, i, age){
   if (c && age!==undefined && !sameV(+age, c.age)){ c.age = +age; refreshStd(c); }
   return c;
 }
-function carFromShare(tok, i){
+function carFromShare(tok, i, ver){
   const parts = tok.split('_'), f = {};
   parts.slice(1).forEach(x => { const key = SHARE_F[x[0]]; if (!key) return;
     const v = decS(x.slice(1)); f[key] = SHARE_STR.includes(key) ? v : num(v); });
   const c = shareBase(parts[0], i, f.age);
   if (!c) return null;
   if (parts[0][0]==='e') return c;
+  // linkki ennen EX_VERSION 8: muutettu "muut kulut" sisälsi vakuutuksen
+  if ((ver||0) < 8 && 'other' in f && !('traf' in f)){ f.traf = 0; f.kasko = 0; }
   Object.entries(f).forEach(([key,v]) => { if (key!=='age') c[key] = v; });
   if (parts.includes('U')) c.autoFuel = false;
   return c;
@@ -1447,7 +1468,7 @@ function applyShared(st){
   defaultInputs();
   Object.entries(st.g||{}).forEach(([id,v]) => { const el = $(id); if (!el || !GIDS.includes(id)) return;
     if (el.type==='select-one') el.selectedIndex = +v; else el.value = v; });
-  if (st.y){ cars = st.y.slice(0,4).map(carFromShare).filter(Boolean); return; }
+  if (st.y){ cars = st.y.slice(0,4).map((t,i) => carFromShare(t, i, st.v)).filter(Boolean); return; }
   cars = migrateCars(st.c||[], st.v||0).slice(0,4).map(c => {
     const car = newCar({...c, brand:undefined, exAuto:false, ex:null});
     if (c.p){ const r = findRow(c.p); if (r) car.picked = r; }
