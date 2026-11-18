@@ -655,6 +655,15 @@ def main():
     page = page.replace("__BUDGET_CARS__", json.dumps(
         [[c["slot"], c["make"], c["model"], c["label"], c["v0"], c.get("last_model_year"), c.get("register_pt")]
          for c in bc], ensure_ascii=False, separators=(",", ":")))
+    # City/highway consumption ratios from WLTP phases (tools/city_ratio.py): powertrain medians and per row
+    crp = root / "data" / "city_ratio.json"
+    cr = json.loads(crp.read_text(encoding="utf-8")) if crp.exists() else {}
+    cr_ratios = cr.get("ratios") or {"B": 1.14, "D": 1.16, "H": 0.81, "P": 1.01, "E": 0.68}
+    cr_model = cr.get("model") or []
+    if len(cr_model) != len(catalog):
+        cr_model = [0] * len(catalog)  # catalogue changed: rerun tools/city_ratio.py --write
+    page = page.replace("__CITY_R__", json.dumps(cr_ratios, separators=(",", ":")))
+    page = page.replace("__CITY_M__", json.dumps(cr_model, separators=(",", ":")))
     # Estimated value when new for every catalogue row (tools/budget_values.py), for prices when a model is picked
     mvp = root / "data" / "model_values.json"
     mv0 = json.loads(mvp.read_text(encoding="utf-8"))["v0"] if mvp.exists() else []

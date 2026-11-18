@@ -46,7 +46,7 @@ Omat lisähavainnot:
   Laskelma kirjoitetaan auki (kaava ja luvut), jotta sen voi tarkistaa ilman koodia.
 - Valmis, kun GitHubin testiajo kaatuu, jos jokin laskettu luku muuttuu tahattomasti.
 
-### 1.2 Pienet rehellisyyskorjaukset · koko S
+### 1.2 Pienet rehellisyyskorjaukset · koko S · ✅ tehty 18.11.2026 (versio 0.66; kevythybridit ja noin 180 mallia saivat oman WLTP-vaiheista lasketun kaupunkikertoimen)
 - "Lisätietoja vaihteluväleistä" → "Energian hinnan vaihtelu" (otsikko kertoo, mitä väli kattaa).
 - Kevythybridit omaksi luokakseen tai vähintään oikea kaupunkikerroin (1,13) mallinimen perusteella, jos se on tunnistettavissa.
 

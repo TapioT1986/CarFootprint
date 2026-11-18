@@ -181,7 +181,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   public roads <= 60 km/h (Statistics Finland 12jx and 12k1, 2025). cityMix(s, r) scales fuel and electricity relative
   to the default, r = city/highway consumption from WLTP phases (city = Low + Medium, highway = High + Extra High,
   distance-weighted; EVs from city vs combined electric range): UK VCA type-approval data, tools/city_ratio.py over
-  sources/vca_euro6_latest_<date>.zip, medians B 1.14, D 1.16, H 0.81 (full hybrids), P fuel 1.01, E 0.68. Replaced
+  sources/vca_euro6_latest_<date>.zip, medians B 1.14, D 1.16, H 0.81 (full hybrids), P fuel 1.01, E 0.68, written with
+  per-row model ratios (same make + first model word, >= 3 versions; 177 rows) to data/city_ratio.json, injected as
+  CITY_R / CITY_M; cityRatio(c, fuel) picks the model figure first. VCA's MHEV/HEV labels are not trusted. Replaced
   the earlier US EPA ratios (owner asked for European WLTP data). At 39 % the measured consumption is unchanged.
 - Mileage limits: typed field 1 000-300 000 km (LIM), slider to 100 000 (taxis averaged 61,725 km in 2018,
   Statistics Finland 22.3.2019). Tipping search goes to max(100 000, 2 x km); the break-even chart's axis stretches to

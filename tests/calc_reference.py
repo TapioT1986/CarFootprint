@@ -29,7 +29,7 @@ SERV_F = {"ice": [1, .060 / .028, .079 / .028], "ev": [1, .028 / .012, .043 / .0
 CO2_PER_L = {"B": 23.3, "H": 23.3, "D": 26.4}
 BATT_T_PER_KWH = 0.0728
 CITY0 = 0.39
-CITY_R = {"B": 1.14, "D": 1.16, "H": 0.81, "P": 1.01, "E": 0.68}
+CITY_R = json.loads((ROOT / "data" / "city_ratio.json").read_text(encoding="utf-8"))["ratios"]  # powertrain medians
 LAST_NEDC = 2017
 TOL = 0.5                   # euros or kg: rounding noise allowed between the two implementations
 
