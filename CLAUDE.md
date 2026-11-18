@@ -141,6 +141,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   loan payment incl. fees + (energy + other)/12 while the loan runs (r.cash; r.cashAfter after a shorter loan);
   depreciation and return on own money are not cash. Always shown; below them the cash-purchase sum (loan 0) or own money
   + loan. Monthly budget (optional, field `monthly`) only adds the over-budget flag.
+- Estimates vs typed values: isEst(c,k) marks price/age/odo filled by the calculator (model pick or example car) with class
+  `est` (dashed border + 'arvio' chip, explained in req_hint); typing sets c.own[k] and removes it. Share-link tokens P/A/O
+  count as own values. The model search hint (`pickh0`) is shown on the first card only.
 - Costs itemised (`costTable()`, `#costs`, below the result cards): energy per 100 km and per year, motor liability, comprehensive,
   vehicle tax, servicing, tyres and other, running costs total, then depreciation, financing and the total. On phones each
   row name sits on its own line above the car columns (CSS grid, --n = number of cars). Result cards also show the energy
