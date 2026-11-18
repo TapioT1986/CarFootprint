@@ -9,7 +9,7 @@ async () => {
 
   // 1. Cards, summary cards and the cost chart show the same cars
   function sameCars(when) {
-    const cards = [...document.querySelectorAll('#cars .car [data-pick]')].map(e => e.value.trim());
+    const cards = [...document.querySelectorAll('#cars .car')].map(e => e.dataset.name.trim());
     const sums = [...document.querySelectorAll('#sums .nm')].map(e => e.innerText.trim());
     if (!cards.length) problems.push(`${lang} ${when}: no car cards`);
     if (JSON.stringify(cards) !== JSON.stringify(sums))
@@ -111,7 +111,7 @@ async () => {
       const bg = getComputedStyle(box).backgroundColor;
       if (bg === 'transparent' || /rgba\(.*,\s*0\)$/.test(bg)) problems.push(`${lang}: model suggestion list is transparent`);
       const label = opt.textContent; opt.click(); await wait(50);
-      const name = $('cars').querySelector('.car [data-pick]').value;
+      const name = $('cars').querySelector('.car').dataset.name;
       if (!label.toUpperCase().includes(name.toUpperCase().split(' ')[1] || '#'))
         problems.push(`${lang}: picked "${label}" but the card is "${name}"`);
       sameCars('after picking a model'); fits('after picking a model');

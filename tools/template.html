@@ -113,6 +113,10 @@ details.adv .fields{margin-top:10px}
 .car{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0;border-top:4px solid var(--cc)}
 .car .head{display:flex;align-items:center;gap:8px;min-height:44px}
 .car .head .label{flex:1;margin:0}
+.car .cname{flex:1;font-size:16px;overflow-wrap:anywhere}
+.car .nameed{flex:1;font-weight:600}
+.car .ren{border:0;background:none;color:var(--muted);font-size:17px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px}
+.car .ren:hover{color:var(--accent)}
 .pickwrap input{font-weight:600}
 .pickwrap input::placeholder{font-weight:400}
 .car .x{border:0;background:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px}
@@ -294,7 +298,7 @@ details.info a{color:var(--accent)}
   .chip,.btn,.btn.sm,.lang,.seg button{min-height:44px}
   .chip{font-size:14px;padding:0 14px}
   .btn.sm{font-size:13.5px;padding:0 12px}
-  .car .x{min-width:44px;min-height:44px}
+  .car .x,.car .ren{min-width:44px;min-height:44px}
   input,select{min-height:44px}
   input[type=range]{min-height:32px}
   details summary{padding:10px 0;min-height:44px;box-sizing:border-box}
@@ -565,7 +569,7 @@ fi: {
 <li>Huollon lähtötaso on karkea oletus. Tämä on luonnos, ei tarkistettu vertailu.</li>`,
   ex_mild:' (kevythybridi)',
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
-  new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
+  new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', ren:'Nimeä auto', del:'Poista auto',
   pick_l:'Hae automalli', pick_hint:'Kirjoita merkki tai malli ja valitse listasta. Valinta täyttää mallin todellisen kulutuksen (EEA:n mittaukset), hinta-arvion (Verohallinnon verotusarvot) sekä iän ja mittarilukeman (Traficomin rekisteri). Voit muuttaa kaikkia arvoja.', pick_ph:'esim. Volkswagen Golf', pick_none:'Ei osumia', pt_l:'Käyttövoima',
   price_l:'Ostohinta', age_l:'Ikä ostaessa', age_u:'v (0 = uusi)', odo_l:'Mittarilukema', odo_u:'km ostaessa',
   dep_l:'Arvonalenema', dep_u:'% / v, tyhjä = iän mukaan',
@@ -714,7 +718,7 @@ en: {
 <li>The starting level of servicing is a rough assumption. This is a draft, not a verified comparison.</li>`,
   ex_mild:' (mild hybrid)',
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
-  new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
+  new_car:'New car', car_n:'Car', car_name:'Car name', ren:'Rename car', del:'Remove car',
   pick_l:'Find a car model', pick_hint:'Type a make or model and pick it from the list. This fills in the real-world consumption of the model (EEA measurements), an estimated price (Tax Administration values) and age and odometer (Traficom register). You can change every value.', pick_ph:'e.g. Volkswagen Golf', pick_none:'No matches', pt_l:'Powertrain',
   price_l:'Purchase price', age_l:'Age at purchase', age_u:'years (0 = new)', odo_l:'Odometer', odo_u:'km at purchase',
   dep_l:'Depreciation', dep_u:'% / yr, blank = by age',
@@ -947,12 +951,17 @@ function newCar(o={}){
     fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??d.tyre, traf:o.traf??d.traf, kasko:o.kasko??d.kasko, serv:o.serv??d.serv, tax:o.tax??'', mass:o.mass??d.mass,
     make:o.make??d.make, batt:o.batt??d.batt, soh:o.soh??'', life:o.life??d.life, real:o.real??d.real, rw:o.rw??null};
   c.std = o.std ?? null; c.autoFuel = o.autoFuel ?? (o.fuel===undefined);
+  c.own = o.own ?? {}; c.priceAuto = o.priceAuto ?? false; c.ownName = o.ownName ?? false; c.mine = o.mine ?? false;
   if (o.pick){ const r = findRow(o.pick); if (r){ c.picked = r; fromRow(c, r); if (o.batt===undefined) c.batt = battFromName(r) ?? c.batt; } }
   else if (o.brand) applyRW(c, o.brand, o.kwhReg);
   else if (o.std===undefined && o.real===undefined) refreshStd(c);
   return c;
 }
 
+// Hakukentän teksti: oma nimi näkyy otsikossa, jolloin hakukentässä on malli; muuten auton nimi
+const modelName = c => c.picked ? `${c.picked[0]} ${c.picked[1]}` : '';
+const pickText = c => (c.ownName && c.picked) ? modelName(c) : c.name;
+let renaming = -1; // auto, jonka nimeä muokataan
 // Valitun mallin hinta-arvio: arvo uutena (Verohallinnon verotusarvoista) × arvonalenema iän mukaan
 const estPrice = (r, age) => { const v0 = MV0[CATALOG.indexOf(r)]; return v0 ? Math.floor(v0*depFactor(age)/100)*100 : 0; };
 // Mallin valinta täyttää ikä-, hinta- ja mittarilukemakentät mallin mukaan, ellei käyttäjä ole itse kirjoittanut niitä:
@@ -1092,11 +1101,14 @@ function isEst(c, k){
 function carCard(c,i){
   const est = k => isEst(c,k) ? ' est' : '', estb = `<span class="estb">${T('est')}</span>`;
   const showFuel = c.pt!=='E', showEl = c.pt==='E'||c.pt==='P';
-  return `<div class="car" style="--cc:${COLORS[i]}" data-i="${i}">
-    <div class="head"><span class="dot" style="--cc:${COLORS[i]}"></span><label class="label" for="pick${i}">${T('pick_l')}</label>
+  return `<div class="car" style="--cc:${COLORS[i]}" data-i="${i}" data-name="${esc(c.name)}">
+    <div class="head"><span class="dot" style="--cc:${COLORS[i]}"></span>${renaming===i
+        ? `<input class="nameed" id="name${i}" data-name="${i}" value="${esc(c.name)}" aria-label="${T('car_name')}" maxlength="40">`
+        : c.ownName ? `<b class="cname">${esc(c.name)}</b>` : `<label class="label" for="pick${i}">${T('pick_l')}</label>`}
+      ${renaming===i ? '' : `<button class="ren" type="button" data-ren="${i}" aria-label="${T('ren')}" title="${T('ren')}">✎</button>`}
       ${cars.length>1?`<button class="x" type="button" data-del="${i}" aria-label="${T('del')}">×</button>`:''}</div>
     <div class="field pickwrap req">
-      <input id="pick${i}" data-pick="${i}" value="${esc(c.name)}" placeholder="${T('pick_ph')}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sg${i}"${i===0?' aria-describedby="pickh0"':''}>
+      <input id="pick${i}" data-pick="${i}" value="${esc(pickText(c))}"${c.ownName?` aria-label="${T('pick_l')}"`:''} placeholder="${T('pick_ph')}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sg${i}"${i===0?' aria-describedby="pickh0"':''}>
       <div class="sugg" id="sg${i}" role="listbox" aria-label="${T('pick_l')}" hidden></div>
       ${i===0?`<span class="hint" id="pickh${i}">${T('pick_hint')}</span>`:''}</div>
     <div class="fields">
@@ -1155,7 +1167,7 @@ $('cars').addEventListener('input', e => {
   if (el.dataset.pick!==undefined){
     const r = byLabel.get(el.value); if (!r){ suggest(el); return; }
     const d = PT_DEF[r[2]];
-    Object.assign(c, {name:`${r[0]} ${r[1]}`, exKey:null, pt:r[2], kwh:d.kwh, share:d.share,
+    Object.assign(c, {name:c.ownName ? c.name : `${r[0]} ${r[1]}`, exKey:null, pt:r[2], kwh:d.kwh, share:d.share,
       other:d.tyre, traf:d.traf, kasko:d.kasko, serv:d.serv, tax:'', mass:d.mass, make:d.make, batt:d.batt, life:d.life});
     c.picked = r; autoPriceAge(c, r); fromRow(c, r); c.batt = battFromName(r) ?? d.batt;
     renderCars(); update(); return;
@@ -1200,7 +1212,7 @@ $('cars').addEventListener('keydown', e => {
     opts.forEach((o,j)=>o.setAttribute('aria-selected', String(j===nx)));
     inp.setAttribute('aria-activedescendant', opts[nx].id); opts[nx].scrollIntoView({block:'nearest'});
   } else if (e.key==='Enter'){ const o = opts[cur>=0?cur:0]; if (o){ e.preventDefault(); choose(inp, o.textContent); } }
-  else if (e.key==='Escape'){ closeSugg(inp); const c = cars[+inp.dataset.pick]; if (c) inp.value = c.name; inp.select(); }
+  else if (e.key==='Escape'){ closeSugg(inp); const c = cars[+inp.dataset.pick]; if (c) inp.value = pickText(c); inp.select(); }
 });
 // Hakukenttä näyttää auton nimen. Kohdistettaessa teksti valitaan, jotta haun voi kirjoittaa suoraan päälle;
 // jos mallia ei valita, kenttään palaa auton nimi.
@@ -1209,8 +1221,26 @@ $('cars').addEventListener('focusin', e => { const inp = e.target; // puhelimess
 $('cars').addEventListener('focusout', e => {
   const inp = e.target; if (!inp.dataset || inp.dataset.pick===undefined) return;
   setTimeout(() => { if (document.activeElement===inp) return; closeSugg(inp);
-    const c = cars[+inp.dataset.pick]; if (c && inp.isConnected) inp.value = c.name; }, 150);
+    const c = cars[+inp.dataset.pick]; if (c && inp.isConnected) inp.value = pickText(c); }, 150);
 });
+// Vapaa nimi: kynäpainike avaa nimen muokkauksen; Enter tai poistuminen tallentaa, Escape peruu.
+// Tyhjä nimi palauttaa mallin nimen.
+function endRename(save){
+  const i = renaming; if (i < 0) return;
+  const el = $('name'+i), c = cars[i]; renaming = -1;
+  if (save && el && c){ const v = el.value.trim();
+    if (v && v !== modelName(c)){ c.name = v; c.ownName = true; }
+    else { c.ownName = false; if (c.picked) c.name = modelName(c); }
+    c.exKey = null; c.exAuto = false; }
+  renderCars(); update(); const r = $('cars').querySelector(`[data-ren="${i}"]`); if (r) r.focus();
+}
+$('cars').addEventListener('click', e => {
+  const r = e.target.closest('[data-ren]'); if (!r) return;
+  renaming = +r.dataset.ren; renderCars(); const el = $('name'+renaming); if (el){ el.focus(); el.select(); }
+});
+$('cars').addEventListener('keydown', e => { if (e.target.dataset.name===undefined) return;
+  if (e.key==='Enter'){ e.preventDefault(); endRename(true); } else if (e.key==='Escape'){ e.preventDefault(); endRename(false); } });
+$('cars').addEventListener('focusout', e => { if (e.target.dataset.name!==undefined && renaming>=0) setTimeout(() => endRename(true), 0); });
 $('cars').addEventListener('click', e => {
   const b = e.target.closest('[data-del]'); if (!b) return;
   const k = +b.dataset.del; cars.splice(k,1);
@@ -1668,6 +1698,7 @@ function carFromShare(tok, i, ver){
   if ((ver||0) < 8 && 'other' in f && !('traf' in f)){ f.traf = 0; f.kasko = 0; }
   Object.entries(f).forEach(([key,v]) => { if (key!=='age') c[key] = v; });
   if (parts.includes('U')) c.autoFuel = false;
+  if ('name' in f && c.picked && f.name !== modelName(c)) c.ownName = true;
   ['price','age','odo'].forEach(k => { if (k in f) c.own = {...(c.own||{}), [k]:true}; }); // linkissä muutettu = oma arvo, ei arvio
   if ('price' in f) c.priceAuto = false;
   return c;

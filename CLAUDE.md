@@ -151,8 +151,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   c.batt / battRef(c), where battRef = kWh in the model name (LEAF 40KWH); the register has no battery size, so for other
   models the field only affects production emissions, and the unit text says so.
 - Car card head: one field for name and model (`#pick<i>`, value = c.name). Focus selects the text (setTimeout for touch),
-  typing searches, picking a model renames the car; leaving without a pick (blur, Escape) restores c.name. There is no
-  free-text name field any more (old saves and links with custom names still show them).
+  typing searches, picking a model renames the car; leaving without a pick (blur, Escape) restores pickText(c).
+  Free name: the pencil button (`data-ren`, `renaming`) edits c.name and sets c.ownName; the head then shows the name and
+  the search field the model (pickText). An empty name returns to the model name. A share-link N token that differs
+  from the model name restores ownName. newCar() keeps own/priceAuto/ownName/mine from saves.
 - Estimates vs typed values: isEst(c,k) marks price/age/odo filled by the calculator (model pick or example car) with class
   `est` (dashed border + 'arvio' chip, explained in req_hint); typing sets c.own[k] and removes it. Share-link tokens P/A/O
   count as own values. The model search hint (`pickh0`) is shown on the first card only.
