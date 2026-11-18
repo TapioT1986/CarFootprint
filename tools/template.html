@@ -481,7 +481,9 @@ fi: {
     'Väli ei ole ennuste: tulevat hinnat voivat olla myös sen ulkopuolella.',
     'Muiden kulujen (arvonalenema, korot, huolto, vakuutus) vaihtelua väli ei sisällä, koska niille ei ole vielä avointa ja perusteltua lähdettä. Niiden vaikutusta kuvaa yllä oleva rivi "Kuinka varma järjestys on?".',
     'Päästöihin vaihteluväli ei vaikuta.'],
-  evr_batt:'Käytetyn sähköauton akku on voinut heiketä: toimintasäde voi olla uutena ilmoitettua lyhyempi, ja akun kunto vaikuttaa myös jälleenmyyntiarvoon. Pyydä akun kuntoraportti (SOH) ennen ostoa.',
+  evr_batt:'Akun kunto on arvio, ellet kirjoita sitä: pyydä myyjältä akun kuntoraportti (SOH) ennen ostoa. Akun kunto vaikuttaa myös jälleenmyyntiarvoon.',
+  evr_soh:(w,s,k,m,c)=>`<b>Toimintasäde sähköllä:</b> uutena WLTP ${w} km · akun kunnolla ${s} % noin ${k} km · lauha talvi noin ${m} km · kova pakkanen noin ${c} km`,
+  soh_l:'Akun kunto (SOH)', soh_u:'% uuden akun kapasiteetista; tyhjä = arvio iän mukaan',
   evr_old:' Luvut ovat Suomessa vuosina 2020–2025 uutena rekisteröityjen saman mallin autojen virallisia arvoja; vanhemmissa mallivuosissa toimintasäde on usein lyhyempi.',
   evr:(w,m,c)=>`<b>Toimintasäde sähköllä:</b> WLTP ${w} km · lauha talvi noin ${m} km · kova pakkanen noin ${c} km`,
   en_km:(v)=>`ajon energia ${v} €/km`, sumd:'Lisätietoja',
@@ -551,7 +553,7 @@ fi: {
 <li><b>Katsastus ja elinikä</b> (tietoa autokortilla, ei vaikuta laskelmaan) tulevat <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficomin katsastuksen vikatilastoista</a> (määräaikaiskatsastukset 2017–2025, avoin data CC BY 4.0). Traficom tilastoi mallisarjoittain, eli kaikki saman mallin käyttövoimat ja sukupolvet ovat yhdessä. Hylkäysprosentti on uusimmalta vuodelta auton ostoiän mukaan, tai lähimmältä iältä, josta on vähintään 50 katsastusta. Viat ovat hylkäykseen johtaneiden vikojen osuudet kaikista ikäluokista. Elinikä lasketaan katsastusmääristä: 10 vuoden iästä alkaen autot katsastetaan joka vuosi, joten saman vuoden autojen katsastusmäärä kertoo, montako on vielä liikenteessä. Ennen 10 vuoden ikää poistuneet autot (kolarit, vienti) eivät näy luvussa. Käytettynä tuodut autot kasvattavat lukuja, ja jos katsastusmäärät kasvavat iän mukana, elinikää ei arvioida. Kun yli puolet on vielä liikenteessä 20-vuotiaana, ikä, jossa puolet on poistunut, on arvio: vuosittainen poistumaosuus jatketaan suorana viivana iän 10–19 havainnoista. Kenttä Käyttöikä (päästöjen jakaminen) on edelleen oletus 18–20 vuotta.</li>
 <li><b>Valmistuspäästöt</b> ovat <a href="https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/" target="_blank" rel="noopener">ICCT:n</a> EU:n elinkaaritutkimuksesta (2025) keskikokoiselle autolle, kuten Golfille. Auton valmistus ja kierrätys ilman akkua: bensiini-, diesel- ja hybridiauto 8,2 t, lataushybridi 8,6 t ja sähköauto 7,5 t CO₂e. Akun valmistus on 72,8 kg CO₂e/kWh, kun painotetaan solujen valmistusmaita (30 % Eurooppa, 56 % Kiina). Oletusakku on EU:ssa 2023 myytyjen keskikokoisten autojen keskiarvo: sähköauto 53,4 kWh (3,9 t), lataushybridi 13,3 kWh (1,0 t). Akun koon voi vaihtaa oman auton mukaiseksi kohdassa Lisää oletuksia. Pienen auton valmistus tuottaa vähemmän ja ison enemmän päästöjä. Valmistuspäästöt jaetaan auton koko käyttöiälle. ICCT:n mukaan akut kestävät yleensä auton käyttöiän: alle 1 %:ssa vuoden 2016 jälkeen myydyistä sähköautoista akku on vaihdettu (Recurrent, 20 000 autoa; <a href="https://www.energy.gov/cmei/vehicles/articles/fotw-1339-april-22-2024-plug-electric-vehicle-battery-replacements-due" target="_blank" rel="noopener">Yhdysvaltain energiaministeriön mukaan</a> vuosimallien 2016–2023 vaihdot vikojen vuoksi selvästi alle 1 %).</li>
 <li><b>Jaa vertailu</b> tekee lyhyen linkin, jossa on vain valitut mallit ja muutetut luvut; kaikki muu lasketaan avattaessa uudelleen. Tiedot ovat linkin #-merkin jälkeisessä osassa, jota selain ei lähetä palvelimelle, eikä sivu kerää mitään tietoa. Linkkiin tallentuvat vain muutetut asetukset, joten avaaja näkee ajantasaiset polttoaineen ja sähkön hinnat, ellet ole muuttanut niitä. Jaetun linkin avaaminen ei hävitä avaajan omia autoja: ne voi palauttaa.</li>
-<li><b>Toimintasäde sähköllä</b> näkyy rekisteristä valituille sähköautoille ja lataushybrideille: virallinen WLTP-toimintasäde on Suomessa 2025 rekisteröityjen saman mallin autojen mediaani, tai uutena enää myymättömille malleille vuosina 2020–2024 rekisteröityjen (lopulliset tiedot) (<a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA:n rekisteri</a>). Talven luvut ovat arvioita Norjan autoliiton El Prix -talvitesteistä: lauhassa talvessa (−6…+8 °C, 2025) autot jäivät keskimäärin 18 % ja kovassa pakkasessa (−7…−32 °C, 2026) 38 % alle WLTP-toimintasäteen (<a href="https://www.naf.no/elbil/elprix-nytt/elprix-vinter-2026-rekkeviddetest" target="_blank" rel="noopener">NAF</a>). Testit ajettiin sähköautoilla; lataushybridille sama suhde on oletus. Luvut ovat vuoden 2025 malleista, joten vanhemmissa mallivuosissa toimintasäde on usein lyhyempi; malleille, joita ei enää myyty uutena 2025 (esim. Nissan Leaf, Renault Zoe), lukua ei näytetä. Yksittäinen auto voi poiketa paljonkin, ja akun kuluminen lyhentää vanhemman auton toimintasädettä.</li>
+<li><b>Toimintasäde sähköllä</b> näkyy rekisteristä valituille sähköautoille ja lataushybrideille: virallinen WLTP-toimintasäde on Suomessa 2025 rekisteröityjen saman mallin autojen mediaani, tai uutena enää myymättömille malleille vuosina 2020–2024 rekisteröityjen (lopulliset tiedot) (<a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA:n rekisteri</a>). Talven luvut ovat arvioita Norjan autoliiton El Prix -talvitesteistä: lauhassa talvessa (−6…+8 °C, 2025) autot jäivät keskimäärin 18 % ja kovassa pakkasessa (−7…−32 °C, 2026) 38 % alle WLTP-toimintasäteen (<a href="https://www.naf.no/elbil/elprix-nytt/elprix-vinter-2026-rekkeviddetest" target="_blank" rel="noopener">NAF</a>). Testit ajettiin sähköautoilla; lataushybridille sama suhde on oletus. Vanhemmissa mallivuosissa toimintasäde on usein lyhyempi kuin rekisterin luku. Yksittäinen auto voi poiketa paljonkin. <b>Akun kunto</b> (SOH) lyhentää sähköauton toimintasädettä samassa suhteessa. Jos et kirjoita sitä, se arvioidaan auton iästä: 2,3 % vuodessa, mikä on keskimääräinen kapasiteetin lasku 22 700 sähköauton aineistossa (<a href="https://www.geotab.com/blog/ev-battery-health/" target="_blank" rel="noopener">Geotab 28.4.2026</a>; aiemmassa tutkimuksessa 1,8 %/v, ja runsaasti pikalatatuilla autoilla 3,0 %/v). Oletus on näistä epäedullisempi keskiarvo. Yksittäisen auton akku voi olla selvästi paremmassa tai huonommassa kunnossa, joten pyydä kuntoraportti.</li>
 <li><b>€/km tuloskortissa on ajon energia:</b> polttoaine tai sähkö kilometriä kohden (kulutus × hinta), eli se, mitä ajaminen itse maksaa. Kaikki kulut kilometriä kohden (vuosikulu jaettuna ajomäärällä) löytyy kortin kohdasta Lisätietoja. Huollon kasvun ja arvon kilometrikohtaisen laskun lisääminen ajon hintaan odottaa parempia lähteitä.</li>
 <li><b>Lataushäviö:</b> WLTP-testissä sähkönkulutus mitataan pistorasiasta, joten latauksen tavanomaiset häviöt ovat jo virallisissa luvuissa. Oletuksena lisätään silti 10 %, koska moni lataa kotona tavallisesta pistorasiasta, jossa häviö on suurempi: <a href="https://www.adac.de/rund-ums-fahrzeug/elektromobilitaet/laden/ladeverluste-elektroauto-studie/" target="_blank" rel="noopener">ADAC:n mittauksessa</a> (8/2026, viisi autoa) häviöt olivat pistorasiasta (2,3 kW) noin 15 % ja yhdellä autolla 24 %, latausasemalla (11–22 kW) alle 7 %. Jos lataat latausasemalla, aseta lisähäviöksi 0.</li>
 <li><b>Mallin valinta</b> täyttää ostohinnan, iän ja mittarilukeman, ellet ole kirjoittanut niitä itse: ikä on nuorin mallivuosi, jonka arvioitu hinta mahtuu enimmäishintaan, hinta on mallin arvo uutena (Verohallinnon verotusarvoista, sama menetelmä kuin esimerkkiautoissa, vähintään 5 päätöstä) kerrottuna arvonaleneman kertoimella, ja mittarilukema on ikä kertaa mallin mediaaniajomäärä Traficomin rekisterissä. Arvio on suuntaa-antava: vaihda oikea hinta, kun tiedät sen. Noin 80 %:lle malleista on arvio.</li>
@@ -625,7 +627,9 @@ en: {
     'The range is not a forecast: future prices may also fall outside it.',
     'It does not include swings in other costs (depreciation, interest, servicing, insurance), because there is no open, well-founded source for them yet. The line "How firm is the ranking?" above shows their effect.',
     'The range does not affect emissions.'],
-  evr_batt:'The battery of a used electric car may have degraded: the range can be shorter than when new, and the condition of the battery also affects the resale value. Ask for a battery health report (SOH) before buying.',
+  evr_batt:'The battery health is an estimate unless you enter it: ask the seller for a battery health report (SOH) before buying. Battery health also affects the resale value.',
+  evr_soh:(w,s,k,m,c)=>`<b>Electric range:</b> new WLTP ${w} km · at ${s}% battery health about ${k} km · mild winter about ${m} km · hard frost about ${c} km`,
+  soh_l:'Battery health (SOH)', soh_u:'% of the new battery capacity; empty = estimate by age',
   evr_old:' The figures are official values of the same model registered new in Finland in 2020–2025; older model years often have a shorter range.',
   evr:(w,m,c)=>`<b>Electric range:</b> WLTP ${w} km · mild winter about ${m} km · hard frost about ${c} km`,
   en_km:(v)=>`driving energy €${v}/km`, sumd:'More details',
@@ -696,7 +700,7 @@ en: {
 <li><b>Inspections and lifetime</b> (information on the car card, not used in the calculation) come from <a href="https://trafi2.stat.fi/PXWeb/pxweb/fi/TraFi/TraFi__Katsastuksen_vikatilastot/" target="_blank" rel="noopener">Traficom's periodic inspection statistics</a> (inspections 2017–2025, open data CC BY 4.0). Traficom groups cars by model series, so all powertrains and generations of a model are together. The failure rate is for the latest year at the car's age at purchase, or the nearest age with at least 50 inspections. The faults are shares of the faults that caused a failure, all ages together. Lifetime is worked out from inspection counts: from 10 years on, cars are inspected every year, so the count for one model year shows how many are still on the road. Cars that left the road before 10 years (crashes, exports) do not show in the figure. Cars imported used raise the counts, and if the counts rise with age, no lifetime is estimated. When more than half are still on the road at 20, the age at which half have left is an estimate: the yearly drop-out rate is continued as a straight line from ages 10–19. The Lifetime field (spreading manufacturing emissions) is still the 18–20-year assumption.</li>
 <li><b>Manufacturing emissions</b> come from the <a href="https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/" target="_blank" rel="noopener">ICCT</a> EU life-cycle study (2025) for a medium-size car such as the Golf. Making and recycling the car without its battery: petrol, diesel and hybrid cars 8.2 t, plug-in hybrids 8.6 t and electric cars 7.5 t CO₂e. Battery production is 72.8 kg CO₂e per kWh, weighted by where the cells are made (30% Europe, 56% China). The default battery is the average of medium-size cars sold in the EU in 2023: 53.4 kWh for electric cars (3.9 t) and 13.3 kWh for plug-in hybrids (1.0 t). You can set your own car's battery size under More assumptions. A small car takes less to make and a large one more. Manufacturing emissions are spread over the car's whole lifetime. According to the ICCT, batteries usually outlast the car: fewer than 1% of electric cars sold after 2016 have had their battery replaced (Recurrent, 20,000 cars; <a href="https://www.energy.gov/cmei/vehicles/articles/fotw-1339-april-22-2024-plug-electric-vehicle-battery-replacements-due" target="_blank" rel="noopener">the US Department of Energy</a> puts replacements due to failure in model years 2016–2023 well under 1%).</li>
 <li><b>Share comparison</b> makes a short link holding only the chosen models and the numbers you changed; everything else is recalculated when it opens. The data sits after the # sign, which browsers never send to the server, and the page collects nothing. Only settings you changed go into the link, so whoever opens it sees current fuel and electricity prices unless you changed them. Opening a shared link does not lose the opener's own cars: they can be restored.</li>
-<li><b>Electric range</b> is shown for electric and plug-in hybrid cars picked from the register: the official WLTP range is the median of the same model registered in Finland in 2025, or for models no longer sold new, in 2020–2024 (final data) (<a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA register</a>). The winter figures are estimates from the Norwegian Automobile Federation's El Prix winter tests: in a mild winter (−6…+8 °C, 2025) cars fell on average 18% and in hard frost (−7…−32 °C, 2026) 38% short of their WLTP range (<a href="https://www.naf.no/elbil/elprix-nytt/elprix-vinter-2026-rekkeviddetest" target="_blank" rel="noopener">NAF</a>). The tests used electric cars; applying the same ratio to plug-in hybrids is an assumption. The figures are for 2025 models, so older model years often have a shorter range; models no longer sold new in 2025 (e.g. Nissan Leaf, Renault Zoe) get no figure. Individual cars can differ a lot, and battery wear shortens an older car's range.</li>
+<li><b>Electric range</b> is shown for electric and plug-in hybrid cars picked from the register: the official WLTP range is the median of the same model registered in Finland in 2025, or for models no longer sold new, in 2020–2024 (final data) (<a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA register</a>). The winter figures are estimates from the Norwegian Automobile Federation's El Prix winter tests: in a mild winter (−6…+8 °C, 2025) cars fell on average 18% and in hard frost (−7…−32 °C, 2026) 38% short of their WLTP range (<a href="https://www.naf.no/elbil/elprix-nytt/elprix-vinter-2026-rekkeviddetest" target="_blank" rel="noopener">NAF</a>). The tests used electric cars; applying the same ratio to plug-in hybrids is an assumption. Older model years often have a shorter range than the register figure. Individual cars can differ a lot. <b>Battery health</b> (SOH) shortens an electric car's range in the same proportion. If you leave it empty, it is estimated from the car's age: 2.3% per year, the average capacity loss in data on 22,700 electric cars (<a href="https://www.geotab.com/blog/ev-battery-health/" target="_blank" rel="noopener">Geotab, 28 April 2026</a>; an earlier study found 1.8% per year, and heavily fast-charged cars 3.0% per year). The default is the less favourable average. A single car's battery can be clearly better or worse, so ask for a health report.</li>
 <li><b>€/km on the result card is the driving energy:</b> fuel or electricity per kilometre (consumption × price), i.e. what driving itself costs. All costs per kilometre (yearly cost divided by mileage) are under More details on the card. Adding the rise in servicing and the mileage-related loss of value to the driving cost waits for better sources.</li>
 <li><b>Charging losses:</b> in the WLTP test, electricity consumption is measured at the socket, so normal charging losses are already in the official figures. The default still adds 10%, because many people charge at home from an ordinary socket, where losses are higher: in <a href="https://www.adac.de/rund-ums-fahrzeug/elektromobilitaet/laden/ladeverluste-elektroauto-studie/" target="_blank" rel="noopener">ADAC's measurements</a> (8/2026, five cars) losses from a household socket (2.3 kW) were about 15%, and 24% for one car, and below 7% from a wallbox (11–22 kW). If you charge from a wallbox, set the extra loss to 0.</li>
 <li><b>Picking a model</b> fills in the purchase price, age and odometer unless you typed them yourself: the age is the youngest model year whose estimated price fits the maximum price, the price is the model's value when new (from Tax Administration taxation values, the same method as for the example cars, at least 5 decisions) times the depreciation factor, and the odometer is age times the model's median annual mileage in Traficom's register. The estimate is indicative: change it to the real price when you know it. About 80% of models have an estimate.</li>
@@ -782,6 +786,11 @@ const OLD_TAX = {B:200, D:600, H:160, P:180, E:300};
 const BATT_T_PER_KWH = 0.0728;
 const OLD_MAKE = {B:7, D:8, H:8, P:10, E:12}; // ennen EX_VERSION 7 (akku sisältyi)
 // Akun koko mallin nimestä, jos se on siinä (esim. "LEAF 40KWH", "BORN 58/62 KWH" -> 62)
+// Akun kunto (SOH, % uuden akun kapasiteetista): tyhjä = arvio iän mukaan, 2,3 %/v (Geotab 28.4.2026, 22 700 sähköautoa;
+// aiempi tutkimus 1,8 %/v, valitaan epäedullisempi). Vaikuttaa vain toimintasäteeseen.
+const SOH_RATE = 2.3;
+const sohAuto = c => Math.max(50, Math.round(100 - SOH_RATE*Math.max(0, c.age||0)));
+const sohOf = c => { const v = num(c.soh, NaN); return isFinite(v) ? v : sohAuto(c); };
 const battFromName = r => { const m = /(\d+(?:[.,]\d+)?)\s*KWH/i.exec(r[1]); return m ? num(m[1]) : null; };
 const battT = c => (c.pt==='E'||c.pt==='P') ? Math.max(0, num(c.batt,0))*BATT_T_PER_KWH : 0;
 // Huollon ja korjausten kasvu mittarilukeman mukaan: Consumer Reports 2020 (USA),
@@ -878,10 +887,10 @@ const num = (v,def=0) => { const x = parseFloat(String(v).replace(',','.')); ret
 // eikä sitä käytetä laskennassa (laskenta käyttää edellistä kelvollista arvoa). Avain = auton kenttä (data-k) tai id.
 const LIM = {price:[0,1e6], age:[0,60], odo:[0,2e6], dep:[0,100], fuel:[0.5,50], kwh:[5,60], share:[0,100],
   traf:[0,5000], kasko:[0,10000], other:[0,20000], serv:[0,20000], tax:[0,10000], real:[0.5,3], make:[0,100],
-  batt:[0,300], life:[1,60], mass:[500,5000],
+  batt:[0,300], soh:[30,100], life:[1,60], mass:[500,5000],
   km:[2000,50000], years:[1,20], budget:[0,1e6], monthly:[0,1e5], own:[0,1e6], loanRate:[0,40], loanFee:[0,100],
   loanYears:[1,10], ownRate:[0,20], pBens:[0,10], pDies:[0,10], pEl:[0,2], loss:[0,100], eBens:[0,10], eDies:[0,10]};
-const LIM_OPT = new Set(['dep','tax','monthly']); // tyhjä = automaattinen tai ei käytössä
+const LIM_OPT = new Set(['dep','tax','soh','monthly']); // tyhjä = automaattinen tai ei käytössä
 function fieldOk(el){
   const key = el.dataset.k || el.id, lim = LIM[key], t = String(el.value).trim();
   if (t==='') return LIM_OPT.has(key) || !lim;
@@ -930,7 +939,7 @@ function newCar(o={}){
   const pt = o.pt || (o.pick && o.pick[2]) || 'B', d = PT_DEF[pt];
   const c = {name:o.name||T('new_car'), exKey:null, ex:o.ex??null, exAuto:o.exAuto??false, pt, price:o.price??20000, age:o.age??0, odo:o.odo??0, dep:o.dep??'',
     fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??d.tyre, traf:o.traf??d.traf, kasko:o.kasko??d.kasko, serv:o.serv??d.serv, tax:o.tax??'', mass:o.mass??d.mass,
-    make:o.make??d.make, batt:o.batt??d.batt, life:o.life??d.life, real:o.real??d.real, rw:o.rw??null};
+    make:o.make??d.make, batt:o.batt??d.batt, soh:o.soh??'', life:o.life??d.life, real:o.real??d.real, rw:o.rw??null};
   c.std = o.std ?? null; c.autoFuel = o.autoFuel ?? (o.fuel===undefined);
   if (o.pick){ const r = findRow(o.pick); if (r){ c.picked = r; fromRow(c, r); if (o.batt===undefined) c.batt = battFromName(r) ?? c.batt; } }
   else if (o.brand) applyRW(c, o.brand, o.kwhReg);
@@ -1089,6 +1098,7 @@ function carCard(c,i){
       <div class="field${est('age')}"><label class="label" for="age${i}">${T('age_l')}${estb}</label><input type="number" id="age${i}" data-k="age" min="0" step="1" value="${c.age}"><span class="unit">${T('age_u')}</span></div>
       <div class="field${est('odo')}"><label class="label" for="odo${i}">${T('odo_l')}${estb}</label><input type="number" id="odo${i}" data-k="odo" step="1000" value="${c.odo}"><span class="unit">${T('odo_u')}</span></div>
     </div>
+    ${c.pt==='E'?`<div class="fields"><div class="field${c.soh===''?' est':''}"><label class="label" for="soh${i}">${T('soh_l')}<span class="estb">${T('est')}</span></label><input type="number" id="soh${i}" data-k="soh" step="1" min="30" max="100" value="${c.soh}" placeholder="${sohAuto(c)}"><span class="unit">${T('soh_u')}</span></div></div>`:''}
     <span class="q" id="q${i}"></span>
     <span class="evr" id="evr${i}"></span>
     <details class="carmore" id="cm${i}"${carOpen.has(i)?' open':''}><summary>${T('car_more')}<span class="cc" id="cc${i}"></span></summary>
@@ -1147,7 +1157,8 @@ $('cars').addEventListener('input', e => {
   const k = el.dataset.k; if (!k) return;
   if (k==='name'){ c.name = el.value; c.exKey = null; }
   else if (k==='pt'){ const d=PT_DEF[el.value]; Object.assign(c,{pt:el.value,mass:PT_DEF[el.value].mass,fuel:(el.value==='P'||!c.fuel)?d.fuel:c.fuel,kwh:c.kwh||d.kwh,share:d.share,make:d.make,batt:d.batt,real:d.real,rw:null,picked:null,autoFuel:true}); refreshStd(c); renderCars(); }
-  else if (k==='dep'||k==='tax') c[k] = el.value;
+  else if (k==='dep'||k==='tax'||k==='soh'){ c[k] = el.value;
+    if (k==='soh') el.closest('.field').classList.toggle('est', el.value===''); }
   else {
     c[k] = num(el.value);
     if (k==='price'||k==='age'||k==='odo'){ c.own = {...(c.own||{}), [k]:true}; if (k==='price') c.priceAuto = false;
@@ -1369,12 +1380,14 @@ function rangeInfo(G){
 const NAF_WINTER = {mild:0.18, cold:0.38}; // keskimääräinen vajaus WLTP:stä: 2025 −6…+8 °C, 2026 −7…−32 °C
 function evRangeText(c){
   // käytetyn sähköauton akkuhuomautus näkyy kortissa (ei vain Tarkenna-osiossa)
-  const batt = c.pt==='E' && (c.age||0) >= 3 ? `<span class="evb">${T('evr_batt')}</span>` : '';
+  const batt = c.pt==='E' && c.soh==='' && (c.age||0) >= 1 ? `<span class="evb">${T('evr_batt')}</span>` : '';
   if (!c.picked || !(c.pt==='E' || c.pt==='P') || typeof EVR === 'undefined') return batt;
   const k = EVR[CATALOG.indexOf(c.picked)];
   if (!k) return batt;
   const r10 = x => fmt(Math.round(x/10)*10);
-  return T('evr')(fmt(k), r10(k*(1-NAF_WINTER.mild)), r10(k*(1-NAF_WINTER.cold))) + (regYear(c) < 2024 ? T('evr_old') : '') + batt;
+  if (c.pt!=='E') return T('evr')(fmt(k), r10(k*(1-NAF_WINTER.mild)), r10(k*(1-NAF_WINTER.cold))) + (regYear(c) < 2024 ? T('evr_old') : '') + batt;
+  const soh = sohOf(c), km = k*soh/100; // akun kunto lyhentää toimintasädettä samassa suhteessa
+  return T('evr_soh')(fmt(k), fmt(soh), r10(km), r10(km*(1-NAF_WINTER.mild)), r10(km*(1-NAF_WINTER.cold))) + (regYear(c) < 2024 ? T('evr_old') : '') + batt;
 }
 
 // --- kääntöpisteet: lähin arvo, jolla halvin auto vaihtuu, kun yhtä asiaa muutetaan kerrallaan ---
@@ -1465,7 +1478,8 @@ function update(){
   cars.forEach((c,i)=>{ const e=$('cc'+i); if(!e) return; const n = carChanged(c,i); e.textContent = n ? T('more_n')(n) : ''; });
   cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];
     t.textContent = T('tag')(fmt(r.rate*100,0), fmt(r.endAge), fmt(r.endOdo), fmt(r.resid)) + (r.loan>0?T('loan_tag')(fmt(r.loan), fmt(r.pay)):'') + T('make_tag')(fmt(r.makeT,1), battT(c)) + T('serv_tag')(fmt(r.serv), fmt(r.servF,1)) + (r.autoTax?T('tax_tag')(fmt(r.tax), fmt(r.vt.base), fmt(r.vt.prop)):'') + T('ins_tag')(fmt(num(c.traf,0)), fmt(num(c.kasko,0))) + (c.picked?T('reg')(fmt(c.picked[4]), c.picked[5]):'') + rwText(c);
-    const tx=$('tax'+i); if (tx) tx.placeholder = fmt(r.vt.total); });
+    const tx=$('tax'+i); if (tx) tx.placeholder = fmt(r.vt.total);
+    const sh=$('soh'+i); if (sh) sh.placeholder = sohAuto(c); });
   const rows = cars.map((c,i)=>({name:c.name,color:COLORS[i],...R[i]}));
   hbars($('costChart'), rows.map(r=>({...r,en:r.energy,oth:r.other})), ['dep','cap','en','oth'], '€/'+yr);
   hbars($('emChart'), rows, ['drive','make'], 'kg CO₂e/'+yr);
@@ -1611,9 +1625,9 @@ else cars = examples();
 //   xB/xE/xH  muokattu esimerkkiauto, pB3k7  rekisteristä valittu malli (rivi + tarkiste), nB  oma auto
 //  Johdettuja kenttiä (todellinen kulutus, NEDC-tiedot, lähdeselitteet) ei tallenneta: ne lasketaan uudelleen.
 // Vanhat linkit 'z' (pakattu JSON) ja 'j' (JSON) avautuvat edelleen.
-const SHARE_KEYS = ['name','pt','price','age','odo','dep','fuel','kwh','share','other','traf','kasko','serv','tax','mass','make','batt','life','real','autoFuel','std','rw'];
-const SHARE_F = {N:'name',P:'price',A:'age',O:'odo',D:'dep',K:'kwh',S:'share',X:'other',Y:'traf',Z:'kasko',V:'serv',T:'tax',M:'mass',W:'make',B:'batt',L:'life',F:'fuel',R:'real'};
-const SHARE_STR = ['name','dep','tax'];
+const SHARE_KEYS = ['name','pt','price','age','odo','dep','fuel','kwh','share','other','traf','kasko','serv','tax','mass','make','batt','soh','life','real','autoFuel','std','rw'];
+const SHARE_F = {N:'name',P:'price',A:'age',O:'odo',D:'dep',K:'kwh',S:'share',X:'other',Y:'traf',Z:'kasko',V:'serv',T:'tax',M:'mass',W:'make',B:'batt',H:'soh',L:'life',F:'fuel',R:'real'};
+const SHARE_STR = ['name','dep','tax','soh'];
 const escS = t => encodeURIComponent(t).replace(/[!'()*_~]/g, ch => '%'+ch.charCodeAt(0).toString(16).toUpperCase()).replace(/\.$/,'%2E');
 const decS = t => { try { return decodeURIComponent(t); } catch(e){ return t; } };
 const numS = v => String(+(+v).toFixed(4));

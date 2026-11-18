@@ -144,6 +144,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   loan payment incl. fees + (energy + other)/12 while the loan runs (r.cash; r.cashAfter after a shorter loan);
   depreciation and return on own money are not cash. Always shown; below them the cash-purchase sum (loan 0) or own money
   + loan. Monthly budget (optional, field `monthly`) only adds the over-budget flag.
+- Battery health (car field `soh`, share letter H, string like dep/tax: '' = estimate): electric cars only, visible on the
+  card. sohAuto = 100 - 2.3 x age (Geotab 28.4.2026, 22,700 EVs; earlier study 1.8 %/yr, pessimistic choice), floor 50.
+  Range = WLTP x SOH, winter factors on top. Information only, not in the costs.
 - Car card head: one field for name and model (`#pick<i>`, value = c.name). Focus selects the text (setTimeout for touch),
   typing searches, picking a model renames the car; leaving without a pick (blur, Escape) restores c.name. There is no
   free-text name field any more (old saves and links with custom names still show them).
