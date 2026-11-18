@@ -111,8 +111,10 @@ details.adv .fields{margin-top:10px}
 /* autot */
 .cars{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
 .car{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0;border-top:4px solid var(--cc)}
-.car .head{display:flex;align-items:center;gap:8px}
-.car .head input{font-weight:600}
+.car .head{display:flex;align-items:center;gap:8px;min-height:44px}
+.car .head .label{flex:1;margin:0}
+.pickwrap input{font-weight:600}
+.pickwrap input::placeholder{font-weight:400}
 .car .x{border:0;background:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px}
 .car .x:hover{color:var(--ink);background:var(--input)}
 .car .fields{gap:9px}
@@ -1076,11 +1078,10 @@ function carCard(c,i){
   const est = k => isEst(c,k) ? ' est' : '', estb = `<span class="estb">${T('est')}</span>`;
   const showFuel = c.pt!=='E', showEl = c.pt==='E'||c.pt==='P';
   return `<div class="car" style="--cc:${COLORS[i]}" data-i="${i}">
-    <div class="head"><span class="dot" style="--cc:${COLORS[i]}"></span>
-      <input aria-label="${T('car_name')}" id="name${i}" data-k="name" value="${c.name.replace(/"/g,'&quot;')}">
+    <div class="head"><span class="dot" style="--cc:${COLORS[i]}"></span><label class="label" for="pick${i}">${T('pick_l')}</label>
       ${cars.length>1?`<button class="x" type="button" data-del="${i}" aria-label="${T('del')}">×</button>`:''}</div>
-    <div class="field pickwrap req"><label class="label" for="pick${i}">${T('pick_l')}</label>
-      <input id="pick${i}" data-pick="${i}" placeholder="${T('pick_ph')}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sg${i}"${i===0?' aria-describedby="pickh0"':''}>
+    <div class="field pickwrap req">
+      <input id="pick${i}" data-pick="${i}" value="${esc(c.name)}" placeholder="${T('pick_ph')}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sg${i}"${i===0?' aria-describedby="pickh0"':''}>
       <div class="sugg" id="sg${i}" role="listbox" aria-label="${T('pick_l')}" hidden></div>
       ${i===0?`<span class="hint" id="pickh${i}">${T('pick_hint')}</span>`:''}</div>
     <div class="fields">
@@ -1182,10 +1183,16 @@ $('cars').addEventListener('keydown', e => {
     opts.forEach((o,j)=>o.setAttribute('aria-selected', String(j===nx)));
     inp.setAttribute('aria-activedescendant', opts[nx].id); opts[nx].scrollIntoView({block:'nearest'});
   } else if (e.key==='Enter'){ const o = opts[cur>=0?cur:0]; if (o){ e.preventDefault(); choose(inp, o.textContent); } }
-  else if (e.key==='Escape') closeSugg(inp);
+  else if (e.key==='Escape'){ closeSugg(inp); const c = cars[+inp.dataset.pick]; if (c) inp.value = c.name; inp.select(); }
 });
+// Hakukenttä näyttää auton nimen. Kohdistettaessa teksti valitaan, jotta haun voi kirjoittaa suoraan päälle;
+// jos mallia ei valita, kenttään palaa auton nimi.
+$('cars').addEventListener('focusin', e => { const inp = e.target; // puhelimessa kosketus siirtää kursorin valinnan jälkeen: valitse vasta sen jälkeen
+  if (inp.dataset && inp.dataset.pick!==undefined) setTimeout(() => { if (document.activeElement===inp) inp.select(); }, 0); });
 $('cars').addEventListener('focusout', e => {
-  const inp = e.target; if (inp.dataset && inp.dataset.pick!==undefined) setTimeout(() => { if (document.activeElement!==inp) closeSugg(inp); }, 150);
+  const inp = e.target; if (!inp.dataset || inp.dataset.pick===undefined) return;
+  setTimeout(() => { if (document.activeElement===inp) return; closeSugg(inp);
+    const c = cars[+inp.dataset.pick]; if (c && inp.isConnected) inp.value = c.name; }, 150);
 });
 $('cars').addEventListener('click', e => {
   const b = e.target.closest('[data-del]'); if (!b) return;

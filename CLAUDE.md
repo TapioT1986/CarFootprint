@@ -144,6 +144,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   loan payment incl. fees + (energy + other)/12 while the loan runs (r.cash; r.cashAfter after a shorter loan);
   depreciation and return on own money are not cash. Always shown; below them the cash-purchase sum (loan 0) or own money
   + loan. Monthly budget (optional, field `monthly`) only adds the over-budget flag.
+- Car card head: one field for name and model (`#pick<i>`, value = c.name). Focus selects the text (setTimeout for touch),
+  typing searches, picking a model renames the car; leaving without a pick (blur, Escape) restores c.name. There is no
+  free-text name field any more (old saves and links with custom names still show them).
 - Estimates vs typed values: isEst(c,k) marks price/age/odo filled by the calculator (model pick or example car) with class
   `est` (dashed border + 'arvio' chip, explained in req_hint); typing sets c.own[k] and removes it. Share-link tokens P/A/O
   count as own values. The model search hint (`pickh0`) is shown on the first card only.
