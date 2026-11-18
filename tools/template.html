@@ -129,6 +129,7 @@ details.adv .fields{margin-top:10px}
 .car .fields{gap:9px}
 /* Mallihaun ehdotuslista: oma lista, koska selaimen datalist näkyy osassa puhelimia läpinäkyvänä */
 .pickwrap{position:relative}
+.pickbox{position:relative} /* ehdotuslista avautuu heti kentän alle, ohjetekstin päälle */
 .sugg{position:absolute;left:0;right:0;top:100%;margin-top:4px;z-index:20;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.22);max-height:min(50vh,320px);overflow-y:auto;overscroll-behavior:contain;padding:4px}
 .sugg[hidden]{display:none}
 .sugg button{display:block;width:100%;text-align:left;padding:9px 10px;border:0;background:none;color:var(--ink);font:inherit;font-size:14px;border-radius:6px;cursor:pointer}
@@ -1146,8 +1147,8 @@ function carCard(c,i){
       ${renaming===i ? '' : `<button class="ren" type="button" data-ren="${i}" aria-label="${T('ren')}" title="${T('ren')}">✎</button>`}
       ${cars.length>1?`<button class="x" type="button" data-del="${i}" aria-label="${T('del')}">×</button>`:''}</div>
     <div class="field pickwrap req">
-      <input id="pick${i}" data-pick="${i}" value="${esc(pickText(c))}"${c.ownName?` aria-label="${T('pick_l')}"`:''} placeholder="${T('pick_ph')}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sg${i}"${i===0?' aria-describedby="pickh0"':''}>
-      <div class="sugg" id="sg${i}" role="listbox" aria-label="${T('pick_l')}" hidden></div>
+      <div class="pickbox"><input id="pick${i}" data-pick="${i}" value="${esc(pickText(c))}"${c.ownName?` aria-label="${T('pick_l')}"`:''} placeholder="${T('pick_ph')}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sg${i}"${i===0?' aria-describedby="pickh0"':''}>
+      <div class="sugg" id="sg${i}" role="listbox" aria-label="${T('pick_l')}" hidden></div></div>
       ${i===0?`<span class="hint" id="pickh${i}">${T('pick_hint')}</span>`:''}</div>
     <div class="mine"><button class="minebtn" type="button" data-mine="${i}" aria-pressed="${!!c.mine}">${c.mine ? '★ '+T('mine_on') : '☆ '+T('mine_off')}</button>
       ${c.mine?`<span class="hint">${T('mine_hint')}</span>`:''}</div>
