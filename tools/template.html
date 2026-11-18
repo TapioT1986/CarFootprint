@@ -151,6 +151,7 @@ h2.step{display:flex;align-items:center;gap:10px;font-size:22px;margin:0 0 12px}
 .q b{font-weight:600;color:var(--ink)}
 .evr:empty{display:none}
 .evr b{font-weight:600}
+.evb{display:block;margin-top:4px;padding-left:8px;border-left:3px solid var(--warn)}
 details.carmore{border-top:1px solid var(--line);padding-top:8px}
 details.carmore>summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--accent)}
 details.carmore>summary .cc{font-weight:500;color:var(--muted);margin-left:6px}
@@ -478,6 +479,7 @@ fi: {
     'Väli ei ole ennuste: tulevat hinnat voivat olla myös sen ulkopuolella.',
     'Muiden kulujen (arvonalenema, korot, huolto, vakuutus) vaihtelua väli ei sisällä, koska niille ei ole vielä avointa ja perusteltua lähdettä. Niiden vaikutusta kuvaa yllä oleva rivi "Kuinka varma järjestys on?".',
     'Päästöihin vaihteluväli ei vaikuta.'],
+  evr_batt:'Käytetyn sähköauton akku on voinut heiketä: toimintasäde voi olla uutena ilmoitettua lyhyempi, ja akun kunto vaikuttaa myös jälleenmyyntiarvoon. Pyydä akun kuntoraportti (SOH) ennen ostoa.',
   evr_old:' Luvut ovat vuoden 2025 malleista; vanhemmissa mallivuosissa toimintasäde on usein lyhyempi.',
   evr:(w,m,c)=>`<b>Toimintasäde sähköllä:</b> WLTP ${w} km · lauha talvi noin ${m} km · kova pakkanen noin ${c} km`,
   en_km:(v)=>`ajon energia ${v} €/km`, sumd:'Lisätietoja',
@@ -620,6 +622,7 @@ en: {
     'The range is not a forecast: future prices may also fall outside it.',
     'It does not include swings in other costs (depreciation, interest, servicing, insurance), because there is no open, well-founded source for them yet. The line "How firm is the ranking?" above shows their effect.',
     'The range does not affect emissions.'],
+  evr_batt:'The battery of a used electric car may have degraded: the range can be shorter than when new, and the condition of the battery also affects the resale value. Ask for a battery health report (SOH) before buying.',
   evr_old:' The figures are for 2025 models; older model years often have a shorter range.',
   evr:(w,m,c)=>`<b>Electric range:</b> WLTP ${w} km · mild winter about ${m} km · hard frost about ${c} km`,
   en_km:(v)=>`driving energy €${v}/km`, sumd:'More details',
@@ -1356,11 +1359,13 @@ function rangeInfo(G){
 // --- toimintasäde sähköllä: WLTP (EEA) ja talviarviot NAF:n El Prix -testeistä ---
 const NAF_WINTER = {mild:0.18, cold:0.38}; // keskimääräinen vajaus WLTP:stä: 2025 −6…+8 °C, 2026 −7…−32 °C
 function evRangeText(c){
-  if (!c.picked || !(c.pt==='E' || c.pt==='P') || typeof EVR === 'undefined') return '';
+  // käytetyn sähköauton akkuhuomautus näkyy kortissa (ei vain Tarkenna-osiossa)
+  const batt = c.pt==='E' && (c.age||0) >= 3 ? `<span class="evb">${T('evr_batt')}</span>` : '';
+  if (!c.picked || !(c.pt==='E' || c.pt==='P') || typeof EVR === 'undefined') return batt;
   const k = EVR[CATALOG.indexOf(c.picked)];
-  if (!k) return '';
+  if (!k) return batt;
   const r10 = x => fmt(Math.round(x/10)*10);
-  return T('evr')(fmt(k), r10(k*(1-NAF_WINTER.mild)), r10(k*(1-NAF_WINTER.cold))) + (regYear(c) < 2024 ? T('evr_old') : '');
+  return T('evr')(fmt(k), r10(k*(1-NAF_WINTER.mild)), r10(k*(1-NAF_WINTER.cold))) + (regYear(c) < 2024 ? T('evr_old') : '') + batt;
 }
 
 // --- kääntöpisteet: lähin arvo, jolla halvin auto vaihtuu, kun yhtä asiaa muutetaan kerrallaan ---
