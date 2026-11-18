@@ -176,6 +176,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Input validation: LIM (key = car field data-k or global id) gives sanity limits, LIM_OPT the fields that may be empty.
   markField() shows the error under the field (aria-invalid, `.errmsg`); an invalid car value is not stored, globals go
   through gv() (last valid value, else HTML default), and saves/links through gRaw(). New numeric fields need a LIM entry.
+- Mileage limits: typed field 1 000-300 000 km (LIM), slider to 100 000 (taxis averaged 61,725 km in 2018,
+  Statistics Finland 22.3.2019). Tipping search goes to max(100 000, 2 x km); the break-even chart's axis stretches to
+  1.2 x km above 45 000 (kmax, kstep) and its 'cheapest across' title takes the range from cross.range.
 - Annual mileage: `#km` is a number field (the saved GIDS value, any typed value; spinner step 500); `#kmSlider` (step 500,
   owner's choice: 100 was too fiddly) shows the nearest step. Shortcut chips set #km exactly (smoke check 9).
 

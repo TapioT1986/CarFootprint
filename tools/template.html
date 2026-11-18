@@ -348,8 +348,8 @@ details.info a{color:var(--accent)}
         <p class="reqhint" data-i="req_hint"></p>
         <div class="km req">
           <label class="label" id="kmLabel" for="km" data-i="km_label"></label>
-          <div class="read"><input type="number" class="odo kmin" id="km" min="2000" max="50000" step="500" value="15000" inputmode="numeric"><span class="unit" data-i="km_unit"></span></div>
-          <input type="range" id="kmSlider" min="2000" max="50000" step="500" value="15000" aria-labelledby="kmLabel">
+          <div class="read"><input type="number" class="odo kmin" id="km" min="1000" max="300000" step="500" value="15000" inputmode="numeric"><span class="unit" data-i="km_unit"></span></div>
+          <input type="range" id="kmSlider" min="1000" max="100000" step="500" value="15000" aria-labelledby="kmLabel">
           <div class="chips">
             <button class="chip" data-km="11800" type="button" data-i="chipB"></button>
             <button class="chip" data-km="14500" type="button" data-i="chipAll"></button>
@@ -537,7 +537,7 @@ fi: {
   step_cars:'Vertailtavat autot', step_res:'Tulos', car_more:'Tarkenna: käyttövoima, kulutus, kulut ja päästöt',
   drive_h:'Oma ajosi', km_label:'Vuotuinen ajomäärä', km_unit:'km / vuosi',
   chipB:'Bensa-auto 11 800', chipAll:'Kaikki 14 500', chipD:'Diesel 20 800',
-  km_hint:'Pikavalinnat ovat suomalaisten autojen toteutuneita ajomääriä (mediaani, <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficomin avoin ajoneuvodata</a> 30.6.2026).',
+  km_hint:'Liukusäädin ulottuu 100 000 km:iin; suuremman ajomäärän (enintään 300 000 km) voi kirjoittaa kenttään. Pikavalinnat ovat suomalaisten autojen toteutuneita ajomääriä (mediaani, <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficomin avoin ajoneuvodata</a> 30.6.2026).',
   years_l:'Omistusaika', years_u:'vuotta', rate_u:'% / vuosi',
   budget_l:'Enimmäishinta', budget_u:'€; esimerkkiautot valitaan tämän mukaan',
   monthly_l:'Kuukausibudjetti (valinnainen)', monthly_u:'€ / kk autoon: lainaerä, energia ja muut kulut; tyhjä = ei käytössä',
@@ -637,7 +637,7 @@ fi: {
   batt:' · Vanhan sähköauton akku on voinut heiketä: tarkista akun kunto (SOH) ennen ostoa',
   rw_ev_def:' · Sähkönkulutus on oletusarvo, mallia ei löytynyt EEA:n rekisteristä (2020–2025)',
   be_one_t:'Kustannus ajomäärän mukaan', be_one_l:'Lisää toinen auto nähdäksesi, missä kohdassa toinen tulee halvemmaksi.',
-  be_none_t:(b)=>`${b} on halvin koko välillä 2 000–50 000 km`, be_none_l:'Käyrät eivät leikkaa tällä ajomäärävälillä.',
+  be_none_t:(b,lo,hi)=>`${b} on halvin koko välillä ${lo}–${hi} km`, be_none_l:'Käyrät eivät leikkaa tällä ajomäärävälillä.',
   be_x_t:(a,b,k)=>`${a} ja ${b} maksavat saman ${k} km:n vuosiajolla`, be_x_l:'Ympyrät näyttävät leikkauspisteet. Katkoviiva on oma ajomääräsi.',
   foot:'CarFootprint on vapaata ohjelmistoa (AGPL-3.0). Lähdekoodi, data ja laskentamalli:',
   prices_src:'__PRICES_NOTE_FI__'
@@ -692,7 +692,7 @@ en: {
   step_cars:'Cars to compare', step_res:'Result', car_more:'Fine-tune: powertrain, consumption, costs and emissions',
   drive_h:'Your driving', km_label:'Annual mileage', km_unit:'km / year',
   chipB:'Petrol car 11,800', chipAll:'All cars 14,500', chipD:'Diesel 20,800',
-  km_hint:'Shortcuts are actual annual mileages of cars in Finland (median, <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficom open vehicle data</a>, 30 June 2026).',
+  km_hint:'The slider goes up to 100,000 km; a higher mileage (up to 300,000 km) can be typed in the field. Shortcuts are actual annual mileages of cars in Finland (median, <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficom open vehicle data</a>, 30 June 2026).',
   years_l:'Ownership period', years_u:'years', rate_u:'% / year',
   budget_l:'Maximum price', budget_u:'€; the example cars follow it',
   monthly_l:'Monthly budget (optional)', monthly_u:'€ / month for the car: loan payment, energy and other costs; empty = off',
@@ -793,7 +793,7 @@ en: {
   batt:' · An older electric car\'s battery may have degraded: check its state of health (SOH) before buying',
   rw_ev_def:' · Electricity consumption is a default, model not found in the EEA register (2020–2025)',
   be_one_t:'Cost by annual mileage', be_one_l:'Add a second car to see where one becomes cheaper than the other.',
-  be_none_t:(b)=>`${b} is cheapest across 2,000–50,000 km`, be_none_l:'The lines do not cross in this mileage range.',
+  be_none_t:(b,lo,hi)=>`${b} is cheapest across ${lo}–${hi} km`, be_none_l:'The lines do not cross in this mileage range.',
   be_x_t:(a,b,k)=>`${a} and ${b} cost the same at ${k} km per year`, be_x_l:'Circles mark the break-even points. The dashed line is your own mileage.',
   foot:'CarFootprint is free software (AGPL-3.0). Source code, data and calculation model:',
   prices_src:'__PRICES_NOTE_EN__'
@@ -937,7 +937,7 @@ const num = (v,def=0) => { const x = parseFloat(String(v).replace(',','.')); ret
 const LIM = {price:[0,1e6], age:[0,60], odo:[0,2e6], dep:[0,100], fuel:[0.5,50], kwh:[5,60], share:[0,100],
   traf:[0,5000], kasko:[0,10000], other:[0,20000], serv:[0,20000], tax:[0,10000], real:[0.5,3], make:[0,100],
   batt:[0,300], soh:[30,100], life:[1,60], mass:[500,5000],
-  km:[2000,50000], years:[1,20], budget:[0,1e6], monthly:[0,1e5], own:[0,1e6], loanRate:[0,40], loanFee:[0,100],
+  km:[1000,300000], years:[1,20], budget:[0,1e6], monthly:[0,1e5], own:[0,1e6], loanRate:[0,40], loanFee:[0,100],
   loanYears:[1,10], ownRate:[0,20], pBens:[0,10], pDies:[0,10], pEl:[0,2], loss:[0,100], eBens:[0,10], eDies:[0,10]};
 const LIM_OPT = new Set(['dep','tax','soh','monthly']); // tyhjä = automaattinen tai ei käytössä
 function fieldOk(el){
@@ -1318,17 +1318,18 @@ function trunc(t,n){return t.length>n?t.slice(0,n-1)+'…':t;}
 
 function breakEven(el, G){
   const W = 900, H = 320, L = 64, R = 20, T0 = 14, B = 40;
-  const kms = []; for (let k=2000;k<=50000;k+=1000) kms.push(k);
+  const kmax = G.km <= 45000 ? 50000 : Math.min(300000, Math.ceil(G.km*1.2/10000)*10000), kstep = kmax/50;
+  const kms = []; for (let k=kmax/25;k<=kmax+1;k+=kstep) kms.push(k);
   const series = cars.map((c,i) => ({c, color:COLORS[i], pts:kms.map(k=>calc(c,G,k).total)}));
   const all = series.flatMap(s=>s.pts);
   const ymax = Math.ceil(Math.max(...all)*1.05/1000)*1000, ymin = Math.max(0, Math.floor(Math.min(...all)*0.9/1000)*1000);
-  const X = k => L + (k-2000)/(48000)*(W-L-R), Y = v => T0 + (1-(v-ymin)/(ymax-ymin||1))*(H-T0-B);
+  const X = k => L + (k-kms[0])/(kmax-kms[0])*(W-L-R), Y = v => T0 + (1-(v-ymin)/(ymax-ymin||1))*(H-T0-B);
   let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:520px" role="img" aria-label="${T('be_aria')}">`;
   const step = (ymax-ymin)/5 >= 2000 ? 2000 : 1000;
   for (let v=Math.ceil(ymin/step)*step; v<=ymax; v+=step){
     s += `<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${L-8}" y="${Y(v)+4}" font-size="12" text-anchor="end" fill="var(--muted)" font-family="var(--mono)">${fmt(v)}</text>`;
   }
-  for (let k=5000;k<=50000;k+=5000) s += `<text x="${X(k)}" y="${H-B+18}" font-size="12" text-anchor="middle" fill="var(--muted)" font-family="var(--mono)">${k/1000}k</text>`;
+  for (let k=kmax/10;k<=kmax+1;k+=kmax/10) s += `<text x="${X(k)}" y="${H-B+18}" font-size="12" text-anchor="middle" fill="var(--muted)" font-family="var(--mono)">${k/1000}k</text>`;
   s += `<text x="${(L+W-R)/2}" y="${H-4}" font-size="12" text-anchor="middle" fill="var(--muted)">${T('km_unit')}</text>`;
   s += `<text x="12" y="${T0+8}" font-size="12" fill="var(--muted)">€/${T('yr')}</text>`;
   s += `<line x1="${X(G.km)}" x2="${X(G.km)}" y1="${T0}" y2="${H-B}" stroke="var(--ink)" stroke-dasharray="4 4" opacity=".6"/><text x="${X(G.km)+6}" y="${T0+12}" font-size="12" fill="var(--ink)">${T('your_km')}</text>`;
@@ -1340,12 +1341,13 @@ function breakEven(el, G){
     for (let j=1;j<kms.length;j++){
       const d0 = series[a].pts[j-1]-series[b].pts[j-1], d1 = series[a].pts[j]-series[b].pts[j];
       if (d0===0 || d0*d1<0){
-        const t = d0/(d0-d1), k = kms[j-1]+t*1000, v = series[a].pts[j-1]+t*(series[a].pts[j]-series[a].pts[j-1]);
+        const t = d0/(d0-d1), k = kms[j-1]+t*kstep, v = series[a].pts[j-1]+t*(series[a].pts[j]-series[a].pts[j-1]);
         cross.push({a,b,k,v}); s += `<circle cx="${X(k)}" cy="${Y(v)}" r="5" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"><title>${esc(cars[a].name)} ${T('and')} ${esc(cars[b].name)}: ${fmt(Math.round(k/100)*100)} km/${T('yr')}</title></circle>`;
       }
     }
   }
   el.innerHTML = s + '</svg>';
+  cross.range = [kms[0], kmax];
   return cross;
 }
 
@@ -1506,7 +1508,7 @@ function tipping(G){
   const win = (G2, km) => winnerOf(cars.map(c => calc(c, G2, km).total));
   const uses = {pB: cars.some(c => 'BHP'.includes(c.pt)), pD: cars.some(c => c.pt==='D'), pE: cars.some(c => c.pt==='E' || c.pt==='P')};
   const rates = cars.map(c => calc(c, G).rate);
-  const V = [{k:'km', x0:G.km, lo:2000, hi:50000, tol:25, f:x => win(G, x)}];
+  const V = [{k:'km', x0:G.km, lo:1000, hi:Math.max(100000, G.km*2), tol:25, f:x => win(G, x)}];
   ['pB','pD','pE'].forEach(k => { if (uses[k] && G[k] > 0) V.push({k, x0:G[k], lo:G[k]/2, hi:G[k]*2, tol:0.0005, f:x => win({...G, [k]:x})}); });
   V.push({k:'years', x0:Math.round(G.years), lo:1, hi:20, int:true, f:x => win({...G, years:x})});
   V.push({k:'dep', x0:1, lo:0.5, hi:2, tol:0.002, f:x => winnerOf(cars.map((c,i) => calc({...c, dep:rates[i]*x*100}, G).total))});
@@ -1579,7 +1581,7 @@ function update(){
   const cross = breakEven($('beChart'), G);
   if (cars.length<2){ $('beTitle').textContent=T('be_one_t'); $('beLead').textContent=T('be_one_l'); }
   else if (!cross.length){ const best = cars[R.indexOf(R.reduce((a,b)=>a.total<b.total?a:b))].name;
-    $('beTitle').textContent = T('be_none_t')(best); $('beLead').textContent=T('be_none_l'); }
+    $('beTitle').textContent = T('be_none_t')(best, fmt(cross.range[0]), fmt(cross.range[1])); $('beLead').textContent=T('be_none_l'); }
   else { const c0 = cross.sort((x,y)=>Math.abs(x.k-G.km)-Math.abs(y.k-G.km))[0];
     $('beTitle').textContent = T('be_x_t')(cars[c0.a].name, cars[c0.b].name, fmt(Math.round(c0.k/500)*500));
     $('beLead').textContent = T('be_x_l'); }
