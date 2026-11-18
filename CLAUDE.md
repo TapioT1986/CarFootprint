@@ -222,6 +222,8 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   commit. A plain build only reads the file, so CI's rebuild check stays deterministic; the monthly price workflow
   does not bump it (the price note shows the price month). <title> and the meta
   description follow the language (applyLang). Feedback goes to GitHub issues only (no e-mail address on the page).
+- Search engines: <head> has canonical and schema.org WebApplication JSON-LD; <body> starts with a <noscript> summary
+  (FI + EN); sitemap.xml in the root. No analytics or verification tags.
 - Phone layout (≤ 900 px): `#dock` is a fixed summary bar filled in update(), hidden (class `off`) by an
   IntersectionObserver while `#sums` is on screen; its height goes to `--dockh` (body padding, scroll-padding).
   `#more` (<details>) holds the financing and energy panels: closed on phones, opened by JS above 900 px;

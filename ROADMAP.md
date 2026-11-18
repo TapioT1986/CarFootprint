@@ -88,7 +88,7 @@ Tavoite: vastata kysymykseen "kannattaako nykyinen auto pitää vai vaihtaa, rah
 - 5 oikeaa autonostajaa, sama tehtävä kaikille ("vertaa nykyistä autoasi kahteen vaihtoehtoon").
 - Claude laatii tehtävät ja kysymyslistan; tulokset palautekanavaan tai muistiinpanoina.
 
-### 4.3 Hakukonenäkyvyys · koko S
+### 4.3 Hakukonenäkyvyys · koko S · ✅ tehty 18.11.2026 (versio 0.68): canonical, schema.org-kuvaus, noscript-teksti, sitemap.xml. Omistaja voi halutessaan lisätä sivun Google Search Consoleen (vaatii Google-tunnuksen).
 - Staattinen lyhyt selitys ja laskentaperiaatteet HTML:ään (ei vain JavaScriptillä), `noscript`-teksti,
   jäsennelty data (WebApplication), englanninkielinen kuvaus.
 
