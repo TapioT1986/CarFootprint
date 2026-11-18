@@ -143,6 +143,8 @@ h2.step{display:flex;align-items:center;gap:10px;font-size:22px;margin:0 0 12px}
 .req input:not([type=range]){border:1.5px solid var(--accent);background:color-mix(in srgb,var(--accent) 6%,var(--input))}
 .req .seg{border:1.5px solid var(--accent)}
 .evr{font-size:12.5px;line-height:1.45}
+.q{font-size:12.5px;line-height:1.45;color:var(--muted)}
+.q b{font-weight:600;color:var(--ink)}
 .evr:empty{display:none}
 .evr b{font-weight:600}
 details.carmore{border-top:1px solid var(--line);padding-top:8px}
@@ -454,6 +456,9 @@ fi: {
   en_km:(v)=>`ajon energia ${v} €/km`, sumd:'Lisätietoja',
   all_km:(v)=>`Kaikki kulut kilometriä kohden: ${v} €/km (vuosikulu jaettuna ajomäärällä; suurin osa ei riipu ajetuista kilometreistä).`,
   parts:(d,c,e,o)=>`Vuodessa: arvonalenema ${d} €, rahoitus ${c} €, energia ${e} €, vero, vakuutus, huolto ja renkaat ${o} €.`,
+  q_h:'Kulutustieto:', q_model:n=>`mallikohtainen mittaus, ${n} autoa (EEA)`, q_brand:(b,n)=>`merkin keskiarvo (${b}, ${n} autoa, EEA)`,
+  q_fleet:'käyttövoiman keskiarvo (EEA)', q_own:'oma tieto', q_nedc:'mallin virallinen NEDC-arvo ja vuoden keskimääräinen ero (ICCT)',
+  q_ev:'mallin virallinen WLTP-arvo (EEA), mitattua tietoa ei ole', q_def:'käyttövoiman oletusarvo',
   err:r=>`Tarkista arvo (sallittu ${r}). Laskenta käyttää edellistä kelvollista arvoa.`,
   price_est:'€, arvio Verohallinnon verotusarvoista: vaihda oikeaan hintaan', price_none:'€, tälle mallille ei ole hinta-arviota: tarkista hinta',
   sens_h:'Kuinka varma järjestys on?', sens_close:'Autot ovat lähes tasoissa. ', sens_if:(p)=>`Halvin vaihtuu, jos ${p}.`, sens_or:' tai ',
@@ -588,6 +593,9 @@ en: {
   en_km:(v)=>`driving energy €${v}/km`, sumd:'More details',
   all_km:(v)=>`All costs per kilometre: €${v}/km (yearly cost divided by mileage; most of it does not depend on the kilometres driven).`,
   parts:(d,c,e,o)=>`Per year: depreciation €${d}, financing €${c}, energy €${e}, tax, insurance, servicing and tyres €${o}.`,
+  q_h:'Consumption data:', q_model:n=>`model-specific measurement, ${n} cars (EEA)`, q_brand:(b,n)=>`brand average (${b}, ${n} cars, EEA)`,
+  q_fleet:'powertrain average (EEA)', q_own:'your own figure', q_nedc:"the model's official NEDC figure and the average gap for its year (ICCT)",
+  q_ev:"the model's official WLTP figure (EEA); no measured data", q_def:'powertrain default',
   err:r=>`Check the value (allowed ${r}). The calculation uses the last valid value.`,
   price_est:'€, estimate from Tax Administration values: change to the real price', price_none:'€, no price estimate for this model: check the price',
   sens_h:'How firm is the ranking?', sens_close:'The cars are nearly even. ', sens_if:(p)=>`The cheapest car changes if ${p}.`, sens_or:' or ',
@@ -1020,6 +1028,7 @@ function carCard(c,i){
       <div class="field req"><label class="label" for="age${i}">${T('age_l')}</label><input type="number" id="age${i}" data-k="age" min="0" step="1" value="${c.age}"><span class="unit">${T('age_u')}</span></div>
       <div class="field req"><label class="label" for="odo${i}">${T('odo_l')}</label><input type="number" id="odo${i}" data-k="odo" step="1000" value="${c.odo}"><span class="unit">${T('odo_u')}</span></div>
     </div>
+    <span class="q" id="q${i}"></span>
     <span class="evr" id="evr${i}"></span>
     <details class="carmore" id="cm${i}"${carOpen.has(i)?' open':''}><summary>${T('car_more')}<span class="cc" id="cc${i}"></span></summary>
     <div class="fields">
@@ -1176,6 +1185,19 @@ function breakEven(el, G){
   return cross;
 }
 
+// Kulutustiedon laatu lyhyesti auton kortissa: mistä kulutus tulee (sama tieto kuin rwText, tiivistettynä)
+function qualText(c){
+  const el = c.pt==='E' || c.pt==='P', dk = (c.picked && c.picked[7]!=null) ? c.picked[7] : PT_DEF[c.pt].kwh;
+  const w = c.rw; let s;
+  if (c.autoFuel===false || (el && Math.abs(num(c.kwh,0) - dk) > 1e-6)) s = T('q_own');
+  else if (isNedc(c) && c.std && c.pt!=='E') s = T('q_nedc');
+  else if (!w) s = T('q_def');
+  else if (w.t==='model') s = T('q_model')(fmt(w.n));
+  else if (w.t==='brand') s = T('q_brand')(esc(w.brand), fmt(w.n));
+  else if (w.t==='fleet') s = T('q_fleet');
+  else s = w.kwhReg ? T('q_ev') : T('q_def');
+  return `<b>${T('q_h')}</b> ${s}`;
+}
 function rwText(c){
   if (isNedc(c) && c.autoFuel===false) return T('rw_nedc_hint')(regYear(c), fmt(nedcGap(regYear(c))*100));
   if (isNedc(c) && c.std)
@@ -1348,6 +1370,7 @@ function update(){
   document.querySelectorAll('#sums .big').forEach((e,i)=>{ if (before.length && before[i]!==undefined && before[i]!==e.textContent) e.classList.add('flash'); });
   cars.forEach((c,i)=>{ const e=$('insp'+i); if(e) e.innerHTML = inspText(c); });
   cars.forEach((c,i)=>{ const e=$('evr'+i); if(e) e.innerHTML = evRangeText(c); });
+  cars.forEach((c,i)=>{ const e=$('q'+i); if(e) e.innerHTML = qualText(c); });
   cars.forEach((c,i)=>{ const e=$('cc'+i); if(!e) return; const n = carChanged(c,i); e.textContent = n ? T('more_n')(n) : ''; });
   cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];
     t.textContent = T('tag')(fmt(r.rate*100,0), fmt(r.endAge), fmt(r.endOdo), fmt(r.resid)) + (r.loan>0?T('loan_tag')(fmt(r.loan), fmt(r.pay)):'') + T('make_tag')(fmt(r.makeT,1), battT(c)) + T('serv_tag')(fmt(r.serv), fmt(r.servF,1)) + (r.autoTax?T('tax_tag')(fmt(r.tax), fmt(r.vt.base), fmt(r.vt.prop)):'') + T('ins_tag')(fmt(num(c.traf,0)), fmt(num(c.kasko,0))) + (c.picked?T('reg')(fmt(c.picked[4]), c.picked[5]):'') + rwText(c);
