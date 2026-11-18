@@ -47,6 +47,7 @@ plug-in hybrid and electric. Prices, taxes, grid emissions and the model list de
 index.html            BUILT FILE – never edit by hand; run tools/build.py
 tools/template.html   the page source: HTML, CSS, JS, FI/EN texts (I18N), placeholders
 tools/build.py        builds data/*.json and index.html (plain Python; pandas only with --sources)
+tools/city_ratio.py   city/highway consumption ratios from UK VCA WLTP phase data (sources/, ~0.1 MB)
 tools/update_prices.py  fuel and electricity prices from StatFin (khi/11xx, ehi/13rb) + 15-year ranges (CPI khi/11xs)
 .github/workflows/update-prices.yml  runs update_prices + build on the 5th of each month
 .github/workflows/update-inspection.yml  runs update_inspection + build on 20 May/June/July (Traficom's spring release)
@@ -178,8 +179,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   through gv() (last valid value, else HTML default), and saves/links through gRaw(). New numeric fields need a LIM entry.
 - City/highway share (global `city`, range 0-100 in step 1, last in GIDS): default 39 % = streets and private roads +
   public roads <= 60 km/h (Statistics Finland 12jx and 12k1, 2025). cityMix(s, r) scales fuel and electricity relative
-  to the default, r = city/highway consumption (EPA fueleconomy.gov MY2021-2027 medians: B 1.29, D 1.26, H 1.00
-  Toyota/Lexus, P fuel 1.11, E 0.89). At 39 % the measured real-world consumption is unchanged.
+  to the default, r = city/highway consumption from WLTP phases (city = Low + Medium, highway = High + Extra High,
+  distance-weighted; EVs from city vs combined electric range): UK VCA type-approval data, tools/city_ratio.py over
+  sources/vca_euro6_latest_<date>.zip, medians B 1.14, D 1.16, H 0.81 (full hybrids), P fuel 1.01, E 0.68. Replaced
+  the earlier US EPA ratios (owner asked for European WLTP data). At 39 % the measured consumption is unchanged.
 - Mileage limits: typed field 1 000-300 000 km (LIM), slider to 100 000 (taxis averaged 61,725 km in 2018,
   Statistics Finland 22.3.2019). Tipping search goes to max(100 000, 2 x km); the break-even chart's axis stretches to
   1.2 x km above 45 000 (kmax, kstep) and its 'cheapest across' title takes the range from cross.range.
