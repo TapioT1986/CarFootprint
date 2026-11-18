@@ -176,6 +176,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Input validation: LIM (key = car field data-k or global id) gives sanity limits, LIM_OPT the fields that may be empty.
   markField() shows the error under the field (aria-invalid, `.errmsg`); an invalid car value is not stored, globals go
   through gv() (last valid value, else HTML default), and saves/links through gRaw(). New numeric fields need a LIM entry.
+- City/highway share (global `city`, range 0-100 in step 1, last in GIDS): default 39 % = streets and private roads +
+  public roads <= 60 km/h (Statistics Finland 12jx and 12k1, 2025). cityMix(s, r) scales fuel and electricity relative
+  to the default, r = city/highway consumption (EPA fueleconomy.gov MY2021-2027 medians: B 1.29, D 1.26, H 1.00
+  Toyota/Lexus, P fuel 1.11, E 0.89). At 39 % the measured real-world consumption is unchanged.
 - Mileage limits: typed field 1 000-300 000 km (LIM), slider to 100 000 (taxis averaged 61,725 km in 2018,
   Statistics Finland 22.3.2019). Tipping search goes to max(100 000, 2 x km); the break-even chart's axis stretches to
   1.2 x km above 45 000 (kmax, kstep) and its 'cheapest across' title takes the range from cross.range.
