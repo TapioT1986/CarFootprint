@@ -21,7 +21,7 @@ from playwright.sync_api import sync_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 _js = (ROOT / "tests" / "smoke_checks.js").read_text(encoding="utf-8")
 CHECKS = _js[_js.index("async () =>"):]  # drop the leading comment so Playwright sees a function
-SIZES = {"phone": {"width": 390, "height": 844}, "desktop": {"width": 1280, "height": 900}}
+SIZES = {"phone": {"width": 390, "height": 844}, "desktop": {"width": 1366, "height": 900}}
 
 
 def serve():

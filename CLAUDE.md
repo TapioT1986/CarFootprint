@@ -137,9 +137,18 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - €/km on the result card = driving energy (r.energy / km). Total cost per km and the yearly breakdown sit in the card's
   `details.sumd`. Owner's plan: switch to the cost of an extra km (energy + servicing rise + mileage depreciation) once
   those parts have good sources (the 0.2 % per 1 000 km depreciation adjustment has none yet).
-- Monthly budget (optional, field `monthly`): cash flow = loan payment incl. fees + (energy + other)/12
-  while the loan runs; depreciation and return on own money are not cash. Shown on the summary
-  card and flagged only when a budget is entered.
+- Monthly figures on the result card (`.mos`): "true cost" = total/12 (incl. depreciation) and "paid out" = cash flow =
+  loan payment incl. fees + (energy + other)/12 while the loan runs (r.cash; r.cashAfter after a shorter loan);
+  depreciation and return on own money are not cash. Always shown; below them the cash-purchase sum (loan 0) or own money
+  + loan. Monthly budget (optional, field `monthly`) only adds the over-budget flag.
+- Consumption data quality (`qualText()`, `#q<i>`, visible on the car card): model measurement (n) / brand average /
+  powertrain average / NEDC + ICCT gap / EV WLTP register / default / own figure (autoFuel false or kwh differs from the
+  row's or PT default).
+- Input validation: LIM (key = car field data-k or global id) gives sanity limits, LIM_OPT the fields that may be empty.
+  markField() shows the error under the field (aria-invalid, `.errmsg`); an invalid car value is not stored, globals go
+  through gv() (last valid value, else HTML default), and saves/links through gRaw(). New numeric fields need a LIM entry.
+- Annual mileage: `#km` is a number field (the saved GIDS value); `#kmSlider` (step 100) mirrors it. Shortcut chips set
+  #km exactly (smoke check 9).
 
 ## Gotchas learned the hard way
 
@@ -181,6 +190,7 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Payment choice (`[data-pay]`, payState/setPay/renderPay) is derived from `own` vs `budget` (0 = loan, ≥ budget = cash,
   else part) and is not stored: saves and links keep only `own`. Cash follows budget changes (listener before update).
   `own` counts as changed in moreCount() only in the 'part' state.
+- Phone touch targets >= 44 px and small text >= 13 px (CSS block at the end of <style>; smoke check 11).
 - tests/smoke.py runs on GitHub after every push (.github/workflows/test.yml): build check + tests/smoke_checks.js
   in headless Chromium. The same checks can be run in the built-in browser by evaluating smoke_checks.js.
 - Test in a real browser (FI and EN, phone width 390 px) and check the numbers by hand for at
