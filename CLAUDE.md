@@ -191,7 +191,8 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   IntersectionObserver while `#sums` is on screen; its height goes to `--dockh` (body padding, scroll-padding).
   `#more` (<details>) holds the financing and energy panels: closed on phones, opened by JS above 900 px;
   moreCount() counts GIDS inside it that differ from their HTML defaults. Closed by default on every screen size.
-- Simple default view: `.req` marks fields users should fill (blue border + dot, explained by `req_hint`); steps 1-3 are
+- Simple default view: `.req` marks the only fields users need to fill: annual mileage and the model search (blue border +
+  dot, explained by `req_hint`); maximum price, payment, price, age and odometer are ready defaults or estimates; steps 1-3 are
   `.stepn` headings. Car cards show model search, price, age and odometer; the rest is in `details.carmore` (`cm<i>`),
   whose open state survives re-renders in `carOpen` (indices shifted on delete). carChanged() counts carToShare() tokens
   other than N/P/A/O/U, i.e. fields that differ from the model's defaults.

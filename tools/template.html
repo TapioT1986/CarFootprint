@@ -143,7 +143,7 @@ h2.step{display:flex;align-items:center;gap:10px;font-size:22px;margin:0 0 12px}
 .req input:not([type=range]){border:1.5px solid var(--accent);background:color-mix(in srgb,var(--accent) 6%,var(--input))}
 .req .seg{border:1.5px solid var(--accent)}
 /* Laskurin arvio (hinta, ikä, mittarilukema mallin mukaan): katkoviiva, kunnes käyttäjä kirjoittaa oman arvon */
-.req.est input{border-style:dashed;background:var(--input)}
+.est input{border-style:dashed}
 .estb{display:none;font:600 11.5px/1 var(--body);text-transform:none;letter-spacing:0;color:var(--muted);border:1px dashed currentColor;border-radius:999px;padding:2px 6px;margin-left:6px;vertical-align:1px}
 .est .estb{display:inline-block}
 .evr{font-size:12.5px;line-height:1.45}
@@ -343,8 +343,8 @@ details.info a{color:var(--accent)}
           <p class="hint" data-i="km_hint"></p>
         </div>
         <div class="fields" style="margin-top:14px">
-          <div class="field full req"><label class="label" for="budget" data-i="budget_l"></label><input type="number" id="budget" min="0" step="500" value="12000"><span class="unit" data-i="budget_u"></span></div>
-          <div class="field full req"><span class="label" id="payLabel" data-i="pay_l"></span>
+          <div class="field full"><label class="label" for="budget" data-i="budget_l"></label><input type="number" id="budget" min="0" step="500" value="12000"><span class="unit" data-i="budget_u"></span></div>
+          <div class="field full"><span class="label" id="payLabel" data-i="pay_l"></span>
             <div class="seg" role="radiogroup" aria-labelledby="payLabel"><button type="button" role="radio" data-pay="cash" data-i="pay_cash"></button><button type="button" role="radio" data-pay="part" data-i="pay_part"></button><button type="button" role="radio" data-pay="loan" data-i="pay_loan"></button></div>
             <span class="unit" id="payNote"></span></div>
         </div>
@@ -504,7 +504,7 @@ fi: {
   disclaim:'Laskelma on arvio avoimen datan ja oletusten pohjalta, ei osto- tai rahoitusneuvo.',
   feedback:'Palaute ja virheilmoitukset: <a href="https://github.com/TapioT1986/CarFootprint/issues/new" target="_blank" rel="noopener">kirjoita GitHubiin</a> (vaatii ilmaisen GitHub-tunnuksen).',
   meta:'Beta __VERSION__ – päivitetty __UPDATED_FI__. Laskee arvonaleneman, rahoituksen, energian ja muut kulut sekä elinkaaren päästöt omalla ajomäärälläsi. Esimerkkiautot ovat esimerkkejä – vaihda omasi.',
-  req_hint:'<b>Sinisellä</b> merkityt kentät kannattaa täyttää omilla tiedoillasi. <span class="estb" style="display:inline-block">arvio</span> ja katkoviiva tarkoittavat, että laskuri on arvioinut arvon automallin mukaan: vaihda se oikeaan, kun tiedät sen. Muut ovat valmiita oletuksia, joita voi tarkentaa.', est:'arvio',
+  req_hint:'Riittää, että täytät <b>sinisellä</b> merkityt: ajomäärän ja automallin. Kaikki muu on valmiina: <span class="estb" style="display:inline-block">arvio</span> ja katkoviiva tarkoittavat laskurin arviota automallin mukaan, ja muut ovat oletuksia. Voit muuttaa mitä tahansa, kun tiedät oikean arvon.', est:'arvio',
   step_cars:'Vertailtavat autot', step_res:'Tulos', car_more:'Tarkenna: käyttövoima, kulutus, kulut ja päästöt',
   drive_h:'Oma ajosi', km_label:'Vuotuinen ajomäärä', km_unit:'km / vuosi',
   chipB:'Bensa-auto 11 800', chipAll:'Kaikki 14 500', chipD:'Diesel 20 800',
@@ -648,7 +648,7 @@ en: {
   disclaim:'The calculation is an estimate based on open data and assumptions, not purchasing or financial advice.',
   feedback:'Feedback and bug reports: <a href="https://github.com/TapioT1986/CarFootprint/issues/new" target="_blank" rel="noopener">write on GitHub</a> (needs a free GitHub account).',
   meta:'Beta __VERSION__ – updated __UPDATED_EN__. Calculates depreciation, financing, energy and other costs plus lifecycle emissions at your own annual mileage. Prices, taxes and the model list are for Finland. The example cars are examples, so swap in your own.',
-  req_hint:'Fields marked in <b>blue</b> are worth filling in with your own details. <span class="estb" style="display:inline-block">estimate</span> and a dashed border mean the calculator estimated the value from the car model: change it to the real one when you know it. The rest are ready-made defaults you can fine-tune.', est:'estimate',
+  req_hint:'You only need to fill in the fields marked in <b>blue</b>: annual mileage and the car model. Everything else is ready: <span class="estb" style="display:inline-block">estimate</span> and a dashed border mark the calculator\'s estimate from the car model, and the rest are defaults. Change anything when you know the real value.', est:'estimate',
   step_cars:'Cars to compare', step_res:'Result', car_more:'Fine-tune: powertrain, consumption, costs and emissions',
   drive_h:'Your driving', km_label:'Annual mileage', km_unit:'km / year',
   chipB:'Petrol car 11,800', chipAll:'All cars 14,500', chipD:'Diesel 20,800',
@@ -1084,9 +1084,9 @@ function carCard(c,i){
       <div class="sugg" id="sg${i}" role="listbox" aria-label="${T('pick_l')}" hidden></div>
       ${i===0?`<span class="hint" id="pickh${i}">${T('pick_hint')}</span>`:''}</div>
     <div class="fields">
-      <div class="field full req${est('price')}"><label class="label" for="price${i}">${T('price_l')}${estb}</label><input type="number" id="price${i}" data-k="price" step="500" value="${c.price}"><span class="unit">${c.priceAuto ? T('price_est') : (c.picked && !(c.own||{}).price && !MV0[CATALOG.indexOf(c.picked)] ? T('price_none') : '€')}</span></div>
-      <div class="field req${est('age')}"><label class="label" for="age${i}">${T('age_l')}${estb}</label><input type="number" id="age${i}" data-k="age" min="0" step="1" value="${c.age}"><span class="unit">${T('age_u')}</span></div>
-      <div class="field req${est('odo')}"><label class="label" for="odo${i}">${T('odo_l')}${estb}</label><input type="number" id="odo${i}" data-k="odo" step="1000" value="${c.odo}"><span class="unit">${T('odo_u')}</span></div>
+      <div class="field full${est('price')}"><label class="label" for="price${i}">${T('price_l')}${estb}</label><input type="number" id="price${i}" data-k="price" step="500" value="${c.price}"><span class="unit">${c.priceAuto ? T('price_est') : (c.picked && !(c.own||{}).price && !MV0[CATALOG.indexOf(c.picked)] ? T('price_none') : '€')}</span></div>
+      <div class="field${est('age')}"><label class="label" for="age${i}">${T('age_l')}${estb}</label><input type="number" id="age${i}" data-k="age" min="0" step="1" value="${c.age}"><span class="unit">${T('age_u')}</span></div>
+      <div class="field${est('odo')}"><label class="label" for="odo${i}">${T('odo_l')}${estb}</label><input type="number" id="odo${i}" data-k="odo" step="1000" value="${c.odo}"><span class="unit">${T('odo_u')}</span></div>
     </div>
     <span class="q" id="q${i}"></span>
     <span class="evr" id="evr${i}"></span>
