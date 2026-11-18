@@ -72,6 +72,12 @@ async () => {
 
   sameCars('on load'); fits('on load');
 
+  // 9. Each mileage shortcut sets exactly its own value (a slider step once rounded 11 800 to 12 000)
+  const km0 = g().km;
+  document.querySelectorAll('.chip[data-km]').forEach(b => { b.click();
+    if (g().km !== +b.dataset.km) problems.push(`${lang}: shortcut ${b.dataset.km} km sets ${g().km} km`); });
+  const kmEl = $('km'); kmEl.value = km0; kmEl.dispatchEvent(new Event('input', {bubbles: true})); await wait(50);
+
   // 3. Example cars follow the maximum price, and results follow the cards
   const budget = $('budget'), before = budget.value;
   for (const v of ['30000', '6000']) {
