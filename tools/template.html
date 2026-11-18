@@ -276,6 +276,8 @@ details.info a{color:var(--accent)}
 .ctable thead th{font-weight:600;font-size:13px;line-height:1.25}
 .ctable thead .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--cc);margin-right:4px}
 .ctable td.n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.ctable .src{font-size:12px;font-weight:400;color:var(--muted);white-space:nowrap}
+.ctable a.src{color:var(--accent)}
 .ctable tr.sub1 th,.ctable tr.sub1 td{font-weight:700;border-bottom:2px solid var(--ink)}
 .ctable th[scope=row]{overflow-wrap:normal;hyphens:auto}
 /* Puhelin: rivin nimi omalle rivilleen, autojen luvut sen alle sarakkeisiin */
@@ -370,6 +372,15 @@ details.info a{color:var(--accent)}
           <div class="field full"><label class="label" for="years" data-i="years_l"></label><input type="number" id="years" min="1" max="20" step="1" value="5"><span class="unit" data-i="years_u"></span></div>
           <div class="field full"><label class="label" for="monthly" data-i="monthly_l"></label><input type="number" id="monthly" min="0" step="50" value="" placeholder="–"><span class="unit" data-i="monthly_u"></span></div>
         </div>
+        </div>
+        <div class="morepart">
+        <h2 data-i="ins_h"></h2>
+        <div class="fields">
+          <div class="field full"><label class="label" for="insKind" data-i="ins_l"></label>
+            <select id="insKind"><option value="full" selected data-i="ins_full"></option><option value="part" data-i="ins_part"></option><option value="none" data-i="ins_none"></option></select>
+            <span class="unit" data-i="ins_u"></span></div>
+        </div>
+        <p class="hint" data-i="ins_src"></p>
         </div>
         <div class="morepart">
         <h2 data-i="fin_h"></h2>
@@ -503,7 +514,8 @@ fi: {
   parts:(d,c,e,o)=>`Vuodessa: arvonalenema ${d} €, rahoitus ${c} €, energia ${e} €, vero, vakuutus, huolto ja renkaat ${o} €.`,
   electricity:'sähkö', p_stat:'Tilastokeskus', p_own:'oma hinta',
   ct:{h:'Kulut eriteltyinä', lead:'€ vuodessa omistusaikana keskimäärin. Ensin käyttökulut, jotka maksat ajaessasi ja omistaessasi, sitten arvonalenema ja rahoitus.',
-    e100:'Energia, € / 100 km', energy:'Energia', traf:'Liikennevakuutus (pakollinen)', kasko:'Kasko (vapaaehtoinen)', tax:'Ajoneuvovero', serv:'Huolto ja korjaukset (arvio)',
+    e100:'Energia, € / 100 km', energy:'Energia', traf:'Liikennevakuutus (pakollinen)', kasko:'Kasko', tax:'Ajoneuvovero', serv:'Huolto ja korjaukset (arvio)',
+    src:'lähde', src_price:'hinta', src_cons:'kulutus', src_serv:'kasvukertoimet', assumed:'oletus, ei lähdettä', k_full:'täyskasko', k_part:'osakasko', k_none:'ei kaskoa',
     tyre:'Renkaat ja muut', run:'Käyttökulut yhteensä', dep:'Arvonalenema (arvio)', cap:'Rahoitus: korot, kulut, oman rahan tuotto', total:'Kaikki yhteensä',
     dep_note:'Arvonalenema on mallien keskiarvo Verohallinnon verotusarvoista, ei ennuste juuri sinun autollesi: kunto, huoltohistoria, varustelu ja sähköautossa akun kunto voivat muuttaa jälleenmyyntihintaa paljon.',
     foot:'Lähteet ja oletukset kohdassa Näin laskenta toimii: vakuutukset Taloustaidon hintavertailuista, vero ajoneuvoverolain taulukoista, huolto tasoarviona ajomäärän mukaan (Consumer Reports 2020), arvonalenema Verohallinnon verotusarvoista. Kaikki arvot voi muuttaa auton kohdassa Tarkenna.'},
@@ -532,6 +544,9 @@ fi: {
   pay_n_cash:'Koko hinta omalla rahalla ja vaihtohyvityksellä (enintään enimmäishinta).', pay_n_part:(o)=>`${o} € omaa rahaa tai vaihtohyvitystä, loput lainaa.`, pay_n_loan:'Koko hinta lainalla.',
   pay_n_more:' Summan ja lainaehdot voi tarkentaa Lisäasetuksissa.', own_h:'Omistus ja kuukausibudjetti',
   more_h:'Lisäasetukset', more_n:(n)=>`· ${n} muutettu`, dock_aria:'Näytä tulokset', dock_cheap:'Halvin', dock_clean:'Vähin CO₂',
+  ins_h:'Vakuutukset', ins_l:'Kasko', ins_full:'Täyskasko (laaja kasko)', ins_part:'Osakasko', ins_none:'Ei kaskoa, vain liikennevakuutus',
+  ins_u:'Koskee kaikkia autoja. Rahoitusyhtiö vaatii yleensä lainalla ostettuun autoon täyskaskon. Auton omat vakuutusmaksut voi vaihtaa kohdassa Tarkenna.',
+  ins_src:'<b>Lähteet:</b> liikennevakuutus ja täyskasko ovat Taloustaidon hintavertailujen keskiarvoja (<a href="https://www.taloustaito.fi/vapaalla/2026/taloustaito-vertaili-huimat-erot-autovakuutusten-hinnoissa/" target="_blank" rel="noopener">24.9.2026</a>, 3 v vanhat autot, ja <a href="https://www.taloustaito.fi/vapaalla/sahkoautoilija-nain-paljon-autosi-kayttovoima-korottaa-vakuutusmaksuja/" target="_blank" rel="noopener">20.10.2022</a>), kustakin suurempi: liikennevakuutus 200 €/v (sähkö 205), täyskasko 520 €/v (bensiini, diesel, hybridi), 700 (lataushybridi) ja 835 (sähkö). Osakasko on 37 % täyskaskon hinnasta Taloustaidon <a href="https://www.taloustaito.fi/vapaalla/2025/autovakuutus--ala-maksa-turhasta/" target="_blank" rel="noopener">26.9.2025</a> vertailun mukaan (neljä yhtiötä, 14 v vanha Octavia: osakasko keskimäärin 86 €/v, laaja kasko 231 €/v). Osakasko ei korvaa omaa kolaria. Vertailujen vakuutuksenottaja oli 58–59-vuotias täysillä bonuksilla; nuoremmalle tai bonuksettomalle hinta on usein selvästi suurempi.',
   fin_h:'Rahoitus', own_l:'Oma raha ja vaihtohyvitys', own_u:'€ käteistä + vanhasta autosta saatava hyvitys; loppu lainaa',
   loanRate_l:'Lainan korko', loanRate_u:'% / vuosi (nimellinen)', loanFee_l:'Lainan kulut', loanFee_u:'€ / kk, tilinhoito ja laskutus',
   loanYears_l:'Laina-aika', ownRate_l:'Oman rahan tuotto',
@@ -584,8 +599,8 @@ fi: {
   dep_l:'Arvonalenema', dep_u:'% / v, tyhjä = iän mukaan',
   fuel_l:'Polttoaine', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, vanha mittaus)', fuel_u_p:'l / 100 km polttoaineella ajaessa',
   el_l:'Sähkö', kwh_u:'kWh / 100 km (WLTP)', share_l:'Sähköllä ajettu', share_u:'% ajosta',
-  other_l:'Renkaat ja muut', other_u:'€ / v', traf_l:'Liikennevakuutus (pakollinen)', traf_u:'€ / v, oletus: vaihda oma tarjouksesi',
-  kasko_l:'Kasko (vapaaehtoinen)', kasko_u:'€ / v, oletus; 0 = ei kaskoa',
+  other_l:'Renkaat ja muut', other_u:'€ / v', traf_l:'Liikennevakuutus (pakollinen)', traf_u:'€ / v; oletus Taloustaidon vertailuista (lähteet: Lisäasetukset → Vakuutukset)',
+  kasko_l:'Kasko (vapaaehtoinen)', kasko_u:'€ / v; oletus Lisäasetusten kaskovalinnan mukaan, 0 = ei kaskoa',
   ins_tag:(a,b)=>` · liikennevakuutus ${a} €/v, kasko ${b} €/v`,
   serv_l:'Huolto ja korjaukset', serv_u:'€ / v vähän ajetulle (alle 80 000 km); kasvaa ajon mukaan',
   tax_l:'Ajoneuvovero', tax_u:'€ / v; tyhjä = laskettu CO₂:sta ja massasta',
@@ -654,7 +669,8 @@ en: {
   parts:(d,c,e,o)=>`Per year: depreciation €${d}, financing €${c}, energy €${e}, tax, insurance, servicing and tyres €${o}.`,
   electricity:'electricity', p_stat:'Statistics Finland', p_own:'your price',
   ct:{h:'Costs itemised', lead:'Euros per year, averaged over the ownership period. Running costs you pay for driving and owning first, then depreciation and financing.',
-    e100:'Energy, € / 100 km', energy:'Energy', traf:'Motor liability (compulsory)', kasko:'Comprehensive (optional)', tax:'Vehicle tax', serv:'Servicing and repairs (estimate)',
+    e100:'Energy, € / 100 km', energy:'Energy', traf:'Motor liability (compulsory)', kasko:'Comprehensive', tax:'Vehicle tax', serv:'Servicing and repairs (estimate)',
+    src:'source', src_price:'price', src_cons:'consumption', src_serv:'rise factors', assumed:'assumption, no source', k_full:'full', k_part:'partial', k_none:'none',
     tyre:'Tyres and other', run:'Running costs total', dep:'Depreciation (estimate)', cap:'Financing: interest, fees, return on own money', total:'All costs total',
     dep_note:'Depreciation is an average over models from Tax Administration values, not a forecast for your car: condition, service history, equipment and, for an electric car, the battery can move the resale price a lot.',
     foot:'Sources and assumptions under How the calculation works: insurance from Taloustaito price comparisons, tax from the Vehicle Tax Act tables, servicing as a level estimate scaled by mileage (Consumer Reports 2020), depreciation from Tax Administration values. Every value can be changed under Fine-tune on the car.'},
@@ -683,6 +699,9 @@ en: {
   pay_n_cash:'The whole price from own money and trade-in (up to the maximum price).', pay_n_part:(o)=>`€${o} own money or trade-in, the rest on loan.`, pay_n_loan:'The whole price on loan.',
   pay_n_more:' The amount and loan terms can be fine-tuned under More settings.', own_h:'Ownership and monthly budget',
   more_h:'More settings', more_n:(n)=>`· ${n} changed`, dock_aria:'Show the results', dock_cheap:'Cheapest', dock_clean:'Lowest CO₂',
+  ins_h:'Insurance', ins_l:'Comprehensive cover', ins_full:'Full comprehensive', ins_part:'Partial comprehensive', ins_none:'None, motor liability only',
+  ins_u:'Applies to all cars. A finance company usually requires full comprehensive cover on a car bought with a loan. Each car\'s own premiums can be changed under Fine-tune.',
+  ins_src:'<b>Sources:</b> motor liability and full comprehensive are averages from Taloustaito price comparisons (<a href="https://www.taloustaito.fi/vapaalla/2026/taloustaito-vertaili-huimat-erot-autovakuutusten-hinnoissa/" target="_blank" rel="noopener">24 Sept 2026</a>, 3-year-old cars, and <a href="https://www.taloustaito.fi/vapaalla/sahkoautoilija-nain-paljon-autosi-kayttovoima-korottaa-vakuutusmaksuja/" target="_blank" rel="noopener">20 Oct 2022</a>), taking the higher one: motor liability €200/yr (electric €205), full comprehensive €520/yr (petrol, diesel, hybrid), €700 (plug-in hybrid) and €835 (electric). Partial comprehensive is 37% of the full price, from Taloustaito\'s <a href="https://www.taloustaito.fi/vapaalla/2025/autovakuutus--ala-maksa-turhasta/" target="_blank" rel="noopener">26 Sept 2025</a> comparison (four insurers, a 14-year-old Octavia: partial €86/yr on average, full €231/yr). Partial cover does not pay for your own collision. The policyholder in the comparisons was 58–59 years old with full bonus; younger drivers or those without bonus usually pay clearly more.',
   fin_h:'Financing', own_l:'Own money and trade-in', own_u:'€ cash + what you get for your old car; the rest is a loan',
   loanRate_l:'Loan interest', loanRate_u:'% / year (nominal)', loanFee_l:'Loan fees', loanFee_u:'€ / month, account and billing',
   loanYears_l:'Loan term', ownRate_l:'Return on own money',
@@ -736,8 +755,8 @@ en: {
   dep_l:'Depreciation', dep_u:'% / yr, blank = by age',
   fuel_l:'Fuel', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, old test)', fuel_u_p:'l / 100 km when running on fuel',
   el_l:'Electricity', kwh_u:'kWh / 100 km (WLTP)', share_l:'Driven on electricity', share_u:'% of driving',
-  other_l:'Tyres and other', other_u:'€ / yr', traf_l:'Motor liability insurance (compulsory)', traf_u:'€ / yr, assumed: enter your own quote',
-  kasko_l:'Comprehensive cover (optional)', kasko_u:'€ / yr, assumed; 0 = none',
+  other_l:'Tyres and other', other_u:'€ / yr', traf_l:'Motor liability insurance (compulsory)', traf_u:'€ / yr; default from Taloustaito comparisons (sources: More settings → Insurance)',
+  kasko_l:'Comprehensive cover (optional)', kasko_u:'€ / yr; default follows the cover chosen in More settings, 0 = none',
   ins_tag:(a,b)=>` · motor liability insurance €${a}/yr, comprehensive €${b}/yr`,
   serv_l:'Servicing and repairs', serv_u:'€ / yr at low mileage (under 80,000 km); rises with mileage',
   tax_l:'Vehicle tax', tax_u:'€ / yr; empty = calculated from CO₂ and mass',
@@ -798,6 +817,13 @@ PT_DEF.B.real = PT_DEF.H.real = RW.fleet.P.k; PT_DEF.D.real = RW.fleet.D.k;
 const INS_DEF = {B:[200,520], D:[200,520], H:[200,520], P:[200,700], E:[205,835]};
 Object.entries(PT_DEF).forEach(([k,d]) => { [d.traf, d.kasko] = INS_DEF[k]; });
 const OLD_KASKO = {B:400, D:400, H:400, P:450, E:500}; // oletus ennen EX_VERSION 9
+// Osakasko = 37 % laajan kaskon hinnasta: Taloustaito 26.9.2025, neljä yhtiötä, 14 v vanha Octavia: osakasko keskimäärin 86 €/v,
+// laaja kasko 231 €/v (kaskon osuus = paketin hinta − liikennevakuutus). Suhde valitaan, koska se antaa uudemmille autoille
+// suuremman (epäedullisemman) hinnan kuin vanhan auton 86 €/v.
+const PART_KASKO = 0.37;
+const insKind = () => { const el = document.getElementById('insKind'); return el ? el.value : 'full'; };
+const kaskoDef = (pt, kind = insKind()) => { const full = (INS_DEF[pt] || INS_DEF.B)[1];
+  return kind==='none' ? 0 : kind==='part' ? Math.round(full*PART_KASKO/5)*5 : full; };
 Object.assign(PT_DEF.P, {real:1, share:25, fuel:+(RW.fleet.PE.ob/0.75).toFixed(1), kwh:RW.phevMedian});
 PT_DEF.E.kwh = RW.evMedian;
 const OLD_TAX = {B:200, D:600, H:160, P:180, E:300};
@@ -960,7 +986,7 @@ let cars = [];
 function newCar(o={}){
   const pt = o.pt || (o.pick && o.pick[2]) || 'B', d = PT_DEF[pt];
   const c = {name:o.name||T('new_car'), exKey:null, ex:o.ex??null, exAuto:o.exAuto??false, pt, price:o.price??20000, age:o.age??0, odo:o.odo??0, dep:o.dep??'',
-    fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??d.tyre, traf:o.traf??d.traf, kasko:o.kasko??d.kasko, serv:o.serv??d.serv, tax:o.tax??'', mass:o.mass??d.mass,
+    fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??d.tyre, traf:o.traf??d.traf, kasko:o.kasko??kaskoDef(pt), serv:o.serv??d.serv, tax:o.tax??'', mass:o.mass??d.mass,
     make:o.make??d.make, batt:o.batt??d.batt, soh:o.soh??'', life:o.life??d.life, real:o.real??d.real, rw:o.rw??null};
   c.std = o.std ?? null; c.autoFuel = o.autoFuel ?? (o.fuel===undefined);
   c.own = o.own ?? {}; c.priceAuto = o.priceAuto ?? false; c.ownName = o.ownName ?? false; c.mine = o.mine ?? false;
@@ -1042,7 +1068,7 @@ const OLD_RATE_DEFS = {loanRate:['4.1'], ownRate:['2.5'], eBens:['2.8'], eDies:[
 const EX_VERSION = 9; // kasvata, kun esimerkkiautot vaihtuvat
 function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF, ev:EX_VERSION})); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
-const GIDS = ['km','years','budget','monthly','own','loanRate','loanFee','loanYears','ownRate','pBens','pDies','pEl','loss','elSrc','eBens','eDies'];
+const GIDS = ['km','years','budget','monthly','own','loanRate','loanFee','loanYears','ownRate','pBens','pDies','pEl','loss','elSrc','eBens','eDies','insKind'];
 function readGlobalsRaw(){ const o={}; GIDS.forEach(id=>o[id]=$(id).type==='select-one'?$(id).selectedIndex:gRaw($(id))); return o; }
 function g(){
   return {km:gv('km',15000), years:Math.max(1,gv('years',5)),
@@ -1182,7 +1208,7 @@ $('cars').addEventListener('input', e => {
     const r = byLabel.get(el.value); if (!r){ suggest(el); return; }
     const d = PT_DEF[r[2]];
     Object.assign(c, {name:c.ownName ? c.name : `${r[0]} ${r[1]}`, exKey:null, pt:r[2], kwh:d.kwh, share:d.share,
-      other:d.tyre, traf:d.traf, kasko:d.kasko, serv:d.serv, tax:'', mass:d.mass, make:d.make, batt:d.batt, life:d.life});
+      other:d.tyre, traf:d.traf, kasko:kaskoDef(r[2]), serv:d.serv, tax:'', mass:d.mass, make:d.make, batt:d.batt, life:d.life});
     c.picked = r; autoPriceAge(c, r); fromRow(c, r); c.batt = battFromName(r) ?? d.batt;
     renderCars(); update(); return;
   }
@@ -1325,20 +1351,23 @@ function breakEven(el, G){
 // Kulut eriteltyinä: käyttökulut omina riveinään, sitten arvonalenema ja rahoitus (€/v omistusaikana keskimäärin)
 function costTable(R, G){
   const L = T('ct'), col = (f, cls='') => R.map((r,i) => `<td class="n${cls}">${f(r, cars[i])}</td>`).join('');
-  const row = (name, f, cls='') => `<tr${cls?` class="${cls}"`:''}><th scope="row">${name}</th>${col(f)}</tr>`;
+  // jokaisella rivillä näkyvä lähde (tai merkintä oletuksesta), jotta luvun alkuperän näkee suoraan taulukosta
+  const src = (u, t=L.src) => ` <a class="src" href="${u}" target="_blank" rel="noopener">${t}</a>`;
+  const row = (name, f, cls='', s='') => `<tr${cls?` class="${cls}"`:''}><th scope="row">${name}${s}</th>${col(f)}</tr>`;
+  const P = PRICE_SRC.petrol || {}, kind = insKind();
   const run = r => r.energy + r.other;
   return `<h3>${L.h}</h3><p class="lead">${L.lead}</p><div class="ctwrap"><table class="ctable" style="--n:${cars.length}">
     <thead><tr><th></th>${cars.map((c,i) => `<th scope="col" style="--cc:${COLORS[i]}"><span class="dot"></span>${esc(trunc(c.name,18))}</th>`).join('')}</tr></thead><tbody>
-    ${row(L.e100, r => fmt(r.energy/G.km*100,2))}
+    ${row(L.e100, r => fmt(r.energy/G.km*100,2), '', P.url ? src(P.url, L.src_price) + src('https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information', L.src_cons) : '')}
     ${row(L.energy, r => fmt(r.energy))}
-    ${row(L.traf, (r,c) => fmt(num(c.traf,0)))}
-    ${row(L.kasko, (r,c) => fmt(num(c.kasko,0)))}
-    ${row(L.tax, r => fmt(r.tax))}
-    ${row(L.serv, r => fmt(r.serv))}
-    ${row(L.tyre, (r,c) => fmt(num(c.other,0)))}
+    ${row(L.traf, (r,c) => fmt(num(c.traf,0)), '', src('https://www.taloustaito.fi/vapaalla/2026/taloustaito-vertaili-huimat-erot-autovakuutusten-hinnoissa/'))}
+    ${row(L.kasko + ': ' + L['k_'+kind], (r,c) => fmt(num(c.kasko,0)), '', kind==='part' ? src('https://www.taloustaito.fi/vapaalla/2025/autovakuutus--ala-maksa-turhasta/') : kind==='full' ? src('https://www.taloustaito.fi/vapaalla/2026/taloustaito-vertaili-huimat-erot-autovakuutusten-hinnoissa/') : '')}
+    ${row(L.tax, r => fmt(r.tax), '', src('https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814'))}
+    ${row(L.serv, r => fmt(r.serv), '', src('https://advocacy.consumerreports.org/wp-content/uploads/2020/10/TCO-Fact-Sheet-Chapter-2-FINAL.pdf', L.src_serv))}
+    ${row(L.tyre, (r,c) => fmt(num(c.other,0)), '', ` <span class="src">${L.assumed}</span>`)}
     ${row(L.run, r => fmt(run(r)), 'sub1')}
-    ${row(L.dep, r => fmt(r.dep))}
-    ${row(L.cap, r => fmt(r.cap))}
+    ${row(L.dep, r => fmt(r.dep), '', src('https://www.vero.fi/contentassets/f3326d05d3954bed9c1686a17917754d/henkiloautojen-sovelletut-verotusarvot-2026.xls'))}
+    ${row(L.cap, r => fmt(r.cap), '', src('https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/'))}
     ${row(L.total, r => fmt(r.total), 'sub1')}
     </tbody></table></div><p class="hint evb">${L.dep_note}</p><p class="hint">${L.foot}</p>`;
 }
@@ -1553,6 +1582,7 @@ function update(){
   else { const c0 = cross.sort((x,y)=>Math.abs(x.k-G.km)-Math.abs(y.k-G.km))[0];
     $('beTitle').textContent = T('be_x_t')(cars[c0.a].name, cars[c0.b].name, fmt(Math.round(c0.k/500)*500));
     $('beLead').textContent = T('be_x_l'); }
+  insPrev = insKind();
   save();
 }
 
@@ -1621,6 +1651,11 @@ document.querySelectorAll('.lang').forEach(b => b.onclick = () => applyLang(b.da
 
 // Ajomäärän voi kirjoittaa tai valita liukusäätimellä; kirjoitettava kenttä (#km) on tallennettava arvo
 $('kmSlider').addEventListener('input', () => { $('km').value = $('kmSlider').value; update(); });
+// Vakuutusvalinta: autot, joiden kasko on edellisen valinnan oletus, siirtyvät uuden valinnan oletukseen
+let insPrev = 'full';
+$('insKind').addEventListener('input', () => { const k = insKind();
+  cars.forEach(c => { if (num(c.kasko, NaN) === kaskoDef(c.pt, insPrev)) c.kasko = kaskoDef(c.pt, k); });
+  insPrev = k; renderCars(); update(); });
 GIDS.forEach(id => $(id).addEventListener('input', update));
 document.querySelectorAll('.chip').forEach(b => b.onclick = () => { $('km').value = b.dataset.km; update(); });
 // Kaikki kentät HTML:n oletusarvoihin (myös selaimen palauttamat lomakearvot ohitetaan)

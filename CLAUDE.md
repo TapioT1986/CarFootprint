@@ -115,6 +115,11 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   splits an old default `other` and leaves a custom one whole with traf = kasko = 0; y-links before v8 with X get the
   same in carFromShare(). EX_VERSION 9: untouched old defaults (traf 200, kasko = OLD_KASKO) move to INS_DEF.
   Share letters Y = traf, Z = kasko.
+- Insurance choice (global `insKind`, last in GIDS so old link letters stay): full / partial / none comprehensive, in
+  More settings above Financing with visible sources (ins_src). kaskoDef(pt) = INS_DEF kasko, x 0.37 for partial
+  (Taloustaito 26.9.2025: partial 86 vs full 231 EUR/yr, 4 insurers; ratio chosen as the pessimistic option), 0 for none.
+  Changing it moves cars whose kasko equals the previous default (insPrev, set in update()). The cost table shows the
+  chosen cover and a source link (or 'assumption, no source') on every row.
 - Tipping points (`tipping()`, `#sens`): winnerOf(totals) is the cheapest car; for km, pB/pD/pE (only if some car uses it),
   years and a common depreciation factor, tipSearch() scans 48 steps (years: whole years) from the current value each way
   and bisects the first change; the two nearest (relative distance) are shown, rounded towards the tipping side (finer when
