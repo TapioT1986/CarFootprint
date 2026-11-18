@@ -59,7 +59,7 @@ data/depreciation.json  depreciation by age from Tax Administration values, with
 data/budget_cars.json   example-car candidates and value-when-new (v0)
 data/vehicle_tax.json   vehicle tax tables 1 / 1 A (c/day per g CO2) + propulsion rates;
                       from tools/vehicle_tax.py (Finlex open data, act 814/2024). Re-run when the law changes.
-data/eea_ev_range_fi_2025.csv  WLTP electric range per model (EEA, Finland 2025), from tools/ev_range.py
+data/eea_ev_range_fi.csv  WLTP electric range per model (EEA, Finland 2025 and 2020-2024), from tools/ev_range.py
 data/inspection.json  Traficom periodic inspections per model series: failure % by age (latest year), fault
                       areas, survival from age 10; from tools/update_inspection.py (PxWeb API, stdlib). Yearly.
 data/eea_*.csv        source tables with provenance headers
@@ -120,9 +120,11 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   and bisects the first change; the two nearest (relative distance) are shown, rounded towards the tipping side (finer when
   within 5 %; "nearly even" under 2 %). Search limits are labelled as limits, not ranges. Ranges (e.g. 4 200–5 100 €/yr)
   only with a sourced basis for each bound.
-- Electric range (`evRangeText()`, `#evr<i>`): EVR[catalogue index] = WLTP km from data/eea_ev_range_fi_2025.csv
-  (tools/ev_range.py, stdlib, from the EEA data viewer CSV for FI 2025 saved in sources/; build.py ev_range_for_page()
-  matches like add_electricity). Winter = NAF El Prix averages: mild −18 % (2025, −6…+8 °C), hard frost −38 % (2026,
+- Electric range (`evRangeText()`, `#evr<i>`): EVR[catalogue index] = WLTP km from data/eea_ev_range_fi.csv
+  (tools/ev_range.py, stdlib, from the EEA data viewer CSVs for FI saved in sources/: 2025 provisional and 2020-2024
+  final, `eea_fi_<year><F|P>*range*.csv`, 17-21 MB each; filter Status + year + Country FI and use "Download search
+  results (CSV)"). build.py ev_range_for_page() matches like add_electricity and takes the 2025 figure, or 2020-2024
+  first for rows whose register years end before 2025 (Golf PHEV 65 km, not the 2025 eHybrid's 128). 209/216 rows. Winter = NAF El Prix averages: mild −18 % (2025, −6…+8 °C), hard frost −38 % (2026,
   −7…−32 °C). Discodata's firewall blocks filtered SQL; use the data viewer's CSV download instead.
   build_catalog() checks for the Traficom file before importing pandas, so a sources/ folder with only small
   extracts keeps the plain build working.

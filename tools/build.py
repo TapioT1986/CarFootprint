@@ -503,19 +503,20 @@ def inspection_for_page(catalog, root):
 def ev_range_for_page(catalog, root):
     """Official WLTP electric range (km) per catalogue row, 0 when unknown.
 
-    data/eea_ev_range_fi_2025.csv comes from tools/ev_range.py (EEA register, Finland
-    2025). Matching follows add_electricity(): same make and powertrain, model equal to
-    or starting with the catalogue name, else the model family ("ID.4 PRO" -> "ID.4")
-    when at least 5 cars match. Several matches give the car-weighted median."""
-    path = root / "data" / "eea_ev_range_fi_2025.csv"
+    data/eea_ev_range_fi.csv comes from tools/ev_range.py (EEA register, Finland): the
+    2025 figure, or the 2020-2024 one for models no longer sold new (register years ending
+    before 2025, or missing from 2025). Matching follows add_electricity(): same make and powertrain, model
+    equal to or starting with the catalogue name, else the model family ("ID.4 PRO" ->
+    "ID.4") when at least 5 cars match. Several matches give the car-weighted median."""
+    path = root / "data" / "eea_ev_range_fi.csv"
     if not path.exists():
         return [0] * len(catalog)
-    table = {}
+    tables = {}
     for line in path.read_text(encoding="utf-8").splitlines():
-        if line.startswith("#") or line.startswith("make|") or not line.strip():
+        if line.startswith("#") or line.startswith("period|") or not line.strip():
             continue
-        b, m, p, km, n = line.split("|")
-        table.setdefault((b, p), []).append((m, int(km), int(n)))
+        per, b, m, p, km, n = line.split("|")
+        tables.setdefault(per, {}).setdefault((b, p), []).append((m, int(km), int(n)))
 
     def wmedian(hits):
         vals = sorted(hits, key=lambda h: h[1])
@@ -526,19 +527,36 @@ def ev_range_for_page(catalog, root):
                 return km
         return 0
 
-    out = []
-    for r in catalog:
-        if r[2] not in "EP":
-            out.append(0)
-            continue
-        brand = EEA_BRAND_ALIASES.get(norm(r[0]), norm(r[0]))
-        model, same = norm(r[1]), table.get((brand, r[2]), [])
+    def match(table, brand, model, pt):
+        same = table.get((brand, pt), [])
         hits = [h for h in same if h[0] == model or h[0].startswith(model + " ")]
         if not hits:
             family = model.split(" ")[0]
             wider = [h for h in same if len(family) >= 2 and (h[0] == family or h[0].startswith(family + " "))]
             hits = wider if sum(h[2] for h in wider) >= 5 else []
-        out.append(wmedian(hits) if hits else 0)
+        return wmedian(hits) if hits else 0
+
+    out, older = [], 0
+    for r in catalog:
+        if r[2] not in "EP":
+            out.append(0)
+            continue
+        brand, model = EEA_BRAND_ALIASES.get(norm(r[0]), norm(r[0])), norm(r[1])
+        # a model whose register years end before 2025 takes the older figure first ("GOLF" plug-in
+        # hybrid 2018-2024: 65 km, not the 2025 eHybrid's 128 km)
+        try:
+            ended = int(str(r[5]).split("–")[-1]) < 2025
+        except ValueError:
+            ended = False
+        order = ["2020-2024", "2025"] if ended else ["2025", "2020-2024"]
+        km = 0
+        for per in order:
+            km = match(tables.get(per, {}), brand, model, r[2])
+            if km:
+                older += per != "2025"
+                break
+        out.append(km)
+    print(f"   of which {older} from the 2020-2024 register", file=sys.stderr)
     return out
 
 
