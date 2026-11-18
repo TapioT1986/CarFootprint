@@ -72,6 +72,14 @@ async () => {
 
   sameCars('on load'); fits('on load');
 
+  // 11. Phone: buttons, shortcuts and section headings are at least 44 px tall to tap
+  if (document.documentElement.clientWidth <= 900) {
+    const low = [...document.querySelectorAll('button, summary, select, input:not([type=range])')]
+      .filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && !e.closest('[hidden]') && r.height < 43.5; })
+      .slice(0, 5).map(e => `${e.tagName.toLowerCase()}${e.id ? '#' + e.id : ''} ${Math.round(e.getBoundingClientRect().height)}px`);
+    if (low.length) problems.push(`${lang}: touch targets under 44 px: ${low.join(', ')}`);
+  }
+
   // 9. Each mileage shortcut sets exactly its own value (a slider step once rounded 11 800 to 12 000)
   const km0 = g().km;
   document.querySelectorAll('.chip[data-km]').forEach(b => { b.click();

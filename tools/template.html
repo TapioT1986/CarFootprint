@@ -256,6 +256,20 @@ details.info a{color:var(--accent)}
 .lang{padding:5px 10px;font-size:13px}
 .lang[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 @media (max-width:700px){.topright{align-items:flex-start}}
+/* Puhelin: kosketusalue vähintään 44 px, otsikot ja ohjetekstit vähintään 13 px */
+@media (max-width:900px){
+  .chip,.btn,.btn.sm,.lang,.seg button{min-height:44px}
+  .chip{font-size:14px;padding:0 14px}
+  .btn.sm{font-size:13.5px;padding:0 12px}
+  .car .x{min-width:44px;min-height:44px}
+  input,select{min-height:44px}
+  input[type=range]{min-height:32px}
+  details summary{padding:10px 0;min-height:44px;box-sizing:border-box}
+  .label{font-size:13px}
+  .unit,.hint,.errmsg,.evr,.q{font-size:13.5px}
+  .tag,.insp,.badge{font-size:13px}
+  .reqhint,.sub{font-size:14px}
+}
 </style>
 </head>
 <body>
