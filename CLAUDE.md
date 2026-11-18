@@ -17,8 +17,9 @@ plug-in hybrid and electric. Prices, taxes, grid emissions and the model list de
   build scripts are English. The page itself is bilingual (FI/EN).
 - He is new to Git and coding. Explain in plain language, keep answers short, and say what he
   needs to do (if anything) at the end.
-- He prefers that Claude commits and pushes for him. Ask before pushing; a short summary of
-  what changes is enough. Commit messages: short English summary line, optional body.
+- He prefers that Claude commits and pushes for him. Standing permission (owner 2026-11-18): push automatically
+  after testing; ask first only for especially large or radical changes (a short summary is enough). Every push
+  raises the version number (see below). Commit messages: short English summary line, optional body.
 
 ## Values that decide design questions
 
@@ -181,7 +182,7 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Phones show stale cached pages (restored tabs), while GitHub Pages only sends max-age=600. build.py puts a
   hash of the page into `const BUILD`; checkFresh() fetches the page with cache:'reload' on load and when the tab
   becomes visible, and reloads once (sessionStorage guard) if the BUILD differs. Keep the `const BUILD = '...'` form.
-- The header says "Beta 0.N – updated <date>" from data/version.json. Before each push that changes the page, run
+- The header says "Beta 0.N – updated <date>" from data/version.json. Before each push, run
   `py tools/build.py --release` once (raises N by one, sets today's date) and include version.json in the last
   commit. A plain build only reads the file, so CI's rebuild check stays deterministic; the monthly price workflow
   does not bump it (the price note shows the price month). <title> and the meta
