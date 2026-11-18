@@ -154,8 +154,8 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Input validation: LIM (key = car field data-k or global id) gives sanity limits, LIM_OPT the fields that may be empty.
   markField() shows the error under the field (aria-invalid, `.errmsg`); an invalid car value is not stored, globals go
   through gv() (last valid value, else HTML default), and saves/links through gRaw(). New numeric fields need a LIM entry.
-- Annual mileage: `#km` is a number field (the saved GIDS value); `#kmSlider` (step 100) mirrors it. Shortcut chips set
-  #km exactly (smoke check 9).
+- Annual mileage: `#km` is a number field (the saved GIDS value, any typed value; spinner step 500); `#kmSlider` (step 500,
+  owner's choice: 100 was too fiddly) shows the nearest step. Shortcut chips set #km exactly (smoke check 9).
 
 ## Gotchas learned the hard way
 
