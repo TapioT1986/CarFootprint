@@ -69,7 +69,9 @@ Tavoite: vastata kysymykseen "kannattaako nykyinen auto pitää vai vaihtaa, rah
 
 ## Vaihe 3 – Epävarmuus
 
-### 3.1 Arvonalenema- ja korjausskenaariot · koko M
+### 3.1 Arvonalenema- ja korjausskenaariot · koko M · osittain tehty 18.11.2026 (versio 0.69)
+- ✅ Jälleenmyyntiarvon vaihteluväli: Verohallinnon 65 803 päätöksestä yksittäisen auton arvo on puolella autoista ±7 % mallin tyypillisestä (`tools/resale_spread.py`).
+- ⏳ Iso korjaus: avointa lähdettä korjausten hinnoille ja todennäköisyyksille ei löytynyt; ei toteuteta ilman lähdettä.
 - Kaksi lisäskenaariota energian hinnan rinnalle: **jälleenmyynti ±X %** ja **yksi iso korjaus** (esim. vaihdelaatikko,
   akku). X ja korjaussummat vain lähteistetyistä luvuista (Verohallinnon verotusarvojen hajonta saman mallin ja iän sisällä
   on hyvä ehdokas; korjauksille Traficomin katsastusdata ei riitä, tarvitaan muu lähde).

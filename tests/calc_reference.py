@@ -93,7 +93,7 @@ def compute(case, vtax, cur_year):
     el = 1.0 if pt == "E" else min(1, max(0, c["share"] / 100)) if pt == "P" else 0.0
     rate = dep_rate(c["age"], n, c.get("dep", ""))
     km_adj = max(0, 1 - KM_ADJ * max(0, km - 15000) / 1000 * n)
-    resid = max(0, c["price"] * (1 - rate) ** n * km_adj)
+    resid = max(0, c["price"] * (1 - rate) ** n * km_adj * G.get("residK", 1))
     dep = (c["price"] - resid) / n
     # current car: its own remaining loan; other cars: own money + current car's net value (trade-in)
     if c.get("mine"):

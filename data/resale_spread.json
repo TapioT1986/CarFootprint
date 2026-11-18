@@ -1,0 +1,17 @@
+{
+ "description": "Spread of a single car's value around its model's median (Tax Administration taxation values, ages made comparable with the page's depreciation curve). p25/p75 = middle half of the cars.",
+ "source": [
+  "henkiloautojen-sovelletut-verotusarvot-2025.xls",
+  "henkiloautojen-sovelletut-verotusarvot-2026.xls"
+ ],
+ "method": "tools/resale_spread.py",
+ "decisions": 65803,
+ "groups": 375,
+ "percentiles": {
+  "p10": 0.853,
+  "p25": 0.926,
+  "p50": 1.0,
+  "p75": 1.074,
+  "p90": 1.155
+ }
+}

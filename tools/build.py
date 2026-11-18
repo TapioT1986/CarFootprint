@@ -663,6 +663,10 @@ def main():
     if len(cr_model) != len(catalog):
         cr_model = [0] * len(catalog)  # catalogue changed: rerun tools/city_ratio.py --write
     page = page.replace("__CITY_R__", json.dumps(cr_ratios, separators=(",", ":")))
+    # Spread of a single car's resale value around its model's typical value (tools/resale_spread.py)
+    rsp = root / "data" / "resale_spread.json"
+    rs = json.loads(rsp.read_text(encoding="utf-8")).get("percentiles") if rsp.exists() else None
+    page = page.replace("__RESALE__", json.dumps(rs or {}, separators=(",", ":")))
     page = page.replace("__CITY_M__", json.dumps(cr_model, separators=(",", ":")))
     # Estimated value when new for every catalogue row (tools/budget_values.py), for prices when a model is picked
     mvp = root / "data" / "model_values.json"

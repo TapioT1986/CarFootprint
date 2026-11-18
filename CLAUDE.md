@@ -134,6 +134,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   −7…−32 °C). Discodata's firewall blocks filtered SQL; use the data viewer's CSV download instead.
   build_catalog() checks for the Traficom file before importing pandas, so a sources/ folder with only small
   extracts keeps the plain build working.
+- Resale range (`rsr` in update(), G.residK in calc()): RESALE = data/resale_spread.json from tools/resale_spread.py (Vero
+  decisions grouped by make/model/fuel, >= 20 each, values moved to 'when new' with the page's curve; ratio to group median,
+  p25 0.926 / p75 1.074). The result card shows the yearly total with the residual value at p75 and p25. Test case 12.
 - Energy price range (`energyRange()`, `#rangeInfo`): PRANGE = prices.json `ranges` from update_prices.py: min/max of
   12-month average prices over 15 years in today's money (CPI khi/11xs ip_0_2005; the 2015 base starts only in 2015).
   Low/high = all energies at their extremes at once, widened to include the current price; totals rounded to 10 €.

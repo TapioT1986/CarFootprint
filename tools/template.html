@@ -515,7 +515,7 @@ fi: {
   pt:{B:'Bensiini',D:'Diesel',H:'Hybridi',P:'Ladattava hybridi',E:'Sähkö'},
   tagline:'Mitä auto oikeasti maksaa vuodessa – ja paljonko se päästää',
   title:'CarFootprint – auton todelliset vuosikulut ja päästöt', desc:'Mitä auto oikeasti maksaa vuodessa ja paljonko se päästää. Suomen hinnoilla, veroilla ja rekisteritiedoilla. Uudet ja käytetyt autot, todellinen kulutus ja arvonalenema.',
-  rng:(a,b)=>`Energian hintojen vaihtelulla: ${a}–${b} € / v`, rng_sum:'Energian hinnan vaihtelu: lisätietoja',
+  rng:(a,b)=>`Energian hintojen vaihtelulla: ${a}–${b} € / v`, rs_rng:(a,b)=>`Jälleenmyyntiarvon vaihtelulla: ${a}–${b} € / v`, rng_sum:'Energian hinnan vaihtelu: lisätietoja',
   rng_intro:(y)=>`Tuloskorttien vaihteluväli kertoo, mitä vuosikulu olisi, jos energia maksaisi yhtä vähän tai yhtä paljon kuin halvimpana ja kalleimpana 12 kuukauden jaksona viimeisten ${y} vuoden aikana. Kaikki muu pysyy laskelmassa ennallaan.`,
   rng_head:['Energia','Halvin 12 kk','Kallein 12 kk','Laskelmassa nyt'], rng_names:{petrol:'Bensiini', diesel:'Diesel', electricity:'Sähkö kotona'},
   rng_src:(cpi)=>`<b>Lähteet:</b> Tilastokeskus: <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/" target="_blank" rel="noopener">polttonesteiden keskihinnat</a> (khi/11xx) ja <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/" target="_blank" rel="noopener">sähkön kokonaishinta</a> kotitaloudelle, joka käyttää 5 000–15 000 kWh vuodessa (ehi/13rb). Hinnat on muutettu kuukauden ${cpi} rahaksi <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xs.px/" target="_blank" rel="noopener">kuluttajahintaindeksillä</a> (khi/11xs, 2005=100). Luvut päivittyvät kuukausittain hintojen mukana.`,
@@ -541,7 +541,7 @@ fi: {
     e100:'Energia, € / 100 km', energy:'Energia', traf:'Liikennevakuutus (pakollinen)', kasko:'Kasko', tax:'Ajoneuvovero', serv:'Huolto ja korjaukset (arvio)',
     src:'lähde', src_price:'hinta', src_cons:'kulutus', src_serv:'kasvukertoimet', assumed:'oletus, ei lähdettä', k_full:'täyskasko', k_part:'osakasko', k_none:'ei kaskoa',
     tyre:'Renkaat ja muut', run:'Käyttökulut yhteensä', dep:'Arvonalenema (arvio)', cap:'Rahoitus: korot, kulut, oman rahan tuotto', total:'Kaikki yhteensä',
-    dep_note:'Arvonalenema on mallien keskiarvo Verohallinnon verotusarvoista, ei ennuste juuri sinun autollesi: kunto, huoltohistoria, varustelu ja sähköautossa akun kunto voivat muuttaa jälleenmyyntihintaa paljon.',
+    dep_note:'Arvonalenema on mallien keskiarvo Verohallinnon verotusarvoista, ei ennuste juuri sinun autollesi: kunto, huoltohistoria, varustelu ja sähköautossa akun kunto voivat muuttaa jälleenmyyntihintaa paljon. Samassa aineistossa puolet yksittäisistä autoista on arvoltaan 7 % mallinsa tyypillistä arvoa halvempia tai kalliimpia, ja joka viides yli 15 %; tuloskortin jälleenmyyntiväli käyttää tuota keskimmäistä puolikasta.',
     foot:'Lähteet ja oletukset kohdassa Näin laskenta toimii: vakuutukset Taloustaidon hintavertailuista, vero ajoneuvoverolain taulukoista, huolto tasoarviona ajomäärän mukaan (Consumer Reports 2020), arvonalenema Verohallinnon verotusarvoista. Kaikki arvot voi muuttaa auton kohdassa Tarkenna.'},
   q_h:'Kulutustieto:', q_model:n=>`mallikohtainen mittaus, ${n} autoa (EEA)`, q_brand:(b,n)=>`merkin keskiarvo (${b}, ${n} autoa, EEA)`,
   q_fleet:'käyttövoiman keskiarvo (EEA)', q_own:'oma tieto', q_nedc:'mallin virallinen NEDC-arvo ja vuoden keskimääräinen ero (ICCT)',
@@ -678,7 +678,7 @@ en: {
   pt:{B:'Petrol',D:'Diesel',H:'Hybrid',P:'Plug-in hybrid',E:'Electric'},
   tagline:'What a car really costs per year, and how much it emits',
   title:'CarFootprint – what a car really costs per year and emits', desc:'What a car really costs per year and how much it emits, with Finnish prices, taxes and register data. New and used cars, real-world consumption and depreciation.',
-  rng:(a,b)=>`With energy price swings: ${a}–${b} € / yr`, rng_sum:'Energy price swings: more details',
+  rng:(a,b)=>`With energy price swings: ${a}–${b} € / yr`, rs_rng:(a,b)=>`With resale value swings: ${a}–${b} € / yr`, rng_sum:'Energy price swings: more details',
   rng_intro:(y)=>`The range on each result card shows the yearly cost if energy cost as little or as much as in the cheapest and dearest 12-month period of the last ${y} years. Everything else in the calculation stays the same.`,
   rng_head:['Energy','Cheapest 12 months','Dearest 12 months','Used now'], rng_names:{petrol:'Petrol', diesel:'Diesel', electricity:'Home electricity'},
   rng_src:(cpi)=>`<b>Sources:</b> Statistics Finland: <a href="https://pxdata.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/" target="_blank" rel="noopener">average prices of liquid fuels</a> (khi/11xx) and the <a href="https://pxdata.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/" target="_blank" rel="noopener">total electricity price</a> for a household using 5,000–15,000 kWh a year (ehi/13rb). Prices are converted into the money of ${cpi} with the <a href="https://pxdata.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__khi/statfin_khi_pxt_11xs.px/" target="_blank" rel="noopener">consumer price index</a> (khi/11xs, 2005=100). The figures update monthly with the prices.`,
@@ -704,7 +704,7 @@ en: {
     e100:'Energy, € / 100 km', energy:'Energy', traf:'Motor liability (compulsory)', kasko:'Comprehensive', tax:'Vehicle tax', serv:'Servicing and repairs (estimate)',
     src:'source', src_price:'price', src_cons:'consumption', src_serv:'rise factors', assumed:'assumption, no source', k_full:'full', k_part:'partial', k_none:'none',
     tyre:'Tyres and other', run:'Running costs total', dep:'Depreciation (estimate)', cap:'Financing: interest, fees, return on own money', total:'All costs total',
-    dep_note:'Depreciation is an average over models from Tax Administration values, not a forecast for your car: condition, service history, equipment and, for an electric car, the battery can move the resale price a lot.',
+    dep_note:'Depreciation is an average over models from Tax Administration values, not a forecast for your car: condition, service history, equipment and, for an electric car, the battery can move the resale price a lot. In the same data half of the individual cars are within 7% of their model\'s typical value, and one in five differ by more than 15%; the resale range on the result cards uses that middle half.',
     foot:'Sources and assumptions under How the calculation works: insurance from Taloustaito price comparisons, tax from the Vehicle Tax Act tables, servicing as a level estimate scaled by mileage (Consumer Reports 2020), depreciation from Tax Administration values. Every value can be changed under Fine-tune on the car.'},
   q_h:'Consumption data:', q_model:n=>`model-specific measurement, ${n} cars (EEA)`, q_brand:(b,n)=>`brand average (${b}, ${n} cars, EEA)`,
   q_fleet:'powertrain average (EEA)', q_own:'your own figure', q_nedc:"the model's official NEDC figure and the average gap for its year (ICCT)",
@@ -1091,6 +1091,7 @@ function choose(inp, label){ inp.value = label; closeSugg(inp); inp.dispatchEven
 // Hinnat, jotka sivu tarjosi oletuksena. Tallennetaan mukaan, jotta käyttäjän itse
 // muuttamat hinnat säilyvät mutta koskemattomat oletukset päivittyvät uusiin.
 const PRICE_DEF = {pBens:'__P_PETROL__', pDies:'__P_DIESEL__', pEl:'__P_ELEC__'};
+const RESALE = __RESALE__; // yksittäisen auton arvo / mallin mediaani, persentiilit (tools/resale_spread.py)
 const PRICE_SRC = __PRICE_SRC__; // oletushintojen kuukausi ja lähde (data/prices.json)
 // Tuloskortin energian hinta: käytetty hinta ja sen lähde (Tilastokeskuksen kuukausi tai oma hinta)
 function priceText(c, G){
@@ -1157,7 +1158,8 @@ function calc(c, G, km){
     for (const [a,r] of AGE_DEP) if (mid>=a) rate=r;
   } else rate = num(c.dep)/100;
   const kmAdj = Math.max(0, 1 - 0.002*Math.max(0,km-15000)/1000*n);
-  const resid = Math.max(0, c.price*Math.pow(1-rate,n)*kmAdj);
+  // G.residK: jälleenmyyntiarvon skenaario (1 = mallin tyypillinen arvo, RESALE.p25/p75 = puolet autoista tällä välillä)
+  const resid = Math.max(0, c.price*Math.pow(1-rate,n)*kmAdj*(G.residK ?? 1));
   const dep = (c.price-resid)/n;
   // Rahoitus: tasaerälaina sille osalle, jota oma raha ei kata
   // Nykyinen auto: jäljellä oleva laina omalla laina-ajallaan. Muut: oma raha + nykyisen auton nettoarvo (vaihtohyvitys).
@@ -1597,6 +1599,8 @@ function update(){
   const minCost = Math.min(...R.map(r=>r.total)), minEm = Math.min(...R.map(r=>r.em));
   const before = [...document.querySelectorAll('#sums .big')].map(e=>e.textContent);
   const rng = cars.map(c => energyRange(c, G));
+  // Jälleenmyyntiarvon vaihtelu: yksittäisen auton arvo mallinsa mediaanista (Verohallinto), keskimmäinen puolikas
+  const rsr = cars.map(c => RESALE.p25 ? [calc(c, {...G, residK:RESALE.p75}).total, calc(c, {...G, residK:RESALE.p25}).total] : null);
   const mi = cars.findIndex(c => c.mine), mineR = mi >= 0 ? R[mi] : null;
   const sgn = (v, d=0) => (Math.round(v*10**d)/10**d > 0 ? '+' : Math.round(v*10**d)/10**d < 0 ? '−' : '±') + fmt(Math.abs(v), d);
   $('sums').innerHTML = cars.map((c,i)=>{ const r=R[i];
@@ -1609,6 +1613,7 @@ function update(){
       ${c.mine?'':r.loan<=0?`<div class="sub">${T('up_cash')(fmt(c.price))}</div>`:(c.price-r.loan>0?`<div class="sub">${T('up_part')(fmt(c.price-r.loan), fmt(r.loan))}</div>`:'')}
       <div class="sub">${T('en_km')(fmt(r.energy/G.km,2))} · ${priceText(c, G)}</div>
       ${rng[i]?`<div class="sub">${T('rng')(fmt(rng[i][0]), fmt(rng[i][1]))}</div>`:''}
+      ${rsr[i]?`<div class="sub">${T('rs_rng')(fmt(Math.round(rsr[i][0]/10)*10), fmt(Math.round(rsr[i][1]/10)*10))}</div>`:''}
       <div class="sub">${fmt(r.em)} kg CO₂e/${yr} · ${fmt(r.em*1000/G.km)} g/km</div>
       <div class="badges">${c.mine?`<span class="badge mineb">★ ${T('mine_on')}</span>`:''}${!c.mine&&G.budget>0&&c.price>G.budget?`<span class="badge warn">${T('over')}</span>`:''}${G.monthly>0&&Math.round(r.cash)>G.monthly?`<span class="badge warn">${T('over_mo')}</span>`:''}${cars.length>1&&r.total===minCost?`<span class="badge win">${T('cheapest')}</span>`:''}${cars.length>1&&r.em===minEm?`<span class="badge win">${T('cleanest')}</span>`:''}</div>
       <details class="sumd"><summary>${T('sumd')}</summary><div class="sub">${T('all_km')(fmt(r.total/G.km,2))}</div><div class="sub">${T('parts')(fmt(r.dep), fmt(r.cap), fmt(r.energy), fmt(r.other))}</div></details>
