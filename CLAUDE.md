@@ -238,6 +238,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 
 ## Open ideas (not started)
 
+The prioritised plan is in ROADMAP.md (Finnish, 2026-11-18): calculation test suite first, then the keep-or-switch
+calculator (trade-in, remaining loan, switching emissions), uncertainty scenarios, feedback channel and SEO, user testing.
+
+
 - Use the inspection-based lifetime as the model default for `life` (owner chose information-only first, 2026-11).
 - Per-model total mass from the Traficom register (needs the ~200 MB source file) for the propulsion tax.
 - A Finnish or European source for the servicing-and-repair rise (now US Consumer Reports factors).
