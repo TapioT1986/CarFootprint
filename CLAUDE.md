@@ -192,3 +192,6 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Per-model total mass from the Traficom register (needs the ~200 MB source file) for the propulsion tax.
 - A Finnish or European source for the servicing-and-repair rise (now US Consumer Reports factors).
 - A "what the same yearly money buys" view, once the above exist.
+- ToDo (owner 2026-11-18): a feedback channel directly on the page for collecting user feedback systematically
+  (now only a GitHub-issues link, which needs an account). Must fit the values: no tracking, no third-party
+  analytics, no e-mail address on the page; collect only what the user writes, say where it goes.
