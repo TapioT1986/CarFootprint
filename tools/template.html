@@ -251,6 +251,26 @@ details.info summary{cursor:pointer;color:var(--accent);font-weight:600}
 details.info p,details.info ul{margin:8px 0}
 details.info ul{padding-left:18px}
 details.info a{color:var(--accent)}
+.costs{margin:14px 0 4px}
+.costs h3{font-size:19px}
+.costs .lead{margin:2px 0 8px;color:var(--muted);font-size:13.5px;max-width:70ch}
+.ctable{border-collapse:collapse;font-size:14px;width:100%;max-width:760px;table-layout:fixed}
+.ctable th,.ctable td{padding:6px 6px 6px 0;border-bottom:1px solid var(--line);text-align:right;vertical-align:bottom;overflow-wrap:anywhere}
+.ctable th[scope=row]{text-align:left;font-weight:500;width:34%}
+.ctable thead th{font-weight:600;font-size:13px;line-height:1.25}
+.ctable thead .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--cc);margin-right:4px}
+.ctable td.n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.ctable tr.sub1 th,.ctable tr.sub1 td{font-weight:700;border-bottom:2px solid var(--ink)}
+.ctable th[scope=row]{overflow-wrap:normal;hyphens:auto}
+/* Puhelin: rivin nimi omalle rivilleen, autojen luvut sen alle sarakkeisiin */
+@media (max-width:560px){
+  .ctable{font-size:13.5px;table-layout:auto}
+  .ctable tr{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));column-gap:6px}
+  .ctable thead th:first-child{display:none}
+  .ctable tbody th[scope=row]{grid-column:1/-1;width:auto;border:0;padding:8px 0 0;color:var(--muted)}
+  .ctable td{padding:2px 0 6px}
+  .ctable tr.sub1 th{border:0;color:var(--ink)}
+}
 .rtable{border-collapse:collapse;margin:8px 0;font-size:13px;width:100%;max-width:640px}
 .rtable th,.rtable td{text-align:left;padding:5px 8px 5px 0;border-bottom:1px solid var(--line);vertical-align:top}
 .rtable th{font-weight:600;color:var(--muted)}
@@ -383,6 +403,7 @@ details.info a{color:var(--accent)}
       <section class="results" aria-live="polite">
         <div class="sumrow" id="sums"></div>
         <p class="sens" id="sens"></p>
+        <div class="costs" id="costs"></div>
         <details class="info" id="rangeInfo"><summary data-i="rng_sum"></summary><div id="rangeBody"></div></details>
         <p class="hint disclaim" data-i="disclaim"></p>
         <div class="sharebar"><button class="btn share" type="button" id="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span data-i="share"></span></button><span class="hint shareinv" data-i="share_inv"></span><span class="hint" id="shareMsg" role="status"></span></div>
@@ -458,6 +479,10 @@ fi: {
   all_km:(v)=>`Kaikki kulut kilometriä kohden: ${v} €/km (vuosikulu jaettuna ajomäärällä; suurin osa ei riipu ajetuista kilometreistä).`,
   parts:(d,c,e,o)=>`Vuodessa: arvonalenema ${d} €, rahoitus ${c} €, energia ${e} €, vero, vakuutus, huolto ja renkaat ${o} €.`,
   electricity:'sähkö', p_stat:'Tilastokeskus', p_own:'oma hinta',
+  ct:{h:'Kulut eriteltyinä', lead:'€ vuodessa omistusaikana keskimäärin. Ensin käyttökulut, jotka maksat ajaessasi ja omistaessasi, sitten arvonalenema ja rahoitus.',
+    e100:'Energia, € / 100 km', energy:'Energia', traf:'Liikennevakuutus (pakollinen)', kasko:'Kasko (vapaaehtoinen)', tax:'Ajoneuvovero', serv:'Huolto ja korjaukset (arvio)',
+    tyre:'Renkaat ja muut', run:'Käyttökulut yhteensä', dep:'Arvonalenema (arvio)', cap:'Rahoitus: korot, kulut, oman rahan tuotto', total:'Kaikki yhteensä',
+    foot:'Lähteet ja oletukset kohdassa Näin laskenta toimii: vakuutukset Taloustaidon hintavertailuista, vero ajoneuvoverolain taulukoista, huolto tasoarviona ajomäärän mukaan (Consumer Reports 2020), arvonalenema Verohallinnon verotusarvoista. Kaikki arvot voi muuttaa auton kohdassa Tarkenna.'},
   q_h:'Kulutustieto:', q_model:n=>`mallikohtainen mittaus, ${n} autoa (EEA)`, q_brand:(b,n)=>`merkin keskiarvo (${b}, ${n} autoa, EEA)`,
   q_fleet:'käyttövoiman keskiarvo (EEA)', q_own:'oma tieto', q_nedc:'mallin virallinen NEDC-arvo ja vuoden keskimääräinen ero (ICCT)',
   q_ev:'mallin virallinen WLTP-arvo (EEA), mitattua tietoa ei ole', q_def:'käyttövoiman oletusarvo',
@@ -596,6 +621,10 @@ en: {
   all_km:(v)=>`All costs per kilometre: €${v}/km (yearly cost divided by mileage; most of it does not depend on the kilometres driven).`,
   parts:(d,c,e,o)=>`Per year: depreciation €${d}, financing €${c}, energy €${e}, tax, insurance, servicing and tyres €${o}.`,
   electricity:'electricity', p_stat:'Statistics Finland', p_own:'your price',
+  ct:{h:'Costs itemised', lead:'Euros per year, averaged over the ownership period. Running costs you pay for driving and owning first, then depreciation and financing.',
+    e100:'Energy, € / 100 km', energy:'Energy', traf:'Motor liability (compulsory)', kasko:'Comprehensive (optional)', tax:'Vehicle tax', serv:'Servicing and repairs (estimate)',
+    tyre:'Tyres and other', run:'Running costs total', dep:'Depreciation (estimate)', cap:'Financing: interest, fees, return on own money', total:'All costs total',
+    foot:'Sources and assumptions under How the calculation works: insurance from Taloustaito price comparisons, tax from the Vehicle Tax Act tables, servicing as a level estimate scaled by mileage (Consumer Reports 2020), depreciation from Tax Administration values. Every value can be changed under Fine-tune on the car.'},
   q_h:'Consumption data:', q_model:n=>`model-specific measurement, ${n} cars (EEA)`, q_brand:(b,n)=>`brand average (${b}, ${n} cars, EEA)`,
   q_fleet:'powertrain average (EEA)', q_own:'your own figure', q_nedc:"the model's official NEDC figure and the average gap for its year (ICCT)",
   q_ev:"the model's official WLTP figure (EEA); no measured data", q_def:'powertrain default',
@@ -1200,6 +1229,26 @@ function breakEven(el, G){
   return cross;
 }
 
+// Kulut eriteltyinä: käyttökulut omina riveinään, sitten arvonalenema ja rahoitus (€/v omistusaikana keskimäärin)
+function costTable(R, G){
+  const L = T('ct'), col = (f, cls='') => R.map((r,i) => `<td class="n${cls}">${f(r, cars[i])}</td>`).join('');
+  const row = (name, f, cls='') => `<tr${cls?` class="${cls}"`:''}><th scope="row">${name}</th>${col(f)}</tr>`;
+  const run = r => r.energy + r.other;
+  return `<h3>${L.h}</h3><p class="lead">${L.lead}</p><div class="ctwrap"><table class="ctable" style="--n:${cars.length}">
+    <thead><tr><th></th>${cars.map((c,i) => `<th scope="col" style="--cc:${COLORS[i]}"><span class="dot"></span>${esc(trunc(c.name,18))}</th>`).join('')}</tr></thead><tbody>
+    ${row(L.e100, r => fmt(r.energy/G.km*100,2))}
+    ${row(L.energy, r => fmt(r.energy))}
+    ${row(L.traf, (r,c) => fmt(num(c.traf,0)))}
+    ${row(L.kasko, (r,c) => fmt(num(c.kasko,0)))}
+    ${row(L.tax, r => fmt(r.tax))}
+    ${row(L.serv, r => fmt(r.serv))}
+    ${row(L.tyre, (r,c) => fmt(num(c.other,0)))}
+    ${row(L.run, r => fmt(run(r)), 'sub1')}
+    ${row(L.dep, r => fmt(r.dep))}
+    ${row(L.cap, r => fmt(r.cap))}
+    ${row(L.total, r => fmt(r.total), 'sub1')}
+    </tbody></table></div><p class="hint">${L.foot}</p>`;
+}
 // Kulutustiedon laatu lyhyesti auton kortissa: mistä kulutus tulee (sama tieto kuin rwText, tiivistettynä)
 function qualText(c){
   const el = c.pt==='E' || c.pt==='P', dk = (c.picked && c.picked[7]!=null) ? c.picked[7] : PT_DEF[c.pt].kwh;
@@ -1386,6 +1435,7 @@ function update(){
   cars.forEach((c,i)=>{ const e=$('insp'+i); if(e) e.innerHTML = inspText(c); });
   cars.forEach((c,i)=>{ const e=$('evr'+i); if(e) e.innerHTML = evRangeText(c); });
   cars.forEach((c,i)=>{ const e=$('q'+i); if(e) e.innerHTML = qualText(c); });
+  $('costs').innerHTML = costTable(R, G);
   cars.forEach((c,i)=>{ const e=$('cc'+i); if(!e) return; const n = carChanged(c,i); e.textContent = n ? T('more_n')(n) : ''; });
   cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];
     t.textContent = T('tag')(fmt(r.rate*100,0), fmt(r.endAge), fmt(r.endOdo), fmt(r.resid)) + (r.loan>0?T('loan_tag')(fmt(r.loan), fmt(r.pay)):'') + T('make_tag')(fmt(r.makeT,1), battT(c)) + T('serv_tag')(fmt(r.serv), fmt(r.servF,1)) + (r.autoTax?T('tax_tag')(fmt(r.tax), fmt(r.vt.base), fmt(r.vt.prop)):'') + T('ins_tag')(fmt(num(c.traf,0)), fmt(num(c.kasko,0))) + (c.picked?T('reg')(fmt(c.picked[4]), c.picked[5]):'') + rwText(c);

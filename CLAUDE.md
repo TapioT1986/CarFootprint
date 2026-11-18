@@ -141,6 +141,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   loan payment incl. fees + (energy + other)/12 while the loan runs (r.cash; r.cashAfter after a shorter loan);
   depreciation and return on own money are not cash. Always shown; below them the cash-purchase sum (loan 0) or own money
   + loan. Monthly budget (optional, field `monthly`) only adds the over-budget flag.
+- Costs itemised (`costTable()`, `#costs`, below the result cards): energy per 100 km and per year, motor liability, comprehensive,
+  vehicle tax, servicing, tyres and other, running costs total, then depreciation, financing and the total. On phones each
+  row name sits on its own line above the car columns (CSS grid, --n = number of cars). Result cards also show the energy
+  price used and its StatFin month (`priceText()`, PRICE_SRC injected by build.py).
 - Consumption data quality (`qualText()`, `#q<i>`, visible on the car card): model measurement (n) / brand average /
   powertrain average / NEDC + ICCT gap / EV WLTP register / default / own figure (autoFuel false or kwh differs from the
   row's or PT default).
