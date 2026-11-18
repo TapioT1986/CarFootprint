@@ -108,6 +108,16 @@ async () => {
       sameCars('after picking a model'); fits('after picking a model');
     }
   }
+  // 10. An impossible value shows a field error and does not enter the calculation
+  const price0 = $('price0');
+  if (price0 && typeof markField === 'function') {
+    const tot = $('sums').querySelector('.big').textContent, old = price0.value;
+    fire(price0, '-5000'); await wait(30);
+    if (price0.getAttribute('aria-invalid') !== 'true') problems.push(`${lang}: price -5000 is not marked as an error`);
+    if ($('sums').querySelector('.big').textContent !== tot) problems.push(`${lang}: price -5000 changed the result`);
+    fire(price0, old); await wait(30);
+    if (price0.getAttribute('aria-invalid') === 'true') problems.push(`${lang}: valid price ${old} still marked as an error`);
+  }
   // 5. A shared link brings back the same cars and results
   if (typeof encodeShare === 'function') {
     const names = () => [...document.querySelectorAll('#sums .nm')].map(e => e.innerText.trim());

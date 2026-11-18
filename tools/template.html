@@ -91,6 +91,8 @@ input,select{font:inherit;color:var(--ink);background:var(--input);border:1px so
 input[type=number]{font-family:var(--mono);font-variant-numeric:tabular-nums}
 input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .unit{font-size:12px;color:var(--muted)}
+input[aria-invalid="true"]{border-color:var(--warn);box-shadow:0 0 0 1px var(--warn)}
+.errmsg{font-size:12.5px;line-height:1.35;color:var(--warn);font-weight:600}
 
 .km{display:flex;flex-direction:column;gap:6px}
 .km .read{display:flex;align-items:baseline;gap:8px}
@@ -433,6 +435,7 @@ fi: {
   en_km:(v)=>`ajon energia ${v} €/km`, sumd:'Lisätietoja',
   all_km:(v)=>`Kaikki kulut kilometriä kohden: ${v} €/km (vuosikulu jaettuna ajomäärällä; suurin osa ei riipu ajetuista kilometreistä).`,
   parts:(d,c,e,o)=>`Vuodessa: arvonalenema ${d} €, rahoitus ${c} €, energia ${e} €, vero, vakuutus, huolto ja renkaat ${o} €.`,
+  err:r=>`Tarkista arvo (sallittu ${r}). Laskenta käyttää edellistä kelvollista arvoa.`,
   price_est:'€, arvio Verohallinnon verotusarvoista: vaihda oikeaan hintaan', price_none:'€, tälle mallille ei ole hinta-arviota: tarkista hinta',
   sens_h:'Kuinka varma järjestys on?', sens_close:'Autot ovat lähes tasoissa. ', sens_if:(p)=>`Halvin vaihtuu, jos ${p}.`, sens_or:' tai ',
   sens_none:'Halvin pysyy samana, vaikka ajomäärä, energian hinnat, omistusaika tai arvonalenema muuttuisivat tutkituissa rajoissa (ks. Näin laskenta toimii).',
@@ -565,6 +568,7 @@ en: {
   en_km:(v)=>`driving energy €${v}/km`, sumd:'More details',
   all_km:(v)=>`All costs per kilometre: €${v}/km (yearly cost divided by mileage; most of it does not depend on the kilometres driven).`,
   parts:(d,c,e,o)=>`Per year: depreciation €${d}, financing €${c}, energy €${e}, tax, insurance, servicing and tyres €${o}.`,
+  err:r=>`Check the value (allowed ${r}). The calculation uses the last valid value.`,
   price_est:'€, estimate from Tax Administration values: change to the real price', price_none:'€, no price estimate for this model: check the price',
   sens_h:'How firm is the ranking?', sens_close:'The cars are nearly even. ', sens_if:(p)=>`The cheapest car changes if ${p}.`, sens_or:' or ',
   sens_none:'The cheapest car stays the same even if mileage, energy prices, ownership period or depreciation change within the tested limits (see How the calculation works).',
@@ -797,6 +801,37 @@ const examples = () => SLOTS.map(sl => exampleCar(sl, num($('budget').value, 120
 const $ = id => document.getElementById(id);
 const fmt = (n,d=0) => (isFinite(n)?n:0).toLocaleString(T('locale'),{maximumFractionDigits:d,minimumFractionDigits:d});
 const num = (v,def=0) => { const x = parseFloat(String(v).replace(',','.')); return isFinite(x)?x:def; };
+// Syötteiden järkevyysrajat: arvo rajojen ulkopuolella (tai tyhjä pakollinen kenttä) näytetään kentän virheenä,
+// eikä sitä käytetä laskennassa (laskenta käyttää edellistä kelvollista arvoa). Avain = auton kenttä (data-k) tai id.
+const LIM = {price:[0,1e6], age:[0,60], odo:[0,2e6], dep:[0,100], fuel:[0.5,50], kwh:[5,60], share:[0,100],
+  traf:[0,5000], kasko:[0,10000], other:[0,20000], serv:[0,20000], tax:[0,10000], real:[0.5,3], make:[0,100],
+  batt:[0,300], life:[1,60], mass:[500,5000],
+  km:[2000,50000], years:[1,20], budget:[0,1e6], monthly:[0,1e5], own:[0,1e6], loanRate:[0,40], loanFee:[0,100],
+  loanYears:[1,10], ownRate:[0,20], pBens:[0,10], pDies:[0,10], pEl:[0,2], loss:[0,100], eBens:[0,10], eDies:[0,10]};
+const LIM_OPT = new Set(['dep','tax','monthly']); // tyhjä = automaattinen tai ei käytössä
+function fieldOk(el){
+  const key = el.dataset.k || el.id, lim = LIM[key], t = String(el.value).trim();
+  if (t==='') return LIM_OPT.has(key) || !lim;
+  const v = num(t, NaN); if (!isFinite(v)) return false;
+  return !lim || (v >= lim[0] && v <= lim[1]);
+}
+function markField(el){
+  const ok = fieldOk(el), box = el.closest('.field') || el.closest('.km'); if (!box) return ok;
+  let m = box.querySelector('.errmsg');
+  if (!ok && !m){ m = document.createElement('span'); m.className = 'errmsg'; m.id = el.id + '_err'; box.appendChild(m); }
+  if (m){ m.hidden = ok; const lim = LIM[el.dataset.k || el.id] || [0,0], f = x => x.toLocaleString(T('locale'));
+    m.textContent = ok ? '' : T('err')(f(lim[0]) + '–' + f(lim[1])); }
+  el.setAttribute('aria-invalid', String(!ok));
+  if (m && !ok) el.setAttribute('aria-describedby', m.id); else el.removeAttribute('aria-describedby');
+  return ok;
+}
+// Yleisasetus laskentaan: kelvollinen arvo, muuten edellinen kelvollinen (tai HTML-oletus)
+const gLast = {};
+function gv(id, def){ const el = $(id);
+  if (fieldOk(el)){ const v = num(el.value, def); gLast[id] = v; return v; }
+  return gLast[id] ?? num(el.defaultValue, def); }
+// Tallennettava raaka-arvo: virheellisen tilalle viimeisin kelvollinen
+const gRaw = el => (el.type!=='number' || fieldOk(el)) ? el.value : String(gLast[el.id] ?? el.defaultValue);
 
 // Asettaa kulutusoletukset rekisteririvistä ja auton iästä.
 function fromRow(c, r){
@@ -838,7 +873,7 @@ const estPrice = (r, age) => { const v0 = MV0[CATALOG.indexOf(r)]; return v0 ? M
 function autoPriceAge(c, r){
   const own = c.own || {}, [y0, y1] = String(r[5]).split('–').map(Number);
   const minAge = Math.max(0, CUR_YEAR - (y1||CUR_YEAR)), maxAge = Math.max(minAge, CUR_YEAR - (y0||CUR_YEAR));
-  const budget = num($('budget').value, 0);
+  const budget = gv('budget', 0);
   if (!own.age){
     let a = Math.min(maxAge, Math.max(minAge, Math.round(c.age||0)));
     if (MV0[CATALOG.indexOf(r)] && budget > 0){
@@ -888,13 +923,13 @@ const EX_VERSION = 9; // kasvata, kun esimerkkiautot vaihtuvat
 function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF, ev:EX_VERSION})); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
 const GIDS = ['km','years','budget','monthly','own','loanRate','loanFee','loanYears','ownRate','pBens','pDies','pEl','loss','elSrc','eBens','eDies'];
-function readGlobalsRaw(){ const o={}; GIDS.forEach(id=>o[id]=$(id).type==='select-one'?$(id).selectedIndex:$(id).value); return o; }
+function readGlobalsRaw(){ const o={}; GIDS.forEach(id=>o[id]=$(id).type==='select-one'?$(id).selectedIndex:gRaw($(id))); return o; }
 function g(){
-  return {km:num($('km').value,15000), years:Math.max(1,num($('years').value,5)),
-    budget:num($('budget').value,0), monthly:Math.max(0,num($('monthly').value,0)), own:Math.max(0,num($('own').value,0)), loanRate:num($('loanRate').value,4.4)/100,
-    loanFee:num($('loanFee').value,0), loanYears:Math.max(1,num($('loanYears').value,5)), rate:num($('ownRate').value,2.48)/100,
-    pB:num($('pBens').value,__P_PETROL__), pD:num($('pDies').value,__P_DIESEL__), pE:num($('pEl').value,__P_ELEC__), loss:num($('loss').value,10)/100,
-    eEl:num($('elSrc').value,42)/1000, eB:num($('eBens').value,2.78), eD:num($('eDies').value,3.32)};
+  return {km:gv('km',15000), years:Math.max(1,gv('years',5)),
+    budget:gv('budget',0), monthly:Math.max(0,gv('monthly',0)), own:Math.max(0,gv('own',0)), loanRate:gv('loanRate',4.4)/100,
+    loanFee:gv('loanFee',0), loanYears:Math.max(1,gv('loanYears',5)), rate:gv('ownRate',2.48)/100,
+    pB:gv('pBens',__P_PETROL__), pD:gv('pDies',__P_DIESEL__), pE:gv('pEl',__P_ELEC__), loss:gv('loss',10)/100,
+    eEl:num($('elSrc').value,42)/1000, eB:gv('eBens',2.78), eD:gv('eDies',3.32)};
 }
 
 // Tasaerälainan kustannus omistusaikana: korot ja kuukausimaksut vuotta kohden,
@@ -1002,11 +1037,13 @@ function carChanged(c, i){
 }
 function renderCars(){
   $('cars').innerHTML = cars.map(carCard).join('') + (cars.length<4?`<button class="addcar" id="add" type="button">${T('add')}</button>`:'');
+  $('cars').querySelectorAll('input[type=number]').forEach(markField);
   const add = $('add'); if (add) add.onclick = () => { cars.push(newCar({name:T('car_n')+' '+(cars.length+1)})); renderCars(); update(); };
 }
 $('cars').addEventListener('input', e => {
   const el = e.target, card = el.closest('.car'); if (!card) return;
   const i = +card.dataset.i, c = cars[i];
+  if (el.type==='number' && !markField(el)) return; // virheellinen arvo ei mene laskentaan
   c.exAuto = false;
   if (el.dataset.pick!==undefined){
     const r = byLabel.get(el.value); if (!r){ suggest(el); return; }
@@ -1255,6 +1292,7 @@ function tipText(t){
   return `${s} (→ ${esc(cars[t.w].name)})`;
 }
 function update(){
+  GIDS.forEach(id => { const el = $(id); if (el.type==='number') markField(el); });
   const G = g(), yr = T('yr');
   $('kmSlider').value = G.km;
   const R = cars.map(c => calc(c,G));
@@ -1335,7 +1373,7 @@ function setPay(mode){
 }
 document.querySelectorAll('[data-pay]').forEach(b => b.onclick = () => setPay(b.dataset.pay));
 // Käteinen seuraa enimmäishintaa (ajetaan ennen update():a)
-$('budget').addEventListener('input', () => { if (payPick==='cash') $('own').value = $('budget').value; });
+$('budget').addEventListener('input', () => { if (payPick==='cash' && fieldOk($('budget'))) $('own').value = $('budget').value; });
 $('own').addEventListener('input', () => { payPick = null; }); // käsin muutettu summa: päätellään uudelleen
 function moreCount(){
   // oma raha lasketaan muutetuksi vain, jos se ei ole maksutavan valinnan suora seuraus
@@ -1386,7 +1424,7 @@ document.querySelectorAll('[data-reset]').forEach(b => b.onclick = () => {
 // Enimmäishinta muuttui: vaihda koskemattomat esimerkkiautot budjettiin sopiviksi
 $('budget').addEventListener('input', () => {
   let changed = false;
-  cars = cars.map(c => { if (!c.exAuto || !c.ex) return c; changed = true; return exampleCar(c.ex.slot, num($('budget').value, 12000)); });
+  cars = cars.map(c => { if (!c.exAuto || !c.ex) return c; changed = true; return exampleCar(c.ex.slot, gv('budget', 12000)); });
   if (changed){ renderCars(); update(); } // update() ajettiin jo vanhoilla autoilla: laske uudelleen
 });
 
@@ -1491,7 +1529,7 @@ function shareState(){
   const g0 = {};
   GIDS.forEach(id => { const el = $(id);
     if (el.type==='select-one'){ const k = [...el.options].findIndex(o=>o.defaultSelected); if (el.selectedIndex !== (k<0?0:k)) g0[id] = el.selectedIndex; }
-    else if (el.value !== el.defaultValue) g0[id] = el.value; });
+    else if (gRaw(el) !== el.defaultValue) g0[id] = gRaw(el); });
   return {v:EX_VERSION, g:g0, y:cars.map(carToShare)};
 }
 const b64u = bytes => { let t=''; bytes.forEach(b => t += String.fromCharCode(b)); return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
