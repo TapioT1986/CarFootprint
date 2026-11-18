@@ -195,3 +195,8 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - ToDo (owner 2026-11-18): a feedback channel directly on the page for collecting user feedback systematically
   (now only a GitHub-issues link, which needs an account). Must fit the values: no tracking, no third-party
   analytics, no e-mail address on the page; collect only what the user writes, say where it goes.
+  Plan chosen 2026-11-18 (no account needed from users): (1) light step under the results, "Oliko laskurista apua?"
+  with 👍/👎, one click is enough; (2) optional expansion after the click: free text field and a checkbox
+  "attach my comparison" (adds the share link). Both go to one small receiver (e.g. Cloudflare Workers, free tier)
+  with spam protection, storing the feedback or turning it into GitHub issues. No IP addresses, cookies or
+  tracking. The owner creates the Cloudflare account himself (Claude guides step by step; Claude does not create accounts).
