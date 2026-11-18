@@ -147,6 +147,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Battery health (car field `soh`, share letter H, string like dep/tax: '' = estimate): electric cars only, visible on the
   card. sohAuto = 100 - 2.3 x age (Geotab 28.4.2026, 22,700 EVs; earlier study 1.8 %/yr, pessimistic choice), floor 50.
   Range = WLTP x SOH, winter factors on top. Information only, not in the costs.
+- Battery size on electric cars is visible next to SOH (plug-in hybrids keep it under Fine-tune). Range also scales by
+  c.batt / battRef(c), where battRef = kWh in the model name (LEAF 40KWH); the register has no battery size, so for other
+  models the field only affects production emissions, and the unit text says so.
 - Car card head: one field for name and model (`#pick<i>`, value = c.name). Focus selects the text (setTimeout for touch),
   typing searches, picking a model renames the car; leaving without a pick (blur, Escape) restores c.name. There is no
   free-text name field any more (old saves and links with custom names still show them).
