@@ -457,6 +457,7 @@ fi: {
   en_km:(v)=>`ajon energia ${v} €/km`, sumd:'Lisätietoja',
   all_km:(v)=>`Kaikki kulut kilometriä kohden: ${v} €/km (vuosikulu jaettuna ajomäärällä; suurin osa ei riipu ajetuista kilometreistä).`,
   parts:(d,c,e,o)=>`Vuodessa: arvonalenema ${d} €, rahoitus ${c} €, energia ${e} €, vero, vakuutus, huolto ja renkaat ${o} €.`,
+  electricity:'sähkö', p_stat:'Tilastokeskus', p_own:'oma hinta',
   q_h:'Kulutustieto:', q_model:n=>`mallikohtainen mittaus, ${n} autoa (EEA)`, q_brand:(b,n)=>`merkin keskiarvo (${b}, ${n} autoa, EEA)`,
   q_fleet:'käyttövoiman keskiarvo (EEA)', q_own:'oma tieto', q_nedc:'mallin virallinen NEDC-arvo ja vuoden keskimääräinen ero (ICCT)',
   q_ev:'mallin virallinen WLTP-arvo (EEA), mitattua tietoa ei ole', q_def:'käyttövoiman oletusarvo',
@@ -594,6 +595,7 @@ en: {
   en_km:(v)=>`driving energy €${v}/km`, sumd:'More details',
   all_km:(v)=>`All costs per kilometre: €${v}/km (yearly cost divided by mileage; most of it does not depend on the kilometres driven).`,
   parts:(d,c,e,o)=>`Per year: depreciation €${d}, financing €${c}, energy €${e}, tax, insurance, servicing and tyres €${o}.`,
+  electricity:'electricity', p_stat:'Statistics Finland', p_own:'your price',
   q_h:'Consumption data:', q_model:n=>`model-specific measurement, ${n} cars (EEA)`, q_brand:(b,n)=>`brand average (${b}, ${n} cars, EEA)`,
   q_fleet:'powertrain average (EEA)', q_own:'your own figure', q_nedc:"the model's official NEDC figure and the average gap for its year (ICCT)",
   q_ev:"the model's official WLTP figure (EEA); no measured data", q_def:'powertrain default',
@@ -946,6 +948,17 @@ function choose(inp, label){ inp.value = label; closeSugg(inp); inp.dispatchEven
 // Hinnat, jotka sivu tarjosi oletuksena. Tallennetaan mukaan, jotta käyttäjän itse
 // muuttamat hinnat säilyvät mutta koskemattomat oletukset päivittyvät uusiin.
 const PRICE_DEF = {pBens:'__P_PETROL__', pDies:'__P_DIESEL__', pEl:'__P_ELEC__'};
+const PRICE_SRC = __PRICE_SRC__; // oletushintojen kuukausi ja lähde (data/prices.json)
+// Tuloskortin energian hinta: käytetty hinta ja sen lähde (Tilastokeskuksen kuukausi tai oma hinta)
+function priceText(c, G){
+  const one = (id, key, v, d, u) => { const s = PRICE_SRC[key] || {}, m = /^(\d{4})M(\d\d)$/.exec(s.period||'');
+    const own = Math.abs(v - num(PRICE_DEF[id], v)) > 1e-9;
+    const src = own ? T('p_own') : (m && s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${T('p_stat')} ${+m[2]}/${m[1]}</a>` : '');
+    return `${T(key).toLowerCase()} ${fmt(v,d)} ${u}${src ? ' ('+src+')' : ''}`; };
+  const f = c.pt==='D' ? one('pDies','diesel',G.pD,2,'€/l') : one('pBens','petrol',G.pB,2,'€/l');
+  const e = one('pEl','electricity',G.pE,3,'€/kWh');
+  return c.pt==='E' ? e : c.pt==='P' ? f + ', ' + e : f;
+}
 const OLD_DEFS = ['1.85','1.75','0.15','2.09','2.15','0.1791']; // ennen tallennettuja oletuksia
 // Korko-oletukset, jotka ovat vaihtuneet: koskematon vanha oletus tallennuksessa -> käytä uutta
 const OLD_RATE_DEFS = {loanRate:['4.1'], ownRate:['2.5'], eBens:['2.8'], eDies:['3.2']};
@@ -1351,7 +1364,7 @@ function update(){
       <div class="mos"><div><span class="mv">${fmt(r.total/12)} <small>€/${T('mo')}</small></span><span class="ml">${T('mo_true')}</span></div>
         <div><span class="mv">${fmt(r.cash)} <small>€/${T('mo')}</small></span><span class="ml">${T('mo_cash')(r.pay>0)}${r.cashAfter!==null?T('cash_after')(fmt(r.cashAfter)):''}</span></div></div>
       ${r.loan<=0?`<div class="sub">${T('up_cash')(fmt(c.price))}</div>`:(c.price-r.loan>0?`<div class="sub">${T('up_part')(fmt(c.price-r.loan), fmt(r.loan))}</div>`:'')}
-      <div class="sub">${T('en_km')(fmt(r.energy/G.km,2))}</div>
+      <div class="sub">${T('en_km')(fmt(r.energy/G.km,2))} · ${priceText(c, G)}</div>
       ${rng[i]?`<div class="sub">${T('rng')(fmt(rng[i][0]), fmt(rng[i][1]))}</div>`:''}
       <div class="sub">${fmt(r.em)} kg CO₂e/${yr} · ${fmt(r.em*1000/G.km)} g/km</div>
       <div class="badges">${G.budget>0&&c.price>G.budget?`<span class="badge warn">${T('over')}</span>`:''}${G.monthly>0&&Math.round(r.cash)>G.monthly?`<span class="badge warn">${T('over_mo')}</span>`:''}${cars.length>1&&r.total===minCost?`<span class="badge win">${T('cheapest')}</span>`:''}${cars.length>1&&r.em===minEm?`<span class="badge win">${T('cleanest')}</span>`:''}</div>

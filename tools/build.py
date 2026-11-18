@@ -440,6 +440,10 @@ def apply_prices(page, root):
     for token, key in (("__P_PETROL__", "petrol"), ("__P_DIESEL__", "diesel"),
                        ("__P_ELEC__", "electricity")):
         page = page.replace(token, str(prices[key]["value"]))
+    # month and source of each default price, shown next to the price on the result cards
+    src = {k: {"period": prices[k].get("period", ""), "url": prices[k].get("url") or fallback_url}
+           for k in ("petrol", "diesel", "electricity") if k in prices}
+    page = page.replace("__PRICE_SRC__", json.dumps(src, separators=(",", ":")))
     return page.replace("__PRICES_NOTE_FI__", fi).replace("__PRICES_NOTE_EN__", en)
 
 
