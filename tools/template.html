@@ -526,7 +526,7 @@ fi: {
   ex_mild:' (kevythybridi)',
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', del:'Poista auto',
-  pick_l:'Hae malli rekisteristä', pick_ph:'esim. Volkswagen Golf', pick_none:'Ei osumia', pt_l:'Käyttövoima',
+  pick_l:'Hae automalli', pick_hint:'Kirjoita merkki tai malli ja valitse listasta. Valinta täyttää mallin todellisen kulutuksen (EEA:n mittaukset), hinta-arvion (Verohallinnon verotusarvot) sekä iän ja mittarilukeman (Traficomin rekisteri). Voit muuttaa kaikkia arvoja.', pick_ph:'esim. Volkswagen Golf', pick_none:'Ei osumia', pt_l:'Käyttövoima',
   price_l:'Ostohinta', age_l:'Ikä ostaessa', age_u:'v (0 = uusi)', odo_l:'Mittarilukema', odo_u:'km ostaessa',
   dep_l:'Arvonalenema', dep_u:'% / v, tyhjä = iän mukaan',
   fuel_l:'Polttoaine', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, vanha mittaus)', fuel_u_p:'l / 100 km polttoaineella ajaessa',
@@ -664,7 +664,7 @@ en: {
   ex_mild:' (mild hybrid)',
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
   new_car:'New car', car_n:'Car', car_name:'Car name', del:'Remove car',
-  pick_l:'Find a model in the register', pick_ph:'e.g. Volkswagen Golf', pick_none:'No matches', pt_l:'Powertrain',
+  pick_l:'Find a car model', pick_hint:'Type a make or model and pick it from the list. This fills in the real-world consumption of the model (EEA measurements), an estimated price (Tax Administration values) and age and odometer (Traficom register). You can change every value.', pick_ph:'e.g. Volkswagen Golf', pick_none:'No matches', pt_l:'Powertrain',
   price_l:'Purchase price', age_l:'Age at purchase', age_u:'years (0 = new)', odo_l:'Odometer', odo_u:'km at purchase',
   dep_l:'Depreciation', dep_u:'% / yr, blank = by age',
   fuel_l:'Fuel', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, old test)', fuel_u_p:'l / 100 km when running on fuel',
@@ -1022,8 +1022,9 @@ function carCard(c,i){
       <input aria-label="${T('car_name')}" id="name${i}" data-k="name" value="${c.name.replace(/"/g,'&quot;')}">
       ${cars.length>1?`<button class="x" type="button" data-del="${i}" aria-label="${T('del')}">×</button>`:''}</div>
     <div class="field pickwrap req"><label class="label" for="pick${i}">${T('pick_l')}</label>
-      <input id="pick${i}" data-pick="${i}" placeholder="${T('pick_ph')}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sg${i}">
-      <div class="sugg" id="sg${i}" role="listbox" aria-label="${T('pick_l')}" hidden></div></div>
+      <input id="pick${i}" data-pick="${i}" placeholder="${T('pick_ph')}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sg${i}" aria-describedby="pickh${i}">
+      <div class="sugg" id="sg${i}" role="listbox" aria-label="${T('pick_l')}" hidden></div>
+      <span class="hint" id="pickh${i}">${T('pick_hint')}</span></div>
     <div class="fields">
       <div class="field full req"><label class="label" for="price${i}">${T('price_l')}</label><input type="number" id="price${i}" data-k="price" step="500" value="${c.price}"><span class="unit">${c.priceAuto ? T('price_est') : (c.picked && !(c.own||{}).price && !MV0[CATALOG.indexOf(c.picked)] ? T('price_none') : '€')}</span></div>
       <div class="field req"><label class="label" for="age${i}">${T('age_l')}</label><input type="number" id="age${i}" data-k="age" min="0" step="1" value="${c.age}"><span class="unit">${T('age_u')}</span></div>
