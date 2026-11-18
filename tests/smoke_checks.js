@@ -75,7 +75,13 @@ async () => {
   // 9. Each mileage shortcut sets exactly its own value (a slider step once rounded 11 800 to 12 000)
   const km0 = g().km;
   document.querySelectorAll('.chip[data-km]').forEach(b => { b.click();
-    if (g().km !== +b.dataset.km) problems.push(`${lang}: shortcut ${b.dataset.km} km sets ${g().km} km`); });
+    if (g().km !== +b.dataset.km) problems.push(`${lang}: shortcut ${b.dataset.km} km sets ${g().km} km`);
+    const sl = $('kmSlider'); if (sl && +sl.value !== g().km) problems.push(`${lang}: slider shows ${sl.value} km, field ${g().km} km`); });
+  // the typed mileage moves the slider, and the slider fills the field
+  fire($('km'), '23400'); await wait(30);
+  if ($('kmSlider') && $('kmSlider').value !== '23400') problems.push(`${lang}: typing 23400 km moves the slider to ${$('kmSlider').value}`);
+  if ($('kmSlider')) { fire($('kmSlider'), '31000'); await wait(30);
+    if ($('km').value !== '31000') problems.push(`${lang}: slider at 31000 km but the field shows ${$('km').value}`); }
   const kmEl = $('km'); kmEl.value = km0; kmEl.dispatchEvent(new Event('input', {bubbles: true})); await wait(50);
 
   // 3. Example cars follow the maximum price, and results follow the cards

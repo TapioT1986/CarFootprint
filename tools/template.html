@@ -95,6 +95,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .km{display:flex;flex-direction:column;gap:6px}
 .km .read{display:flex;align-items:baseline;gap:8px}
 .odo{font-family:var(--mono);font-size:30px;font-weight:500;letter-spacing:.04em}
+.kmin{width:7.2ch;padding:2px 6px;font-size:30px}
 input[type=range]{padding:0;background:none;border:0;accent-color:var(--accent)}
 .hint{font-size:12.5px;color:var(--muted);margin:4px 0 0}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
@@ -281,9 +282,9 @@ details.info a{color:var(--accent)}
         <div class="phead"><h2><span class="stepn">1</span><span data-i="drive_h"></span></h2><button class="btn sm" type="button" data-reset data-i="reset"></button></div>
         <p class="reqhint" data-i="req_hint"></p>
         <div class="km req">
-          <span class="label" id="kmLabel" data-i="km_label"></span>
-          <div class="read"><span class="odo" id="kmOut">15 000</span><span class="unit" data-i="km_unit"></span></div>
-          <input type="range" id="km" min="2000" max="50000" step="100" value="15000" aria-labelledby="kmLabel">
+          <label class="label" id="kmLabel" for="km" data-i="km_label"></label>
+          <div class="read"><input type="number" class="odo kmin" id="km" min="2000" max="50000" step="100" value="15000" inputmode="numeric"><span class="unit" data-i="km_unit"></span></div>
+          <input type="range" id="kmSlider" min="2000" max="50000" step="100" value="15000" aria-labelledby="kmLabel">
           <div class="chips">
             <button class="chip" data-km="11800" type="button" data-i="chipB"></button>
             <button class="chip" data-km="14500" type="button" data-i="chipAll"></button>
@@ -1255,7 +1256,7 @@ function tipText(t){
 }
 function update(){
   const G = g(), yr = T('yr');
-  $('kmOut').textContent = fmt(G.km);
+  $('kmSlider').value = G.km;
   const R = cars.map(c => calc(c,G));
   const minCost = Math.min(...R.map(r=>r.total)), minEm = Math.min(...R.map(r=>r.em));
   const before = [...document.querySelectorAll('#sums .big')].map(e=>e.textContent);
@@ -1366,6 +1367,8 @@ function applyLang(lang){
 }
 document.querySelectorAll('.lang').forEach(b => b.onclick = () => applyLang(b.dataset.lang));
 
+// Ajomäärän voi kirjoittaa tai valita liukusäätimellä; kirjoitettava kenttä (#km) on tallennettava arvo
+$('kmSlider').addEventListener('input', () => { $('km').value = $('kmSlider').value; update(); });
 GIDS.forEach(id => $(id).addEventListener('input', update));
 document.querySelectorAll('.chip').forEach(b => b.onclick = () => { $('km').value = b.dataset.km; update(); });
 // Kaikki kentät HTML:n oletusarvoihin (myös selaimen palauttamat lomakearvot ohitetaan)
