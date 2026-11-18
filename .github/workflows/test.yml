@@ -30,6 +30,9 @@ jobs:
             exit 1
           }
 
+      - name: Calculation test cases match the independent reference
+        run: python tests/calc_reference.py
+
       - name: Install the test browser
         run: |
           pip install playwright==1.47.0

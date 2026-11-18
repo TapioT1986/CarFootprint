@@ -127,6 +127,17 @@ async () => {
     fire(price0, old); await wait(30);
     if (price0.getAttribute('aria-invalid') === 'true') problems.push(`${lang}: valid price ${old} still marked as an error`);
   }
+  // 12. Calculation: the page's calc() gives the same yearly figures as the independent reference
+  //     (tests/calc_reference.py -> tests/calc_cases.json), within 0.5 EUR / 0.5 kg
+  if (typeof calc === 'function') {
+    const data = await (await fetch('tests/calc_cases.json', {cache: 'reload'})).json();
+    for (const cs of data.cases) {
+      const r = calc(newCar({...cs.car}), cs.g);
+      for (const [k, v] of Object.entries(cs.expected)) {
+        if (!(Math.abs(r[k] - v) <= 0.5)) problems.push(`${lang}: calculation "${cs.name}": ${k} is ${r[k]}, reference ${v}`);
+      }
+    }
+  }
   // 5. A shared link brings back the same cars and results
   if (typeof encodeShare === 'function') {
     const names = () => [...document.querySelectorAll('#sums .nm')].map(e => e.innerText.trim());

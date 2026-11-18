@@ -231,6 +231,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   else part) and is not stored: saves and links keep only `own`. Cash follows budget changes (listener before update).
   `own` counts as changed in moreCount() only in the 'part' state.
 - Phone touch targets >= 44 px and small text >= 13 px (CSS block at the end of <style>; smoke check 11).
+- Calculation tests: tests/calc_reference.py is a separate Python implementation of the method; tests/calc_cases.json holds
+  8 cases with explicit inputs and its expected figures. CI runs the reference check, and smoke_checks.js (check 12)
+  compares the page's calc() with them (0.5 EUR). When the method changes on purpose, change calc_reference.py the same
+  way and run `py tests/calc_reference.py --write`; `--explain` prints case 1 step by step.
 - tests/smoke.py runs on GitHub after every push (.github/workflows/test.yml): build check + tests/smoke_checks.js
   in headless Chromium. The same checks can be run in the built-in browser by evaluating smoke_checks.js.
 - Test in a real browser (FI and EN, phone width 390 px) and check the numbers by hand for at

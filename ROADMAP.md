@@ -39,7 +39,7 @@ Omat lisähavainnot:
 
 ## Vaihe 1 – Perusta kuntoon (seuraavaksi)
 
-### 1.1 Laskennan testisarja · koko S–M
+### 1.1 Laskennan testisarja · koko S–M · ✅ tehty 18.11.2026 (versio 0.65)
 - Tiedosto `tests/calc_cases.json` + tarkistus `smoke_checks.js`:iin: 5–8 käsin laskettua esimerkkiä
   (käteisosto, osittain laina, laina pidempi kuin omistus, sähköauto, lataushybridi, vanha NEDC-auto, nykyinen auto, osakasko).
 - Jokaiselle odotetut arvot: arvonalenema, jäännösarvo, rahoitus, energia, vero, huolto, vakuutus, yhteensä, päästöt.

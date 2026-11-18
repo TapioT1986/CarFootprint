@@ -44,6 +44,8 @@ Every assumption is visible and editable.
 - **Input checks:** negative or impossible values (price, age, odometer, consumption, rates and so on) are shown as an error under the field with the allowed range, and the calculation keeps the last valid value.
 - **Simple start:** "Your driving" asks only for annual mileage (slider, shortcuts or typed), maximum price and payment: cash (own money = maximum price), partly on loan (the default €6,000) or fully on loan (0). The choice only sets the own-money field, so it is worked out from that field and needs no saved value of its own; ownership period, monthly budget and the exact amount are under More settings.
 
+Tests: after every push GitHub checks that `index.html` is built from the template, that the calculation test cases in `tests/calc_cases.json` match an independent reference implementation (`tests/calc_reference.py`), and opens the page in a headless browser at phone and desktop width in both languages (`tests/smoke.py`), where the page's own calculation is compared with the same cases.
+
 Feedback and bug reports: [GitHub issues](https://github.com/TapioT1986/CarFootprint/issues/new). The page is a beta; its header shows the version number and the date of the latest release (`data/version.json`, raised by `python tools/build.py --release`).
 
 ## Known limitations
