@@ -95,8 +95,12 @@ def compute(case, vtax, cur_year):
     km_adj = max(0, 1 - KM_ADJ * max(0, km - 15000) / 1000 * n)
     resid = max(0, c["price"] * (1 - rate) ** n * km_adj)
     dep = (c["price"] - resid) / n
-    loan = 0 if c.get("mine") else max(0, c["price"] - G["own"])
-    per_year, avg_bal, pay = loan_cost(loan, G["loanRate"], G["loanFee"], G["loanYears"], n)
+    # current car: its own remaining loan; other cars: own money + current car's net value (trade-in)
+    if c.get("mine"):
+        loan, loan_years = max(0, c.get("debt", 0)), (float(c.get("debtYears") or 0) or G["loanYears"])
+    else:
+        loan, loan_years = max(0, c["price"] - max(0, G["own"] + G.get("trade", 0))), G["loanYears"]
+    per_year, avg_bal, pay = loan_cost(loan, G["loanRate"], G["loanFee"], loan_years, n)
     own_tied = max(0, (c["price"] + resid) / 2 - avg_bal)
     cap = per_year + own_tied * G["rate"]
     fuel_r = CITY_R["B" if pt == "E" else pt]

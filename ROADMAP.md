@@ -54,7 +54,7 @@ Omat lisähavainnot:
 
 Tavoite: vastata kysymykseen "kannattaako nykyinen auto pitää vai vaihtaa, rahassa ja päästöissä".
 
-### 2.1 Raha · koko M
+### 2.1 Raha · koko M · ✅ tehty 18.11.2026 (versio 0.67)
 - Nykyiselle autolle kentät: **jäljellä oleva laina** ja (valinnaisesti) **odotettavissa olevat korjaukset**.
 - Vaihtoehtoautoille: nykyisen auton **myyntiarvo − jäljellä oleva laina** siirtyy automaattisesti omaksi rahaksi
   (vaihtohyvitys), ellei käyttäjä anna omaa summaa.
