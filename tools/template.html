@@ -99,9 +99,10 @@ body{background:var(--bg);color:var(--ink);font:400 15px/1.5 var(--body);
 .secnav button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 html{scroll-padding-top:64px}
 .ntoc{margin:6px 0 10px}
-.ntoc summary{cursor:pointer;color:var(--ink);font-weight:600}
-#ntoc{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 14px;margin-top:6px}
-#ntoc a{color:var(--accent);text-decoration:none;padding:4px 0;font-size:13.5px}
+.ntoc summary{cursor:pointer;color:var(--ink);font:600 18px/1.3 var(--display)}
+#ntoc{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(150px,100%),1fr));gap:2px 14px;margin-top:6px}
+#ntoc a{min-width:0;white-space:normal;overflow-wrap:break-word;hyphens:auto}
+#ntoc a{color:var(--accent);text-decoration:none;padding:4px 0;font-size:15px;line-height:1.3}
 #ntoc a:hover{text-decoration:underline}
 h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:.01em;text-wrap:balance;margin:0}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
@@ -262,7 +263,10 @@ svg text{font-family:var(--body)}
 .notes{margin-top:24px;color:var(--ink);font-size:15px;line-height:1.65;max-width:75ch}
 .notes h3{color:var(--ink);font-size:18px;margin-bottom:6px}
 .notes ul{padding-left:18px;margin:6px 0}
-.notes ul > li{margin-bottom:.7em}
+.notes ul{list-style:none;padding-left:0}
+.notes ul > li{margin:0;padding:14px 0;border-top:1px solid var(--line)}
+/* kohdan otsikko (ensimmäinen lihavointi) isompana ja kirkkaana, jotta kohdat erottuvat */
+.notes li[id^="m-"] > b:first-of-type{font:600 18px/1.3 var(--display);color:var(--ink);letter-spacing:.01em}
 .notes a{color:var(--accent)}
 .notes li{scroll-margin-top:12px}
 .notes li.hl{animation:hl 2.4s ease-out}
@@ -390,7 +394,7 @@ details.info a{color:var(--accent)}
 @media (max-width:900px){
   .chip,.btn,.btn.sm,.lang,.seg button,.secnav button{min-height:44px}
   .secnav{padding:2px 0}
-  #ntoc a{min-height:44px;display:flex;align-items:center;padding:0}
+  #ntoc a{min-height:44px;display:block;padding:11px 0 6px}
   .chip{font-size:14px;padding:0 14px}
   .btn.sm{font-size:13.5px;padding:0 12px}
   .car .x,.car .ren{min-width:44px;min-height:44px}
@@ -401,6 +405,8 @@ details.info a{color:var(--accent)}
   .label{font-size:13px}
   .unit,.hint,.errmsg,.evr,.q{font-size:15px}
   .notes{font-size:16px}
+  .notes li[id^="m-"] > b:first-of-type{font-size:19px}
+  #ntoc a{font-size:16px}
   .tag,.insp,.badge{font-size:13px}
   .estb{font-size:12px}
   .reqhint,.sub{font-size:14px}
