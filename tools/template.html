@@ -91,6 +91,18 @@
 body{background:var(--bg);color:var(--ink);font:400 15px/1.5 var(--body);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
 .wrap{max-width:1240px;margin:0 auto}
+/* Osionavigaatio: ylälaidassa kiinni; puhelimella piiloutuu alaspäin vieritettäessä ja palaa ylöspäin vieritettäessä */
+.secnav{position:sticky;top:0;z-index:25;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;
+  margin:-16px 0 20px;padding:6px 0;background:var(--bg);border-bottom:1px solid var(--line)}
+.secnav button{font:600 14px/1.1 var(--body);color:var(--muted);background:none;border:0;border-radius:6px;padding:8px 4px;cursor:pointer;min-height:40px}
+.secnav button[aria-current="true"]{color:var(--accent);background:var(--surface)}
+.secnav button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+html{scroll-padding-top:64px}
+.ntoc{margin:6px 0 10px}
+.ntoc summary{cursor:pointer;color:var(--ink);font-weight:600}
+#ntoc{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 14px;margin-top:6px}
+#ntoc a{color:var(--accent);text-decoration:none;padding:4px 0;font-size:13.5px}
+#ntoc a:hover{text-decoration:underline}
 h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:.01em;text-wrap:balance;margin:0}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
@@ -282,7 +294,8 @@ details.more[open]>summary::before{transform:rotate(45deg)}
   body{padding-bottom:calc(var(--dockh,0px) + 48px)}
   html{scroll-padding-bottom:calc(var(--dockh,0px) + 12px)}
 }
-@media (max-width:900px) and (prefers-reduced-motion:no-preference){.dock{transition:transform .2s ease,visibility .2s}}
+@media (max-width:900px) and (prefers-reduced-motion:no-preference){.dock,.secnav{transition:transform .2s ease,visibility .2s}}
+@media (max-width:900px){.secnav.hide{transform:translateY(-110%);visibility:hidden}}
 .dock .dc{min-width:0;border-left:3px solid var(--cc);padding-left:7px;display:flex;flex-direction:column;gap:1px}
 .dock .dn{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dock .dv{font:500 16px/1.2 var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -359,7 +372,9 @@ details.info a{color:var(--accent)}
 @media (max-width:700px){.topright{align-items:flex-start}}
 /* Puhelin: kosketusalue vähintään 44 px, otsikot ja ohjetekstit vähintään 13 px */
 @media (max-width:900px){
-  .chip,.btn,.btn.sm,.lang,.seg button{min-height:44px}
+  .chip,.btn,.btn.sm,.lang,.seg button,.secnav button{min-height:44px}
+  .secnav{padding:2px 0}
+  #ntoc a{min-height:44px;display:flex;align-items:center;padding:0}
   .chip{font-size:14px;padding:0 14px}
   .btn.sm{font-size:13.5px;padding:0 12px}
   .car .x,.car .ren{min-width:44px;min-height:44px}
@@ -402,9 +417,14 @@ details.info a{color:var(--accent)}
     </div>
   </header>
 
+  <!-- Osionavigaatio: napit vierittävät osioon (ei osoitteen #-muutosta, koska # kantaa jakolinkit) -->
+  <nav class="secnav" id="secnav" data-i-label="nav_l">
+    <button type="button" data-go="s-drive" data-i="nav_drive"></button><button type="button" data-go="s-cars" data-i="nav_cars"></button><button type="button" data-go="resultsH" data-i="nav_res"></button><button type="button" data-go="s-notes" data-i="nav_notes"></button>
+  </nav>
+
   <div class="grid">
     <aside>
-      <div class="panel">
+      <div class="panel" id="s-drive">
         <div class="phead"><h2><span class="stepn">1</span><span data-i="drive_h"></span></h2><button class="btn sm" type="button" data-reset data-i="reset"></button></div>
         <div class="reqhint" data-i="req_hint"></div>
         <div class="km req">
@@ -522,7 +542,7 @@ details.info a{color:var(--accent)}
     </aside>
 
     <main style="min-width:0">
-      <h2 class="step"><span class="stepn">2</span><span data-i="step_cars"></span></h2>
+      <h2 class="step" id="s-cars"><span class="stepn">2</span><span data-i="step_cars"></span></h2>
       <div class="cars" id="cars"></div>
 
       <h2 class="step" id="resultsH"><span class="stepn">3</span><span data-i="step_res"></span></h2>
@@ -579,7 +599,8 @@ details.info a{color:var(--accent)}
 
       <div class="notes">
         <div class="rowbtns" style="margin:0 0 18px"><button class="btn" type="button" data-reset data-i="reset"></button></div>
-        <h3 data-i="notes_h"></h3>
+        <h3 id="s-notes" data-i="notes_h"></h3>
+        <details class="ntoc" open><summary data-i="toc_s"></summary><div id="ntoc"></div></details>
         <ul data-i="notes"></ul>
       </div>
     </main>
@@ -630,7 +651,7 @@ fi: {
   soh_l:'Akun kunto (SOH)', soh_u:'% uuden akun kapasiteetista; tyhjä = arvio iän mukaan',
   evr_old:' Luvut ovat Suomessa vuosina 2020–2025 uutena rekisteröityjen saman mallin autojen virallisia arvoja; vanhemmissa mallivuosissa toimintasäde on usein lyhyempi.',
   evr:(w,m,c)=>`<b>Toimintasäde sähköllä:</b> WLTP ${w} km · lauha talvi noin ${m} km · kova pakkanen noin ${c} km`,
-  en_km:(v)=>`ajon energia ${v} €/km`, sumd:'Erittely ja vaihteluvälit', fold_s:'Perustelut ja lähteet', why:'perustelut', why_back:'takaisin', fold_i:'Lisätietoja ja lähteet',
+  en_km:(v)=>`ajon energia ${v} €/km`, sumd:'Erittely ja vaihteluvälit', nav_l:'Sivun osiot', nav_drive:'Ajo', nav_cars:'Autot', nav_res:'Tulos', nav_notes:'Lähteet', toc_s:'Aiheet', fold_s:'Perustelut ja lähteet', why:'perustelut', why_back:'takaisin', fold_i:'Lisätietoja ja lähteet',
   all_km:(v)=>`Kaikki kulut kilometriä kohden: ${v} €/km (vuosikulu jaettuna ajomäärällä; suurin osa ei riipu ajetuista kilometreistä).`,
   parts:(d,c,e,o)=>`Vuodessa: arvonalenema ${d} €, rahoitus ${c} €, energia ${e} €, vero, vakuutus, huolto ja renkaat ${o} €.`,
   electricity:'sähkö', p_stat:'Tilastokeskus', p_own:'oma hinta',
@@ -815,7 +836,7 @@ en: {
   soh_l:'Battery health (SOH)', soh_u:'% of the new battery capacity; empty = estimate by age',
   evr_old:' The figures are official values of the same model registered new in Finland in 2020–2025; older model years often have a shorter range.',
   evr:(w,m,c)=>`<b>Electric range:</b> WLTP ${w} km · mild winter about ${m} km · hard frost about ${c} km`,
-  en_km:(v)=>`driving energy €${v}/km`, sumd:'Breakdown and ranges', fold_s:'Reasoning and sources', why:'reasoning', why_back:'back', fold_i:'More detail and sources',
+  en_km:(v)=>`driving energy €${v}/km`, sumd:'Breakdown and ranges', nav_l:'Page sections', nav_drive:'Driving', nav_cars:'Cars', nav_res:'Results', nav_notes:'Sources', toc_s:'Topics', fold_s:'Reasoning and sources', why:'reasoning', why_back:'back', fold_i:'More detail and sources',
   all_km:(v)=>`All costs per kilometre: €${v}/km (yearly cost divided by mileage; most of it does not depend on the kilometres driven).`,
   parts:(d,c,e,o)=>`Per year: depreciation €${d}, financing €${c}, energy €${e}, tax, insurance, servicing and tyres €${o}.`,
   electricity:'electricity', p_stat:'Statistics Finland', p_own:'your price',
@@ -1895,6 +1916,33 @@ function moreCount(){
   else dock.classList.remove('off');
 })();
 
+// Osionavigaatio: napautus vierittää osioon, korostettuna se osio, jossa ollaan; puhelimella palkki väistää alaspäin vieritettäessä
+(() => {
+  const nav = $('secnav'), bs = [...nav.querySelectorAll('[data-go]')], smooth = () => matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth';
+  nav.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (!b) return;
+    const t = $(b.dataset.go); if (t) { t.scrollIntoView({behavior: smooth(), block:'start'}); t.setAttribute('tabindex','-1'); t.focus({preventScroll:true}); } });
+  let lastY = scrollY, tick = false;
+  const spy = () => { tick = false; const y = scrollY, line = nav.offsetHeight + 24;
+    let cur = 0; bs.forEach((b,i) => { const t = $(b.dataset.go); if (t && t.getBoundingClientRect().top <= line + 40) cur = i; });
+    if (innerHeight + y >= document.documentElement.scrollHeight - 4) cur = bs.length - 1;
+    bs.forEach((b,i) => b.setAttribute('aria-current', String(i===cur)));
+    if (matchMedia('(max-width:900px)').matches) { if (y > lastY + 6 && y > 300) nav.classList.add('hide'); else if (y < lastY - 6 || y < 300) nav.classList.remove('hide'); }
+    else nav.classList.remove('hide');
+    lastY = y; };
+  addEventListener('scroll', () => { if (!tick) { tick = true; setTimeout(spy, 50); } }, {passive:true});
+  nav.addEventListener('focusin', () => nav.classList.remove('hide'));
+  spy();
+})();
+// Näin laskenta toimii -osion aiheluettelo: kohtien lihavoiduista otsikoista, linkit toimivat kuten perustelut-linkit
+function buildToc(){
+  const box = $('ntoc'); if (!box) return;
+  box.innerHTML = [...document.querySelectorAll('.notes li[id^="m-"]')].map(li => {
+    const b = li.querySelector('b'); if (!b) return '';
+    let t = b.textContent.replace(/\s*\(.*?\)\s*/g, ' ').replace(/[:?]\s*$/, '').trim();
+    t = t.split(/ (?:on|is) /)[0];
+    return `<a class="why toc" href="#${li.id}">${esc(t)}</a>`; }).join('');
+}
+
 // --- kielen vaihto ---
 // Pitkä ohje: '¦' erottaa näkyvän alun ja loppuosan, joka taitetaan "Perustelut ja lähteet" -avauksen taakse.
 // '¦¦' = käyttäjälle ohjeita antava osa (ei laskurin perusteluja): avauksen nimi on "Lisätietoja ja lähteet" (fold_i).
@@ -1910,6 +1958,8 @@ function applyLang(lang){
   document.documentElement.lang = LANG;
   document.title = T('title'); $('metaDesc').content = T('desc');
   document.querySelectorAll('[data-i]').forEach(el => { const v = T(el.dataset.i); if (typeof v === 'string') el.innerHTML = fold(v); });
+  document.querySelectorAll('[data-i-label]').forEach(el => el.setAttribute('aria-label', T(el.dataset.iLabel)));
+  buildToc();
   document.querySelectorAll('.lang').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang===LANG)));
   cars.forEach(c => { if (c.exAuto && c.ex) c.name = exName(c.ex, c.pt); });
   buildModels(); renderCars(); update();

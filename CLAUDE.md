@@ -280,6 +280,11 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   keeps its short per-row source links and the energy-range panel its own sources.
   Car-field units, cost-table rows and some settings link there; the click handler scrolls, highlights (`.hl`) and adds a
   '← takaisin' link (`.whyback`) back to the field. No hash change (the hash carries share links). New notes items need an id.
+- Section bar (`#secnav`, owner 2026-11-20): sticky, buttons [data-go] scroll to s-drive / s-cars / resultsH / s-notes without a
+  hash change; scroll spy sets aria-current; on phones (<= 900 px) it hides while scrolling down and returns on scroll up
+  (setTimeout throttle: the preview pane runs as a background page, so rAF and scroll events stall there; dispatch
+  scroll events by hand when testing). html scroll-padding-top 64px keeps targets clear of it. Topic list `#ntoc` is built
+  by buildToc() from the notes items' bold titles; its links are a.why, so they highlight and offer the back link.
 - The break-even line chart (`#beChart`, `.charts.befirst`) is the first thing in the results section (owner 2026-11-19).
 - Leaving costs out (global `excl`, last in GIDS, share letter t; a hidden text input, because type=hidden keeps no
   defaultValue): "s" servicing, "t" tyres, "o" other costs; buttons `[data-excl]` in the cost table, `#exclNote` under the results,
