@@ -84,7 +84,7 @@ Feedback and bug reports: [GitHub issues](https://github.com/TapioT1986/CarFootp
 
 ## Running it
 
-Open `index.html` in a browser. No build step, no server, no tracking: fonts are served from `fonts/` (SIL Open Font License), and the page loads nothing from other sites. Your inputs are stored in your own browser only.
+Open `index.html` in a browser. No build step, no server, no tracking: fonts are served from `fonts/` (SIL Open Font License), and the page loads nothing from other sites. Feedback sent from the page (thumb, optional text and comparison link) goes through a small Cloudflare Worker (`tools/feedback-worker/worker.js`) to a private GitHub repository; no IP address, cookies or device data are stored. Your inputs are stored in your own browser only.
 
 ## Repository layout
 

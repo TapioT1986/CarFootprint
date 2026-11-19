@@ -281,6 +281,17 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 .dock.n4 .dv .yr{display:none}
 .dock .db{font-size:10.5px;font-weight:600;color:var(--good);line-height:1.25}
 .dock .db:empty{display:none}
+.fb{margin:22px 0 0;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--surface);max-width:640px}
+.fb h3{font-size:19px;margin-bottom:8px}
+.fbvote{display:flex;gap:8px;flex-wrap:wrap}
+.fbvote .btn[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--input))}
+.fbmore{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.fbmore[hidden]{display:none}
+.fbmore textarea{font:inherit;color:var(--ink);background:var(--input);border:1px solid var(--line);border-radius:6px;padding:8px 9px;width:100%;resize:vertical}
+.fbchk{display:flex;gap:8px;align-items:flex-start;font-size:14px}
+.fbchk input{width:auto;margin-top:3px}
+.fbhp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+#fbMsg:empty{display:none}
 .foot{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 .foot a{color:var(--accent)}
 .foot .feedback{margin:8px 0 0}
@@ -494,6 +505,23 @@ details.info a{color:var(--accent)}
             <div class="svgbox" id="beChart"></div>
           </div>
         </div>
+        <!-- Palaute: peukku yhdellä napautuksella, sen jälkeen vapaaehtoinen teksti. Vastaanottaja tools/feedback-worker/worker.js -->
+        <section class="fb" id="fb" hidden aria-labelledby="fbH">
+          <h3 id="fbH" data-i="fb_h"></h3>
+          <div class="fbvote" role="group" aria-labelledby="fbH">
+            <button class="btn" type="button" data-vote="up" aria-pressed="false"><span aria-hidden="true">👍</span> <span data-i="fb_up"></span></button>
+            <button class="btn" type="button" data-vote="down" aria-pressed="false"><span aria-hidden="true">👎</span> <span data-i="fb_down"></span></button>
+          </div>
+          <p class="hint" id="fbMsg" role="status"></p>
+          <form class="fbmore" id="fbMore" hidden>
+            <label class="label" for="fbText" data-i="fb_text_l"></label>
+            <textarea id="fbText" rows="4" maxlength="2000"></textarea>
+            <label class="fbchk"><input type="checkbox" id="fbLink"> <span data-i="fb_link"></span></label>
+            <div class="fbhp" aria-hidden="true"><label for="fbWeb">Website</label><input id="fbWeb" name="website" tabindex="-1" autocomplete="off"></div>
+            <div class="rowbtns"><button class="btn share" type="submit" id="fbSend" data-i="fb_send"></button></div>
+          </form>
+          <details class="info"><summary data-i="fb_priv_s"></summary><p data-i="fb_priv"></p></details>
+        </section>
       </section>
 
       <div class="notes">
@@ -569,6 +597,11 @@ fi: {
   sens_years:(d,v)=>`omistat auton ${d<0?'enintään':'vähintään'} ${v} ${v==1?'vuoden':'vuotta'}`,
   sens_dep:(d,v)=>`autot menettävät arvoaan yli ${v} % oletettua ${d<0?'hitaammin':'nopeammin'}`,
   disclaim:'Laskelma on arvio avoimen datan ja oletusten pohjalta, ei osto- tai rahoitusneuvo.',
+  fb_h:'Oliko laskurista apua?', fb_up:'Oli', fb_down:'Ei ollut', fb_thanks:'Kiitos! Kerro halutessasi lisää – yksi napautus riitti jo.',
+  fb_text_l:'Mitä jäi puuttumaan tai mikä oli vaikeaa? (vapaaehtoinen)', fb_link:'Liitä vertailuni (jakolinkki autoista ja asetuksista)', fb_send:'Lähetä',
+  fb_sent:'Kiitos, palaute on perillä.', fb_sending:'Lähetetään…', fb_err:'Lähetys ei onnistunut. Kokeile hetken päästä uudelleen; kirjoittamasi teksti on tallessa.', fb_rate:'Liian monta lähetystä lyhyessä ajassa. Kokeile hetken päästä uudelleen.',
+  fb_priv_s:'Mihin palaute menee?',
+  fb_priv:'Palaute tallentuu laskurin tekijän yksityiseen GitHub-repositorioon, jota vain hän lukee. Välittäjänä on Cloudflare Workers -palvelu, joka näkee yhteyden teknisesti, kuten verkkopalvelut aina. Tallentuvat vain peukku, kirjoittamasi teksti, jakolinkki jos valitsit sen, sivun versio, kieli ja aika. IP-osoitetta, evästeitä tai laitetietoja ei tallenneta; IP-osoitetta käytetään vain hetken muistissa liian tiheiden lähetysten estoon. Älä kirjoita tekstiin nimeä tai muita henkilötietoja. Lähdekoodi: tools/feedback-worker/worker.js GitHubissa.',
   feedback:'Palaute ja virheilmoitukset: <a href="https://github.com/TapioT1986/CarFootprint/issues/new" target="_blank" rel="noopener">kirjoita GitHubiin</a> (vaatii ilmaisen GitHub-tunnuksen).',
   meta:'Beta __VERSION__ – päivitetty __UPDATED_FI__. Laskee arvonaleneman, rahoituksen, energian ja muut kulut sekä elinkaaren päästöt omalla ajomäärälläsi. Esimerkkiautot ovat esimerkkejä – vaihda omasi.',
   req_hint:'Riittää, että täytät <b>sinisellä</b> merkityt: ajomäärän ja automallin. Kaikki muu on valmiina: <span class="estb" style="display:inline-block">arvio</span> ja katkoviiva tarkoittavat laskurin arviota automallin mukaan, ja muut ovat oletuksia. Voit muuttaa mitä tahansa, kun tiedät oikean arvon.', est:'arvio',
@@ -734,6 +767,11 @@ en: {
   sens_years:(d,v)=>`you keep the car ${d<0?'at most':'at least'} ${v} ${v==1?'year':'years'}`,
   sens_dep:(d,v)=>`cars lose value over ${v}% ${d<0?'slower':'faster'} than assumed`,
   disclaim:'The calculation is an estimate based on open data and assumptions, not purchasing or financial advice.',
+  fb_h:'Was the calculator helpful?', fb_up:'Yes', fb_down:'No', fb_thanks:'Thank you! Tell us more if you like – the one tap already counted.',
+  fb_text_l:'What was missing or hard? (optional)', fb_link:'Attach my comparison (share link to the cars and settings)', fb_send:'Send',
+  fb_sent:'Thank you, the feedback has arrived.', fb_sending:'Sending…', fb_err:'Sending failed. Try again in a moment; your text is kept.', fb_rate:'Too many sends in a short time. Try again in a moment.',
+  fb_priv_s:'Where does the feedback go?',
+  fb_priv:'Feedback is stored in a private GitHub repository that only the author of the calculator reads. It passes through Cloudflare Workers, which sees the connection technically, as any web service does. Only the thumb, the text you write, the share link if you chose it, the page version, language and time are stored. No IP address, cookies or device data are stored; the IP address is kept briefly in memory only to stop too frequent sends. Please do not write names or other personal data. Source code: tools/feedback-worker/worker.js on GitHub.',
   feedback:'Feedback and bug reports: <a href="https://github.com/TapioT1986/CarFootprint/issues/new" target="_blank" rel="noopener">write on GitHub</a> (needs a free GitHub account).',
   meta:'Beta __VERSION__ – updated __UPDATED_EN__. Calculates depreciation, financing, energy and other costs plus lifecycle emissions at your own annual mileage. Prices, taxes and the model list are for Finland. The example cars are examples, so swap in your own.',
   req_hint:'You only need to fill in the fields marked in <b>blue</b>: annual mileage and the car model. Everything else is ready: <span class="estb" style="display:inline-block">estimate</span> and a dashed border mark the calculator\'s estimate from the car model, and the rest are defaults. Change anything when you know the real value.', est:'estimate',
@@ -1906,6 +1944,45 @@ function applyShared(st){
     const car = newCar({...c, brand:undefined, exAuto:false, ex:null});
     if (c.p){ const r = findRow(c.p); if (r) car.picked = r; }
     return car; });
+}
+// --- palaute ---
+// FEEDBACK_URL tyhjä = osio piilossa. Lähetys vain napautuksesta; sivu ei lataa mitään muualta.
+const FEEDBACK_URL = 'https://carfootprint-palaute.carfootprint.workers.dev/';
+{ const fb = { id:null, key:null, vote:null, busy:false };
+  const ver = () => (document.querySelector('.top .meta')?.textContent.match(/\d+\.\d+/) || [''])[0];
+  async function fbPost(body){
+    const r = await fetch(FEEDBACK_URL, {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({...body, lang: document.documentElement.lang, version: ver(), website: $('fbWeb').value})});
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || !d.ok) throw new Error(d.error || r.status);
+    return d;
+  }
+  const say = k => { $('fbMsg').textContent = T(k); };
+  if (FEEDBACK_URL) $('fb').hidden = false;
+  document.querySelectorAll('[data-vote]').forEach(b => b.onclick = async () => {
+    if (fb.busy || fb.vote) return;
+    fb.busy = true; say('fb_sending');
+    try {
+      const d = await fbPost({vote: b.dataset.vote});
+      Object.assign(fb, {id:d.id, key:d.key, vote:b.dataset.vote});
+      b.setAttribute('aria-pressed', 'true');
+      document.querySelectorAll('[data-vote]').forEach(x => x.disabled = true);
+      say('fb_thanks'); $('fbMore').hidden = false;
+    } catch(e){ say(String(e.message)==='rate' ? 'fb_rate' : 'fb_err'); }
+    fb.busy = false;
+  });
+  $('fbMore').onsubmit = async ev => {
+    ev.preventDefault();
+    const text = $('fbText').value.trim(), wantLink = $('fbLink').checked;
+    if (fb.busy || (!text && !wantLink)) return;
+    fb.busy = true; $('fbSend').disabled = true; say('fb_sending');
+    try {
+      const link = wantLink ? 'https://tapiot1986.github.io/CarFootprint/#s=' + await encodeShare(shareState()) : '';
+      await fbPost(fb.id ? {id:fb.id, key:fb.key, text, link} : {text, link});
+      $('fbMore').hidden = true; $('fbText').value = ''; say('fb_sent');
+    } catch(e){ say(String(e.message)==='rate' ? 'fb_rate' : 'fb_err'); $('fbSend').disabled = false; }
+    fb.busy = false;
+  };
 }
 $('share').onclick = async () => {
   const url = location.origin + location.pathname + '#s=' + await encodeShare(shareState());

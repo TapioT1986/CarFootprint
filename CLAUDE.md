@@ -230,9 +230,17 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   (index.html), run `py tools/build.py --release` once (raises N by one, sets today's date) and include version.json in the last
   commit. A plain build only reads the file, so CI's rebuild check stays deterministic; the monthly price workflow
   does not bump it (the price note shows the price month). <title> and the meta
-  description follow the language (applyLang). Feedback goes to GitHub issues only (no e-mail address on the page).
+  description follow the language (applyLang). Feedback: the on-page channel below, or GitHub issues (no e-mail address on the page).
 - Fonts are self-hosted in fonts/ (woff2, latin + latin-ext, OFL licences there), @font-face at the top of <style>: no
   Google Fonts, so no visitor IP goes to Google. The page must load nothing from other hosts (smoke check 13).
+- Feedback channel (`#fb`, under the charts; done 2026-11-19): 👍/👎 sends at once, then optional text + "attach my comparison"
+  (share link) as a comment on the same issue. FEEDBACK_URL in the template ('' hides the section) points to the Cloudflare
+  Worker carfootprint-palaute.carfootprint.workers.dev (owner's account; subdomain chosen without his surname). Code in
+  tools/feedback-worker/worker.js: the owner pastes it in the dashboard (Edit code -> Deploy) after changes; no GitHub link
+  to Cloudflare. It creates issues in the private repo TapioT1986/CarFootprint-palaute with a fine-grained token (secret
+  GITHUB_TOKEN, Issues read/write on that repo only, expires 19.11.2027, reminder task carfootprint-palauteavain), text var
+  REPO. Stores no IP/cookies/device data; Workers Logs turned off in the dashboard; spam: origin check, honeypot `website`,
+  length limits, in-memory rate limit 6/10 min. Testing from the page creates real issues (127.0.0.1:8765 is an allowed origin).
 - Search engines: <head> has canonical and schema.org WebApplication JSON-LD; <body> starts with a <noscript> summary
   (FI + EN); sitemap.xml in the root. No analytics or verification tags.
 - Phone layout (≤ 900 px): `#dock` is a fixed summary bar filled in update(), hidden (class `off`) by an
@@ -267,11 +275,4 @@ calculator (trade-in, remaining loan, switching emissions), uncertainty scenario
 - Per-model total mass from the Traficom register (needs the ~200 MB source file) for the propulsion tax.
 - A Finnish or European source for the servicing-and-repair rise (now US Consumer Reports factors).
 - A "what the same yearly money buys" view, once the above exist.
-- ToDo (owner 2026-11-18): a feedback channel directly on the page for collecting user feedback systematically
-  (now only a GitHub-issues link, which needs an account). Must fit the values: no tracking, no third-party
-  analytics, no e-mail address on the page; collect only what the user writes, say where it goes.
-  Plan chosen 2026-11-18 (no account needed from users): (1) light step under the results, "Oliko laskurista apua?"
-  with 👍/👎, one click is enough; (2) optional expansion after the click: free text field and a checkbox
-  "attach my comparison" (adds the share link). Both go to one small receiver (e.g. Cloudflare Workers, free tier)
-  with spam protection, storing the feedback or turning it into GitHub issues. No IP addresses, cookies or
-  tracking. The owner creates the Cloudflare account himself (Claude guides step by step; Claude does not create accounts).
+

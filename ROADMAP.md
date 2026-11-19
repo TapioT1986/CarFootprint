@@ -85,7 +85,7 @@ Tavoite: vastata kysymykseen "kannattaako nykyinen auto pitää vai vaihtaa, rah
 
 ## Vaihe 4 – Käyttäjät mukaan
 
-### 4.1 Palautekanava · koko M (omistajan tunnus tarvitaan)
+### 4.1 Palautekanava · koko M · ✅ tehty 19.11.2026 (versio 0.73): peukku + vapaaehtoinen teksti → Cloudflare Worker → yksityinen GitHub-repositorio CarFootprint-palaute
 - Suunnitelma valmiina CLAUDE.md:ssä: 👍/👎 + vapaaehtoinen teksti, vastaanotin esim. Cloudflare Workers, ei seurantaa.
 
 ### 4.2 Käyttäjätestaus · omistajan työ, Claude valmistelee
