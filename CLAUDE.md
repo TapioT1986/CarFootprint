@@ -58,7 +58,7 @@ data/catalog.json     588 models: [brand, model, pt, WLTP l/100km, count, "years
                       kWh/100km, kWh n, model real-world factor, its n, [[year, NEDC l/100km]...]]
 data/realworld.json   brand/fleet real-world factors (EEA OBFCM)
 data/prices.json      default prices; the page shows their month
-data/version.json     page version number and date (header); raised by build.py --release
+data/version.json     page version number and date (header); raised by build.py --release (0.01) or --patch (0.001)
 data/depreciation.json  depreciation by age from Tax Administration values, with method
 data/budget_cars.json   example-car candidates and value-when-new (v0)
 data/vehicle_tax.json   vehicle tax tables 1 / 1 A (c/day per g CO2) + propulsion rates;
@@ -228,7 +228,8 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   hash of the page into `const BUILD`; checkFresh() fetches the page with cache:'reload' on load and when the tab
   becomes visible, and reloads once (sessionStorage guard) if the BUILD differs. Keep the `const BUILD = '...'` form.
 - The header says "Beta 0.N – updated <date>" from data/version.json. Before each push that changes the page
-  (index.html), run `py tools/build.py --release` once (raises N by one, sets today's date) and include version.json in the last
+  (index.html), run `py tools/build.py --release` once for a change in what the page does (raises N by one, 0.83 -> 0.84),
+  or `--patch` for a cosmetic fix such as wording, links or layout (third decimal, 0.83 -> 0.831; owner 2026-11-19); both set today's date and include version.json in the last
   commit. A plain build only reads the file, so CI's rebuild check stays deterministic; the monthly price workflow
   does not bump it (the price note shows the price month). <title> and the meta
   description follow the language (applyLang). Feedback: the on-page channel below, or GitHub issues (no e-mail address on the page).

@@ -562,27 +562,37 @@ def ev_range_for_page(catalog, root):
 
 # --- page version -------------------------------------------------------------
 
-def page_version(root, release=False):
+def page_version(root, release=False, patch=False):
     """Version number and date shown in the page header (data/version.json).
 
-    `--release` raises the number by one and sets today's date; a plain build only
-    reads the file, so rebuilding the same commit (as the GitHub test does) gives
-    the same page."""
+    `--release` (a change in what the page does) raises the number by one, e.g.
+    0.83 -> 0.84, and resets the patch; `--patch` (a cosmetic fix: wording, links,
+    layout) raises the third decimal, 0.83 -> 0.831 -> 0.832 (owner 2026-11-19).
+    Both set today's date. A plain build only reads the file, so rebuilding the same
+    commit (as the GitHub test does) gives the same page."""
     path = root / "data" / "version.json"
     v = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"version": 0, "date": ""}
-    if release:
+    if release or patch:
         import datetime
-        v = {"version": int(v.get("version", 0)) + 1, "date": datetime.date.today().isoformat(),
+        ver, pat = int(v.get("version", 0)), int(v.get("patch", 0))
+        ver, pat = (ver + 1, 0) if release else (ver, pat + 1)
+        v = {"version": ver, "patch": pat, "date": datetime.date.today().isoformat(),
              "note": v.get("note", "")}
         path.write_text(json.dumps(v, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
     return v
+
+
+def version_text(v):
+    """0.83, or 0.831 with cosmetic patch 1."""
+    pat = int(v.get("patch", 0))
+    return f"0.{v.get('version', 0)}{pat if pat else ''}"
 
 
 def apply_version(page, v):
     y, m, d = (str(v.get("date", "")).split("-") + ["", "", ""])[:3]
     fi = f"{int(d)}.{int(m)}.{y}" if d else ""
     en = f"{int(d)} {MONTHS_EN[int(m) - 1]} {y}" if d else ""
-    page = page.replace("__VERSION__", f"0.{v.get('version', 0)}")
+    page = page.replace("__VERSION__", version_text(v))
     return page.replace("__UPDATED_FI__", fi).replace("__UPDATED_EN__", en)
 
 
@@ -593,7 +603,9 @@ def main():
     ap.add_argument("--root", default=pathlib.Path(__file__).resolve().parent.parent)
     ap.add_argument("--sources", default=None, help="folder holding the large source CSVs")
     ap.add_argument("--release", action="store_true",
-                    help="raise the version number in data/version.json and set today's date")
+                    help="raise the version number (0.83 -> 0.84) in data/version.json and set today's date")
+    ap.add_argument("--patch", action="store_true",
+                    help="cosmetic fix: raise the third decimal (0.83 -> 0.831) and set today's date")
     args = ap.parse_args()
     root = pathlib.Path(args.root)
     sources = pathlib.Path(args.sources) if args.sources else root / "sources"
@@ -632,9 +644,9 @@ def main():
     print("3. index.html", file=sys.stderr)
     page = (root / "tools" / "template.html").read_text(encoding="utf-8")
     page = apply_prices(page, root)
-    version = page_version(root, args.release)
+    version = page_version(root, args.release, args.patch)
     page = apply_version(page, version)
-    print(f"   version 0.{version['version']} ({version['date']})", file=sys.stderr)
+    print(f"   version {version_text(version)} ({version['date']})", file=sys.stderr)
     page = page.replace("__CATALOG__", json.dumps(catalog, ensure_ascii=False, separators=(",", ":")))
     page = page.replace("__RW__", json.dumps(realworld, ensure_ascii=False, separators=(",", ":")))
     # Vehicle tax tables, fetched by tools/vehicle_tax.py from Finlex
