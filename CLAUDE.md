@@ -36,6 +36,9 @@ plug-in hybrid and electric. Prices, taxes, grid emissions and the model list de
   to the reliable source it comes from: the specific release, table, PDF or page that states the number (e.g. the Bank
   of Finland release of 30.6.2026 for the vehicle-loan rate), not a site's front page or a statistics index. Give the
   date of the figure and, where the source offers alternatives, name them ("new loans 4.08 %").
+- **Keep the information on the page, fold it away (owner 2026-11-19).** Details, explanations and source references stay
+  on the page as text (names, dates, table ids), so they still help if a link breaks; tidy the view for casual users by
+  putting them behind "Lisätietoja"/details toggles, not by deleting them.
 - **Pessimistic default when choosing.** When sources give several defensible values, use by default the one less
   favourable to the car (higher cost or emissions), say so on the page and show the other value. Example: loan rate
   4.40 % (stock of vehicle loans) rather than 4.08 % (new loans); return on own money 2.48 % (new term deposits)

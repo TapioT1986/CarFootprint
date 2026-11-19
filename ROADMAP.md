@@ -96,6 +96,16 @@ Tavoite: vastata kysymykseen "kannattaako nykyinen auto pitää vai vaihtaa, rah
 - Staattinen lyhyt selitys ja laskentaperiaatteet HTML:ään (ei vain JavaScriptillä), `noscript`-teksti,
   jäsennelty data (WebApplication), englanninkielinen kuvaus.
 
+### 4.4 Ulkoasukatselmus (palaute: "monelle liian monimutkainen") · koko M · odottaa omistajan päätöstä
+Katselmus 19.11.2026, verrattu Erkan poista-ai-slop-taitoon. Fontit omalta palvelimelta tehty (versio 0.71). Jäljellä:
+- Tuloskortti tiiviimmäksi (nyt 11 riviä): vaihteluvälit yhdeksi riviksi, energian hinta lisätietoihin.
+- Ohjetekstit lyhyiksi: yksi lause näkyviin, loput lähteineen "Lisätietoja"-avauksen taakse.
+- Otsikot tavallisin kirjaimin, vähemmän pyöreitä "pillereitä", kuvaavat otsikot toistuvien "Lisätietoja"-otsikoiden tilalle.
+- Merkit ✎ ☆ × yksinkertaisiksi kuvakkeiksi; otsikon "Esimerkkiautot ovat esimerkkejä" pois.
+- Tasalevyinen fontti vain tuloslukuihin ja taulukkoon; osa kehyksistä pois.
+- Periaate (omistaja 19.11.2026): tieto ja lähdeviitteet pysyvät sivulla tekstinä, vain piilotettuina avattavien kohtien taakse.
+- Muutokset tarkistetaan ennen ja jälkeen -kuvina puhelimella ennen pushausta.
+
 ## Vaihe 5 – Tarkkuus (kun edelliset ovat valmiina)
 
 - Katsastuksiin perustuva käyttöikä `life`-oletukseksi (avoin idea).
