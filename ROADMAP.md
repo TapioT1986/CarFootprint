@@ -119,7 +119,7 @@ Katselmus 19.11.2026, verrattu Erkan poista-ai-slop-taitoon. Fontit omalta palve
 
 ## Vaihe 6 – Uudet kysymykset (omistajan toiveet 20.11.2026)
 
-### 6.1 "Hae edullisin minun ajollani" · koko M–L
+### 6.1 "Hae edullisin minun ajollani" · koko M–L · ✅ tehty 20.11.2026 (versio 0.86; suodatin käyttövoiman mukaan, ei vielä korimallia)
 Laskuri etsii koko malliluettelosta (588 mallia) ne autot, jotka ovat käyttäjän ajomäärällä ja enimmäishinnalla
 halvimpia vuodessa, ja näyttää esim. viisi parasta (malli, vuosimalli, €/v, CO₂). Valmiina on jo melkein kaikki:
 mallin valinta täyttää hinnan, iän ja mittarilukeman (MV0, autoPriceAge), ja calc() laskee vuosikulun.

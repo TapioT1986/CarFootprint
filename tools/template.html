@@ -178,6 +178,17 @@ details.adv .fields{margin-top:10px}
 .sugg .none{padding:9px 10px;color:var(--muted);font-size:14px}
 .addcar{border:1.5px dashed var(--line);border-radius:10px;background:transparent;color:var(--muted);font:600 15px var(--body);cursor:pointer;min-height:120px}
 .addcar:hover{border-color:var(--accent);color:var(--accent)}
+.finder{margin:16px 0 28px}
+.finder > summary{font:600 17px/1.3 var(--display);cursor:pointer;color:var(--accent)}
+.finder .field{max-width:320px;margin:8px 0 12px}
+.findlist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.findlist li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--input)}
+.findlist .rk{font:600 15px var(--mono);color:var(--muted)}
+.findlist .fn{min-width:0}
+.findlist .fv{grid-column:2;display:flex;flex-wrap:wrap;gap:2px 12px;align-items:baseline}
+.findlist .fv .num{font-size:16px;font-weight:600}
+.findlist .btn{grid-column:3;grid-row:1 / span 2}
+@media (max-width:520px){.findlist li{grid-template-columns:auto minmax(0,1fr)}.findlist .btn{grid-column:1 / -1;grid-row:auto;justify-self:start}}
 .tag{font-size:11.5px;color:var(--muted)}
 .insp{display:block;margin-top:6px;font-size:11.5px;color:var(--muted);line-height:1.45}
 .insp:empty{display:none}
@@ -544,6 +555,14 @@ details.info a{color:var(--accent)}
     <main style="min-width:0">
       <h2 class="step" id="s-cars"><span class="stepn">2</span><span data-i="step_cars"></span></h2>
       <div class="cars" id="cars"></div>
+      <!-- Hae edullisin: mallit, joilla on hinta-arvio, sovitettuna enimmäishintaan; järjestys vuosikulun mukaan (ROADMAP 6.1) -->
+      <details class="panel finder" id="finder">
+        <summary><span data-i="find_h"></span></summary>
+        <p class="hint" data-i="find_lead"></p>
+        <div class="field"><label class="label" for="findPt" data-i="find_pt"></label>
+          <select id="findPt"><option value=""></option><option value="B"></option><option value="D"></option><option value="H"></option><option value="P"></option><option value="E"></option></select></div>
+        <div id="findRes" aria-live="polite"></div>
+      </details>
 
       <h2 class="step" id="resultsH"><span class="stepn">3</span><span data-i="step_res"></span></h2>
       <section class="results" aria-live="polite">
@@ -701,6 +720,10 @@ fi: {
   servLvl_l:'Huollon ja korjausten taso', servLvl_out:p=>`${p} % oletuksesta`,
   servLvl_hint:'Oletus on Keskiverto. <a class="why" href="#m-serv">perustelut</a>',
   misc_l:'Pesu ja muut', misc_hint:'Summa on autokohtainen (oletus 250 € / v, ADAC 10/2026: pesu ja hoito).',
+  find_h:'Hae edullisin minun ajollani', find_lead:'Käy läpi kaikki mallit, joille on hinta-arvio, ja näyttää viisi vuodessa edullisinta sinun ajomäärälläsi, omistusajallasi ja enimmäishinnallasi. Kustakin mallista valitaan nuorin vuosimalli, joka mahtuu enimmäishintaan. Tulokset ovat mallien keskiarvoja: katso itse auton kunto, koko ja tilat. <a class="why" href="#m-find">perustelut</a>',
+  find_pt:'Käyttövoima', find_all:'Kaikki käyttövoimat', find_my:y=>`vuosimalli ${y}`, find_price:p=>`noin ${p} €`, find_thin:'kulutus merkin keskiarvosta',
+  find_n:(n,km,y,b)=>`${n} mallia mahtuu ${b} euroon; edullisimmat ${km} km:n vuosiajolla ${y} vuoden omistuksessa:`, find_add:'+ Lisää vertailuun',
+  find_full:'Vertailussa on jo neljä autoa: poista ensin yksi.', find_none:'Yksikään malli ei mahdu enimmäishintaan. Nosta enimmäishintaa tai vaihda käyttövoimaa.',
   ins_h:'Vakuutukset', ins_l:'Kasko', ins_full:'Täyskasko (laaja kasko)', ins_part:'Osakasko', ins_none:'Ei kaskoa, vain liikennevakuutus',
   ins_u:'Koskee kaikkia autoja. Rahoitusyhtiö vaatii yleensä lainalla ostettuun autoon täyskaskon. Auton omat vakuutusmaksut voi vaihtaa kohdassa Tarkenna.',
   ins_src:'Oletukset Taloustaidon hintavertailuista: liikennevakuutus 200 € / v, täyskasko 520–835 € / v käyttövoiman mukaan, osakasko 37 % täyskaskosta. <a class="why" href="#m-ins">perustelut</a>',
@@ -746,6 +769,7 @@ fi: {
 <li id="m-range"><b>Toimintasäde sähköllä</b> näkyy rekisteristä valituille sähköautoille ja lataushybrideille: virallinen WLTP-toimintasäde on Suomessa 2025 rekisteröityjen saman mallin autojen mediaani, tai uutena enää myymättömille malleille vuosina 2020–2024 rekisteröityjen (lopulliset tiedot) (<a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA:n rekisteri</a>). Talven luvut ovat arvioita Norjan autoliiton El Prix -talvitesteistä: lauhassa talvessa (−6…+8 °C, 2025) autot jäivät keskimäärin 18 % ja kovassa pakkasessa (−7…−32 °C, 2026) 38 % alle WLTP-toimintasäteen (<a href="https://www.naf.no/elbil/elprix-nytt/elprix-vinter-2026-rekkeviddetest" target="_blank" rel="noopener">NAF</a>). Testit ajettiin sähköautoilla; lataushybridille sama suhde on oletus. Vanhemmissa mallivuosissa toimintasäde on usein lyhyempi kuin rekisterin luku. Yksittäinen auto voi poiketa paljonkin. <b>Akun kunto</b> (SOH) lyhentää sähköauton toimintasädettä samassa suhteessa. Jos et kirjoita sitä, se arvioidaan auton iästä: 2,3 % vuodessa, mikä on keskimääräinen kapasiteetin lasku 22 700 sähköauton aineistossa (<a href="https://www.geotab.com/blog/ev-battery-health/" target="_blank" rel="noopener">Geotab 28.4.2026</a>; aiemmassa tutkimuksessa 1,8 %/v, ja runsaasti pikalatatuilla autoilla 3,0 %/v). Oletus on näistä epäedullisempi keskiarvo. Yksittäisen auton akku voi olla selvästi paremmassa tai huonommassa kunnossa, joten pyydä kuntoraportti. <b>Akun koko</b> muuttaa toimintasädettä samassa suhteessa, kun mallin akku tiedetään mallin nimestä (esim. Nissan Leaf 40 kWh). Rekisterissä ei ole akun kokoa, joten muille malleille kenttä vaikuttaa vain valmistuksen päästöihin.</li>
 <li id="m-ekm"><b>€/km tuloskortissa on ajon energia:</b> polttoaine tai sähkö kilometriä kohden (kulutus × hinta), eli se, mitä ajaminen itse maksaa. Kaikki kulut kilometriä kohden (vuosikulu jaettuna ajomäärällä) löytyy kortin kohdasta Erittely ja vaihteluvälit. Huollon kasvun ja arvon kilometrikohtaisen laskun lisääminen ajon hintaan odottaa parempia lähteitä.</li>
 <li id="m-loss"><b>Lataushäviö:</b> WLTP-testissä sähkönkulutus mitataan pistorasiasta, joten latauksen tavanomaiset häviöt ovat jo virallisissa luvuissa. Oletuksena lisätään silti 10 %, koska moni lataa kotona tavallisesta pistorasiasta, jossa häviö on suurempi: <a href="https://www.adac.de/rund-ums-fahrzeug/elektromobilitaet/laden/ladeverluste-elektroauto-studie/" target="_blank" rel="noopener">ADAC:n mittauksessa</a> (8/2026, viisi autoa) häviöt olivat pistorasiasta (2,3 kW) noin 15 % ja yhdellä autolla 24 %, latausasemalla (11–22 kW) alle 7 %. Jos lataat latausasemalla, aseta lisähäviöksi 0.</li>
+<li id="m-find"><b>Hae edullisin</b> käy läpi kaikki mallit, joille on hinta-arvio ja joita on rekisterissä vähintään 200 (harvinaisista malleista hinta- ja kulutustieto on epävarmaa). Kustakin valitaan nuorin vuosimalli, jonka arvioitu hinta mahtuu enimmäishintaan, kuten mallin valinnassa, ja vuosikulu lasketaan samoilla asetuksilla kuin vertailun autoille (ajomäärä, omistusaika, rahoitus, vakuutus, renkaat ja huolto sekä pois jätetyt kulut). Saman mallin versioista näytetään halvin. Järjestys perustuu mallien keskiarvoihin: yksittäisen auton kunto, varustelu ja huoltohistoria voivat muuttaa hintaa paljon, ja todellinen kulutus on mallin oma mitattu luku vain, kun EEA:n aineistossa on sille tarpeeksi autoja (muuten merkin keskiarvo, ja tulos on merkitty). Rekisterissä ei ole korimallia eikä kokoa, joten haku ei tiedä, sopiiko auto tarpeisiisi: vertaa itse tiloja ja kokoa.</li>
 <li id="m-pick"><b>Mallin valinta</b> täyttää ostohinnan, iän ja mittarilukeman, ellet ole kirjoittanut niitä itse: ikä on nuorin mallivuosi, jonka arvioitu hinta mahtuu enimmäishintaan, hinta on mallin arvo uutena (Verohallinnon verotusarvoista, sama menetelmä kuin esimerkkiautoissa, vähintään 5 päätöstä) kerrottuna arvonaleneman kertoimella, ja mittarilukema on ikä kertaa mallin mediaaniajomäärä Traficomin rekisterissä. Arvio on suuntaa-antava: vaihda oikea hinta, kun tiedät sen. Noin 80 %:lle malleista on arvio.</li>
 <li id="m-var"><b>Vaihteluväli</b> tuloskorteissa näyttää vuosikulun 15 vuoden halvimmilla ja kalleimmilla energian hinnoilla (12 kuukauden keskihinnat nykyrahassa, Tilastokeskus). Lähteet ja oletukset ovat tulosten alla kohdassa Lisätietoja vaihteluväleistä.</li>
 <li id="m-tip"><b>Kuinka varma järjestys on?</b> Sivu muuttaa yhtä asiaa kerrallaan ja etsii lähimmän arvon, jolla halvin auto vaihtuu, ja näyttää kaksi lähintä. Haun rajat: ajomäärä 2 000–50 000 km, polttoaineen ja sähkön hinta puolesta kaksinkertaiseen, omistusaika 1–20 vuotta ja arvonalenema puolesta kaksinkertaiseen (sama kerroin kaikille autoille). Rajat eivät ole ennusteita tai vaihteluvälejä, vaan sitä, kuinka kaukaa kääntöpistettä haetaan; kaukana olevaa kääntöpistettä ei näytetä.</li>
@@ -886,6 +910,10 @@ en: {
   servLvl_l:'Servicing and repair level', servLvl_out:p=>`${p}% of the default`,
   servLvl_hint:'The default is Average. <a class="why" href="#m-serv">reasoning</a>',
   misc_l:'Washing and other', misc_hint:'The amount is set per car (default €250 / yr, ADAC 10/2026: washing and care).',
+  find_h:'Find the cheapest for my driving', find_lead:'Goes through every model with a price estimate and shows the five cheapest per year at your mileage, ownership period and maximum price. For each model it takes the youngest model year that fits the maximum price. Results are model averages: check the car\'s condition, size and space yourself. <a class="why" href="#m-find">reasoning</a>',
+  find_pt:'Powertrain', find_all:'All powertrains', find_my:y=>`model year ${y}`, find_price:p=>`about €${p}`, find_thin:'consumption from the brand average',
+  find_n:(n,km,y,b)=>`${n} models fit €${b}; cheapest at ${km} km a year over ${y} years:`, find_add:'+ Add to comparison',
+  find_full:'There are already four cars in the comparison: remove one first.', find_none:'No model fits the maximum price. Raise it or choose another powertrain.',
   ins_h:'Insurance', ins_l:'Comprehensive cover', ins_full:'Full comprehensive', ins_part:'Partial comprehensive', ins_none:'None, motor liability only',
   ins_u:'Applies to all cars. A finance company usually requires full comprehensive cover on a car bought with a loan. Each car\'s own premiums can be changed under Fine-tune.',
   ins_src:'Defaults from Taloustaito price comparisons: motor liability €200 / yr, full comprehensive €520–835 / yr by powertrain, partial comprehensive 37% of full. <a class="why" href="#m-ins">reasoning</a>',
@@ -932,6 +960,7 @@ en: {
 <li id="m-range"><b>Electric range</b> is shown for electric and plug-in hybrid cars picked from the register: the official WLTP range is the median of the same model registered in Finland in 2025, or for models no longer sold new, in 2020–2024 (final data) (<a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA register</a>). The winter figures are estimates from the Norwegian Automobile Federation's El Prix winter tests: in a mild winter (−6…+8 °C, 2025) cars fell on average 18% and in hard frost (−7…−32 °C, 2026) 38% short of their WLTP range (<a href="https://www.naf.no/elbil/elprix-nytt/elprix-vinter-2026-rekkeviddetest" target="_blank" rel="noopener">NAF</a>). The tests used electric cars; applying the same ratio to plug-in hybrids is an assumption. Older model years often have a shorter range than the register figure. Individual cars can differ a lot. <b>Battery health</b> (SOH) shortens an electric car's range in the same proportion. If you leave it empty, it is estimated from the car's age: 2.3% per year, the average capacity loss in data on 22,700 electric cars (<a href="https://www.geotab.com/blog/ev-battery-health/" target="_blank" rel="noopener">Geotab, 28 April 2026</a>; an earlier study found 1.8% per year, and heavily fast-charged cars 3.0% per year). The default is the less favourable average. A single car's battery can be clearly better or worse, so ask for a health report. <b>Battery size</b> changes the range in proportion when the model's battery is known from its name (e.g. Nissan Leaf 40 kWh). The register has no battery size, so for other models the field only affects production emissions.</li>
 <li id="m-ekm"><b>€/km on the result card is the driving energy:</b> fuel or electricity per kilometre (consumption × price), i.e. what driving itself costs. All costs per kilometre (yearly cost divided by mileage) are under Breakdown and ranges on the card. Adding the rise in servicing and the mileage-related loss of value to the driving cost waits for better sources.</li>
 <li id="m-loss"><b>Charging losses:</b> in the WLTP test, electricity consumption is measured at the socket, so normal charging losses are already in the official figures. The default still adds 10%, because many people charge at home from an ordinary socket, where losses are higher: in <a href="https://www.adac.de/rund-ums-fahrzeug/elektromobilitaet/laden/ladeverluste-elektroauto-studie/" target="_blank" rel="noopener">ADAC's measurements</a> (8/2026, five cars) losses from a household socket (2.3 kW) were about 15%, and 24% for one car, and below 7% from a wallbox (11–22 kW). If you charge from a wallbox, set the extra loss to 0.</li>
+<li id="m-find"><b>Find the cheapest</b> goes through every model with a price estimate and at least 200 cars in the register (price and consumption data for rare models are uncertain). For each it takes the youngest model year whose estimated price fits the maximum price, as when picking a model, and computes the yearly cost with the same settings as the cars in the comparison (mileage, ownership period, financing, insurance, tyres and servicing, and any costs left out). Of a model's versions the cheapest is shown. The ranking rests on model averages: the condition, equipment and service history of an individual car can change its price a lot, and real-world consumption is the model's own measured figure only when the EEA data hold enough of its cars (otherwise the brand average, and the result is marked). The register has no body type or size, so the search cannot tell whether a car suits your needs: compare space and size yourself.</li>
 <li id="m-pick"><b>Picking a model</b> fills in the purchase price, age and odometer unless you typed them yourself: the age is the youngest model year whose estimated price fits the maximum price, the price is the model's value when new (from Tax Administration taxation values, the same method as for the example cars, at least 5 decisions) times the depreciation factor, and the odometer is age times the model's median annual mileage in Traficom's register. The estimate is indicative: change it to the real price when you know it. About 80% of models have an estimate.</li>
 <li id="m-var"><b>The range</b> on the result cards shows the yearly cost at the cheapest and dearest energy prices of the last 15 years (12-month averages in today's money, Statistics Finland). Sources and assumptions are under the results in More about the ranges.</li>
 <li id="m-tip"><b>How firm is the ranking?</b> The page changes one thing at a time, finds the nearest value at which the cheapest car changes, and shows the two nearest. Search limits: mileage 2,000–50,000 km, fuel and electricity prices from half to double, ownership 1–20 years and depreciation from half to double (the same factor for every car). The limits are not forecasts or ranges, only how far the page looks for a tipping point; one further away is not shown.</li>
@@ -1234,6 +1263,41 @@ function autoPriceAge(c, r){
   if (!own.price){ const v = estPrice(r, c.age); c.priceAuto = !!v; if (v) c.price = v; }
   if (!own.odo) c.odo = Math.round(c.age*(r[6]||14000)/1000)*1000;
 }
+
+// --- Hae edullisin minun ajollani ---
+// Kaikki mallit, joilla on hinta-arvio (MV0) ja vähintään FIND_MIN autoa rekisterissä: nuorin vuosimalli, joka mahtuu
+// enimmäishintaan (sama kuin mallin valinnassa), laskettuna käyttäjän asetuksilla. Saman mallin versioista näytetään halvin.
+const FIND_MIN = 200, FIND_N = 5;
+function carFromRow(r){
+  const c = newCar({pt:r[2], name:`${r[0]} ${r[1]}`});
+  c.picked = r; autoPriceAge(c, r); fromRow(c, r); c.batt = battDef(r, r[2]); return c;
+}
+function findCheapest(G, pt){
+  const best = new Map();
+  CATALOG.forEach((r, k) => {
+    if (!MV0[k] || (r[4]||0) < FIND_MIN || (pt && r[2]!==pt)) return;
+    const c = carFromRow(r); if (G.budget > 0 && c.price > G.budget) return;
+    const t = calc(c, G), key = `${r[0]} ${String(r[1]).split(' ')[0]} ${r[2]}`, o = best.get(key);
+    if (!o || t.total < o.t.total) best.set(key, {r, c, t});
+  });
+  return [...best.values()].sort((a,b) => a.t.total - b.t.total);
+}
+function renderFinder(){
+  const box = $('findRes'); if (!box || !$('finder').open) return;
+  const G = g(), all = findCheapest(G, $('findPt').value), yr = T('yr'), full = cars.length >= 4;
+  box.innerHTML = !all.length ? `<p class="hint">${T('find_none')}</p>` :
+    `<p class="hint">${T('find_n')(all.length, fmt(G.km), G.years, fmt(G.budget))}</p><ol class="findlist">` + all.slice(0, FIND_N).map((o,i) => {
+      const thin = o.r[9]==null && o.r[2]!=='E';
+      return `<li><span class="rk">${i+1}</span><div class="fn"><b>${esc(o.r[0]+' '+o.r[1])}</b> <span class="unit">${T('pt')[o.r[2]]}, ${T('find_my')(CUR_YEAR-o.c.age)}, ${T('find_price')(fmt(o.c.price))}${thin?' · '+T('find_thin'):''}</span></div>`
+        + `<div class="fv"><span class="num">${fmt(o.t.total)} € / ${yr}</span><span class="unit">${fmt(o.t.em)} kg CO₂e / ${yr}</span></div>`
+        + `<button class="btn sm" type="button" data-find="${CATALOG.indexOf(o.r)}"${full?' disabled':''}>${T('find_add')}</button></li>`; }).join('')
+    + `</ol>${full ? `<p class="hint">${T('find_full')}</p>` : ''}`;
+}
+$('finder').addEventListener('toggle', renderFinder);
+$('findPt').addEventListener('input', renderFinder);
+$('findRes').addEventListener('click', e => { const b = e.target.closest('[data-find]'); if (!b || cars.length >= 4) return;
+  cars.push(carFromRow(CATALOG[+b.dataset.find])); renderCars(); update(); save();
+  const card = document.querySelector(`.car[data-i="${cars.length-1}"]`); if (card) card.scrollIntoView({block:'start'}); });
 
 // --- malliluettelo ---
 const labelOf = r => `${r[0]} ${r[1]} – ${T('pt')[r[2]]}`;
@@ -1805,6 +1869,7 @@ function update(){
   $('kmSlider').value = G.km;
   $('cityOut').textContent = T('city_out')(Math.round(G.city*100));
   renderLvl(G);
+  renderFinder();
   { const mc = cars.find(c => c.mine); $('tradeNote').textContent = !mc ? T('trade_none') : $('tradeIn').value!=='yes' ? T('trade_off')
       : T('trade_on')(fmt(num(mc.price,0)), fmt(num(mc.debt,0)), fmt(G.trade), fmt(Math.max(0, G.own + G.trade))); }
   const R = cars.map(c => calc(c,G));
@@ -1960,6 +2025,7 @@ function applyLang(lang){
   document.querySelectorAll('[data-i]').forEach(el => { const v = T(el.dataset.i); if (typeof v === 'string') el.innerHTML = fold(v); });
   document.querySelectorAll('[data-i-label]').forEach(el => el.setAttribute('aria-label', T(el.dataset.iLabel)));
   buildToc();
+  document.querySelectorAll('#findPt option').forEach(o => o.textContent = o.value ? T('pt')[o.value] : T('find_all'));
   document.querySelectorAll('.lang').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang===LANG)));
   cars.forEach(c => { if (c.exAuto && c.ex) c.name = exName(c.ex, c.pt); });
   buildModels(); renderCars(); update();

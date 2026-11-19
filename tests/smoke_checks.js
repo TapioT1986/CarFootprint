@@ -170,6 +170,19 @@ async () => {
       if (r[2] === 'E' && !(battDef(r, 'E') >= 15 && battDef(r, 'E') <= 160)) problems.push(`${lang}: ${r[1]} battery ${battDef(r, 'E')} kWh is implausible`);
     });
   }
+  // 15. Find the cheapest: results fit the maximum price, are sorted by yearly cost, follow the powertrain filter,
+  //     and a found car added to the comparison costs the same as the search showed
+  if (typeof findCheapest === 'function') {
+    const G = g(), all = findCheapest(G, '');
+    if (!all.length) problems.push(`${lang}: cheapest search found nothing at budget ${G.budget}`);
+    all.forEach((o, i) => {
+      if (G.budget > 0 && o.c.price > G.budget) problems.push(`${lang}: search result ${o.r[1]} costs ${o.c.price} over budget ${G.budget}`);
+      if (i && all[i - 1].t.total > o.t.total) problems.push(`${lang}: search results not sorted at ${o.r[1]}`);
+    });
+    if (findCheapest(G, 'E').some(o => o.r[2] !== 'E')) problems.push(`${lang}: powertrain filter E lets other powertrains through`);
+    if (all[0]) { const c = carFromRow(all[0].r), t = calc(c, G).total;
+      if (Math.abs(t - all[0].t.total) > 0.5) problems.push(`${lang}: added car costs ${t} but the search showed ${all[0].t.total}`); }
+  }
   // 13. No tracking: the page loads nothing from other hosts (fonts come from fonts/ in the repository)
   const foreign = performance.getEntriesByType('resource').map(e => e.name).filter(u => new URL(u).host !== location.host);
   if (foreign.length) problems.push(`${lang}: page loaded files from other hosts: ${[...new Set(foreign)].join(', ')}`);
