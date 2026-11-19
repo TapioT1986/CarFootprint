@@ -11,6 +11,7 @@ CarFootprint is a single-page calculator for people choosing between cars: new o
 For up to four cars side by side:
 
 - **Annual cost** (€/year, €/month; €/km on the result card is the driving energy only, fuel or electricity per km, and all costs per km are under More details): depreciation, financing, energy, and vehicle tax, servicing and repairs, insurance (compulsory motor liability and optional comprehensive cover, shown separately) and other costs (tyres).
+- **Leaving costs out:** servicing and tyres and other can be left out of the comparison (for all cars) with buttons in the cost table, for people who service their car themselves or buy used tyres.
 - **Annual emissions** (kg CO₂e/year, g/km): driving emissions plus manufacturing emissions spread over the car's lifetime.
 - **Switching-decision emissions** (shown when a current car is marked, over the whole ownership period): keeping the current car counts driving only, since it is already built; a new car (under a year old) counts its whole manufacturing; a used car counts manufacturing × ownership years ÷ its remaining lifetime (lifetime − age, at least the ownership period). The used-car allocation is a deliberately pessimistic assumption; counting 0 for a used car is the other defensible choice and is mentioned on the page.
 - **Break-even mileage:** the annual mileage at which one car becomes cheaper than another.

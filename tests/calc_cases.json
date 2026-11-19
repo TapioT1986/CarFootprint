@@ -748,6 +748,64 @@
     "pay": 0.0,
     "cash": 323.32
    }
+  },
+  {
+   "name": "14 Electric car with servicing and tyres left out of the comparison",
+   "g": {
+    "km": 15000,
+    "years": 5,
+    "own": 6000,
+    "loanRate": 0.044,
+    "loanFee": 12.5,
+    "loanYears": 5,
+    "rate": 0.0248,
+    "pB": 2.28,
+    "pD": 2.49,
+    "pE": 0.1791,
+    "loss": 0.1,
+    "eEl": 0.042,
+    "eB": 2.78,
+    "eD": 3.32,
+    "city": 0.39,
+    "excl": "so"
+   },
+   "car": {
+    "pt": "E",
+    "price": 25000,
+    "age": 2,
+    "odo": 70000,
+    "dep": "",
+    "fuel": 0,
+    "kwh": 17,
+    "share": 100,
+    "real": 1.2,
+    "other": 250,
+    "traf": 205,
+    "kasko": 835,
+    "serv": 250,
+    "tax": "",
+    "mass": 2200,
+    "make": 7.5,
+    "batt": 60,
+    "life": 18
+   },
+   "expected": {
+    "dep": 2047.55,
+    "resid": 14762.25,
+    "cap": 835.16,
+    "energy": 602.85,
+    "tax": 323.75,
+    "serv": 0,
+    "other": 1363.76,
+    "total": 4849.32,
+    "drive": 141.37,
+    "make": 659.33,
+    "em": 800.71,
+    "swMake": 3708.75,
+    "swEm": 4415.61,
+    "pay": 365.85,
+    "cash": 529.74
+   }
   }
  ]
 }

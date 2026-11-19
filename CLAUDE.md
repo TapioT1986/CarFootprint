@@ -260,6 +260,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   `details.fold` ("Lisätietoja ja lähteet") via fold(); applyLang and the card/cost-table renders call it. Owner's rule: keep
   information and sources on the page, fold them away. Result card shows total, monthly, financing, emissions; energy price
   and both ranges are in its `details.sumd`. User test guide: docs/kayttajatestit.md.
+- Leaving costs out (global `excl`, last in GIDS, share letter t; a hidden text input, because type=hidden keeps no
+  defaultValue): "s" servicing, "o" tyres and other; buttons `[data-excl]` in the cost table, `#exclNote` under the results,
+  calc() zeroes serv / tyre (r.tyre). Applies to all cars. Test case 14.
 - Phone touch targets >= 44 px and small text >= 13 px (CSS block at the end of <style>; smoke check 11).
 - Calculation tests: tests/calc_reference.py is a separate Python implementation of the method; tests/calc_cases.json holds
   8 cases with explicit inputs and its expected figures. CI runs the reference check, and smoke_checks.js (check 12)

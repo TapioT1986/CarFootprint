@@ -108,8 +108,10 @@ def compute(case, vtax, cur_year):
     kwh = km / 100 * c["kwh"] * c["real"] * el * (1 + G["loss"]) * city_mix(G["city"], CITY_R["E"])
     energy = litres * (G["pD"] if pt == "D" else G["pB"]) + kwh * G["pE"]
     tax = vehicle_tax(c, vtax, cur_year) if c["tax"] in ("", None) else float(c["tax"])
-    serv = c["serv"] * serv_factor(pt, c["odo"], c["odo"] + km * n)
-    other = c["other"] + c["traf"] + c["kasko"] + tax + serv
+    # left out of the comparison by the user: "s" = servicing, "o" = tyres and other
+    ex = G.get("excl", "")
+    serv = 0 if "s" in ex else c["serv"] * serv_factor(pt, c["odo"], c["odo"] + km * n)
+    other = (0 if "o" in ex else c["other"]) + c["traf"] + c["kasko"] + tax + serv
     total = dep + cap + energy + other
     drive = litres * (G["eD"] if pt == "D" else G["eB"]) + kwh * G["eEl"]
     batt = c["batt"] if pt in "EP" else 0
