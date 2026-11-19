@@ -294,6 +294,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   defaultValue): "s" servicing, "t" tyres, "o" other costs; buttons `[data-excl]` in the cost table, `#exclNote` under the results,
   calc() zeroes serv / tyre (r.tyre). Applies to all cars. Test case 14.
 - Phone touch targets >= 44 px and small text >= 13 px (CSS block at the end of <style>; smoke check 11).
+- Readability (owner 2026-11-20, Samsung dark/night mode): notes text in --ink at 15 px (16 px on phones), hints 13.5 px
+  (15 px on phones), dark --muted #aeb9c3. Rotation keeps the reading place: the block at the top of the screen and the
+  fraction within it are remembered on scroll and restored when innerWidth changes (anchor IIFE before buildToc).
 - Calculation tests: tests/calc_reference.py is a separate Python implementation of the method; tests/calc_cases.json holds
   8 cases with explicit inputs and its expected figures. CI runs the reference check, and smoke_checks.js (check 12)
   compares the page's calc() with them (0.5 EUR). When the method changes on purpose, change calc_reference.py the same

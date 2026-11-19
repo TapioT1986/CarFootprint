@@ -75,13 +75,13 @@
   --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0f151b; --surface:#18212a; --ink:#e7edf2; --muted:#9aa8b4; --line:#2b3742;
+  --bg:#0f151b; --surface:#18212a; --ink:#e7edf2; --muted:#aeb9c3; --line:#2b3742;
   --accent:#4d9be6; --accent-ink:#06121e; --input:#121a21;
   --c1:#4d9be6; --c2:#f0a050; --c3:#4cc28a; --c4:#b78ae6;
   --seg-dep:#e7edf2; --seg-cap:#8b99a5; --seg-en:#f0a050; --seg-oth:#4a5966;
   --seg-drive:#a9c46a; --seg-make:#5d6d3c; --good:#4cc28a; --warn:#f0a050; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0f151b; --surface:#18212a; --ink:#e7edf2; --muted:#9aa8b4; --line:#2b3742;
+  --bg:#0f151b; --surface:#18212a; --ink:#e7edf2; --muted:#aeb9c3; --line:#2b3742;
   --accent:#4d9be6; --accent-ink:#06121e; --input:#121a21;
   --c1:#4d9be6; --c2:#f0a050; --c3:#4cc28a; --c4:#b78ae6;
   --seg-dep:#e7edf2; --seg-cap:#8b99a5; --seg-en:#f0a050; --seg-oth:#4a5966;
@@ -136,7 +136,7 @@ input[aria-invalid="true"]{border-color:var(--warn);box-shadow:0 0 0 1px var(--w
 .odo{font-family:var(--mono);font-size:30px;font-weight:500;letter-spacing:.04em}
 .kmin{width:7.2ch;padding:2px 6px;font-size:30px}
 input[type=range]{padding:0;background:none;border:0;accent-color:var(--accent)}
-.hint{font-size:12.5px;color:var(--muted);margin:4px 0 0}
+.hint{font-size:13.5px;line-height:1.5;color:var(--muted);margin:4px 0 0}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .chip{font:500 12.5px/1 var(--body);border:1px solid var(--line);background:var(--input);color:var(--ink);padding:6px 9px;border-radius:999px;cursor:pointer}
 .chip[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:700}
@@ -255,9 +255,10 @@ details.carmore .tag,details.carmore .insp{display:block;margin-top:10px}
 svg text{font-family:var(--body)}
 .svgbox{overflow-x:auto}
 
-.notes{margin-top:24px;color:var(--muted);font-size:13px;max-width:90ch}
+.notes{margin-top:24px;color:var(--ink);font-size:15px;line-height:1.65;max-width:75ch}
 .notes h3{color:var(--ink);font-size:18px;margin-bottom:6px}
 .notes ul{padding-left:18px;margin:6px 0}
+.notes ul > li{margin-bottom:.7em}
 .notes a{color:var(--accent)}
 .notes li{scroll-margin-top:12px}
 .notes li.hl{animation:hl 2.4s ease-out}
@@ -394,7 +395,8 @@ details.info a{color:var(--accent)}
   input[type=range]{min-height:32px}
   details summary{padding:10px 0;min-height:44px;box-sizing:border-box}
   .label{font-size:13px}
-  .unit,.hint,.errmsg,.evr,.q{font-size:13.5px}
+  .unit,.hint,.errmsg,.evr,.q{font-size:15px}
+  .notes{font-size:16px}
   .tag,.insp,.badge{font-size:13px}
   .estb{font-size:12px}
   .reqhint,.sub{font-size:14px}
@@ -1997,6 +1999,21 @@ function moreCount(){
   addEventListener('scroll', () => { if (!tick) { tick = true; setTimeout(spy, 50); } }, {passive:true});
   nav.addEventListener('focusin', () => nav.classList.remove('hide'));
   spy();
+})();
+// Lukukohta säilyy ruudun kääntyessä: selain muistaa vierityksen pikseleinä, mutta teksti rivittyy uudelleen ja sivun
+// pituus muuttuu. Muistetaan ruudun yläreunan kappale ja kohta sen sisällä, ja palautetaan se, kun leveys muuttuu.
+(() => {
+  let w = innerWidth, anchor = null, t = 0;
+  const BLOCK = 'li, p, tr, h2, h3, summary, .field, .car, .chart, .sumcard, .panel, section';
+  const pick = () => { const y = ($('secnav') ? $('secnav').offsetHeight : 0) + 8;
+    for (const x of [0.5, 0.25, 0.75]) { const e = document.elementFromPoint(innerWidth*x, y), el = e && e.closest(BLOCK);
+      if (el) { const r = el.getBoundingClientRect(); return {el, f: r.height ? (y - r.top)/r.height : 0, y}; } }
+    return null; };
+  const restore = () => { if (!anchor || !anchor.el.isConnected) return;
+    const r = anchor.el.getBoundingClientRect(); scrollBy(0, r.top + anchor.f*r.height - anchor.y); };
+  addEventListener('scroll', () => { clearTimeout(t); t = setTimeout(() => { if (innerWidth === w) anchor = pick(); }, 150); }, {passive:true});
+  addEventListener('resize', () => { if (innerWidth === w) return; w = innerWidth; clearTimeout(t);
+    restore(); setTimeout(restore, 120); setTimeout(restore, 400); });
 })();
 // Näin laskenta toimii -osion aiheluettelo: kohtien lihavoiduista otsikoista, linkit toimivat kuten perustelut-linkit
 function buildToc(){
