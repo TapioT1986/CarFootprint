@@ -113,10 +113,13 @@ def compute(case, vtax, cur_year):
     total = dep + cap + energy + other
     drive = litres * (G["eD"] if pt == "D" else G["eB"]) + kwh * G["eEl"]
     batt = c["batt"] if pt in "EP" else 0
-    make = (c["make"] + batt * BATT_T_PER_KWH) * 1000 / c["life"]
+    make_t = (c["make"] + batt * BATT_T_PER_KWH) * 1000
+    make = make_t / c["life"]
+    # switching decision over the whole ownership: current car 0, new car (age < 1) all, used car years / remaining life
+    sw_make = 0 if c.get("mine") else make_t if c["age"] < 1 else make_t * n / max(n, c["life"] - c["age"])
     cash = pay + (energy + other) / 12
     r = dict(dep=dep, resid=resid, cap=cap, energy=energy, tax=tax, serv=serv, other=other, total=total,
-             drive=drive, make=make, em=drive + make, pay=pay, cash=cash)
+             drive=drive, make=make, em=drive + make, swMake=sw_make, swEm=drive * n + sw_make, pay=pay, cash=cash)
     return {k: round(v, 2) for k, v in r.items()}
 
 

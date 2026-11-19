@@ -60,12 +60,14 @@ Tavoite: vastata kysymykseen "kannattaako nykyinen auto pitää vai vaihtaa, rah
   (vaihtohyvitys), ellei käyttäjä anna omaa summaa.
 - Tuloskortissa: "Jos vaihdat: +X €/v" ja omistusajan yhteenlaskettu ero.
 
-### 2.2 Päästöt kahdella tavalla · koko M
+### 2.2 Päästöt kahdella tavalla · koko M · ✅ tehty 19.11.2026 (versio 0.70)
 - **Elinkaarivertailu** (nykyinen): valmistus jaettuna elinkaarelle + käyttö.
 - **Vaihtopäätöksen vaikutus**: pidä = vain käytön päästöt; vaihda uuteen = uuden auton valmistus nyt + käyttö;
   vaihda käytettyyn = rajaus kerrottava (käytetyn auton ostaminen ei synnytä uutta autoa, mutta vaikuttaa ketjuun).
   Laskentarajaus ja lähteet näkyviin, ja nämä kaksi tulosta erotellaan selvästi toisistaan.
 - Päätettävä yhdessä: miten käytetyn auton ostoon kohdistetaan valmistuspäästöt (vaihtoehdot kirjataan sivulle).
+- Omistajan valinta 19.11.2026: epäedullisempi tapa B = valmistus × omistusvuodet ÷ jäljellä oleva käyttöikä (vähintään omistusaika);
+  uusi auto (ikä < 1 v) koko valmistus, nykyinen auto 0. Vaihtoehto 0 käytetylle autolle kerrotaan sivulla. Testitapaus 13.
 
 ## Vaihe 3 – Epävarmuus
 

@@ -158,6 +158,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   value - debt of the current car, added to own money for the other cars (negative equity raises their loan). Result cards
   show the yearly and whole-period difference. Before 0.67 the current car had no loan at all (its value is own money tied up), labels say current value / age now / km now, it is never replaced by budget
   examples, and the other result cards show the difference to it (€/yr, t CO2e/yr). Data stays in localStorage.
+- Switching-decision emissions (calc() swMake/swEm, whole ownership period, kg): current car 0 + driving; other cars: age < 1 = all of makeT,
+  else makeT x years / max(years, life - age) (owner chose this pessimistic option B 2026-11-19; option A = 0 is named on the page).
+  Shown on result cards only when a current car is marked (sw_keep / sw_vs). Test case 13 (new car).
 - Battery health (car field `soh`, share letter H, string like dep/tax: '' = estimate): electric cars only, visible on the
   card. sohAuto = 100 - 2.3 x age (Geotab 28.4.2026, 22,700 EVs; earlier study 1.8 %/yr, pessimistic choice), floor 50.
   Range = WLTP x SOH, winter factors on top. Information only, not in the costs.
