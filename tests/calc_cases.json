@@ -997,6 +997,66 @@
     "pay": 0.0,
     "cash": 241.92
    }
+  },
+  {
+   "name": "18 Budget tyres (57 %) and dealer servicing (110 %)",
+   "g": {
+    "km": 15000,
+    "years": 5,
+    "own": 20000,
+    "loanRate": 0.044,
+    "loanFee": 12.5,
+    "loanYears": 5,
+    "rate": 0.0248,
+    "pB": 2.28,
+    "pD": 2.49,
+    "pE": 0.1791,
+    "loss": 0.1,
+    "eEl": 0.042,
+    "eB": 2.78,
+    "eD": 3.32,
+    "city": 0.39,
+    "tyreL": 0.57,
+    "servL": 1.1
+   },
+   "car": {
+    "pt": "B",
+    "price": 10000,
+    "age": 8,
+    "odo": 120000,
+    "dep": "",
+    "fuel": 6.0,
+    "kwh": 0,
+    "share": 0,
+    "real": 1.15,
+    "other": 200,
+    "traf": 200,
+    "kasko": 520,
+    "serv": 400,
+    "tax": 200,
+    "mass": 1700,
+    "make": 8.2,
+    "batt": 0,
+    "life": 18
+   },
+   "expected": {
+    "dep": 944.54,
+    "resid": 5277.32,
+    "cap": 189.44,
+    "energy": 2359.8,
+    "tax": 200.0,
+    "serv": 1078.47,
+    "tyres": 197.36,
+    "other": 2395.83,
+    "total": 5889.61,
+    "drive": 2877.3,
+    "make": 455.56,
+    "em": 3332.86,
+    "swMake": 4100.0,
+    "swEm": 18486.5,
+    "pay": 0.0,
+    "cash": 396.3
+   }
   }
  ]
 }

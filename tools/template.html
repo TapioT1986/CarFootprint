@@ -127,6 +127,9 @@ input[type=range]{padding:0;background:none;border:0;accent-color:var(--accent)}
 .hint{font-size:12.5px;color:var(--muted);margin:4px 0 0}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .chip{font:500 12.5px/1 var(--body);border:1px solid var(--line);background:var(--input);color:var(--ink);padding:6px 9px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:700}
+.lvl input[type=range]{width:100%}
+.lvl + .lvl{margin-top:10px}
 .chip:hover{border-color:var(--accent)}
 
 details.adv{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
@@ -221,6 +224,7 @@ details.carmore .tag,details.carmore .insp{display:block;margin-top:10px}
 @media (max-width:760px){.charts{grid-template-columns:minmax(0,1fr)}}
 .chart{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
 .chart.wide{grid-column:1/-1}
+.charts.befirst{margin:0 0 16px}
 .chart h3{font-size:19px}
 .chart p.lead{margin:2px 0 10px;color:var(--muted);font-size:13.5px;max-width:70ch}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin-bottom:8px}
@@ -442,6 +446,32 @@ details.info a{color:var(--accent)}
         <p class="hint" data-i="ins_src"></p>
         </div>
         <div class="morepart">
+        <h2 data-i="oc_h"></h2>
+        <p class="hint" data-i="oc_lead"></p>
+        <!-- Rengas- ja huoltokulujen taso kaikille autoille (% oletuksesta); pikanapit LVL-taulukosta, Jätä pois = excl-kirjain -->
+        <div class="fields">
+          <div class="field full lvl">
+            <label class="label" for="tyreLvl" data-i="tyreLvl_l"></label>
+            <input type="range" id="tyreLvl" min="30" max="150" step="1" value="100">
+            <span class="unit" id="tyreLvlOut"></span>
+            <div class="chips" data-lvl="tyreLvl"><button class="chip" type="button" data-set="b" data-i="lv_b"></button><button class="chip" type="button" data-set="m" data-i="lv_m"></button><button class="chip" type="button" data-set="p" data-i="lv_p"></button><button class="chip" type="button" data-excl="t" data-i="lv_out"></button></div>
+            <div class="hint" data-i="tyreLvl_hint"></div>
+          </div>
+          <div class="field full lvl">
+            <label class="label" for="servLvl" data-i="servLvl_l"></label>
+            <input type="range" id="servLvl" min="30" max="200" step="1" value="100">
+            <span class="unit" id="servLvlOut"></span>
+            <div class="chips" data-lvl="servLvl"><button class="chip" type="button" data-set="b" data-i="lv_b"></button><button class="chip" type="button" data-set="m" data-i="lv_m"></button><button class="chip" type="button" data-set="p" data-i="lv_p"></button><button class="chip" type="button" data-excl="s" data-i="lv_out"></button></div>
+            <div class="hint" data-i="servLvl_hint"></div>
+          </div>
+          <div class="field full lvl">
+            <span class="label" data-i="misc_l"></span>
+            <div class="chips"><button class="chip" type="button" data-excl="o" data-i="lv_out"></button></div>
+            <div class="hint" data-i="misc_hint"></div>
+          </div>
+        </div>
+        </div>
+        <div class="morepart">
         <h2 data-i="fin_h"></h2>
         <div class="fields">
           <div class="field full"><label class="label" for="own" data-i="own_l"></label><input type="number" id="own" min="0" step="500" value="6000"><span class="unit" data-i="own_u"></span></div>
@@ -492,6 +522,14 @@ details.info a{color:var(--accent)}
 
       <h2 class="step" id="resultsH"><span class="stepn">3</span><span data-i="step_res"></span></h2>
       <section class="results" aria-live="polite">
+        <!-- Ajomäärän leikkauspisteet ensin: kertoo yhdellä silmäyksellä, mikä auto on halvin millä ajomäärällä (omistaja 19.11.2026) -->
+        <div class="charts befirst">
+          <div class="chart wide">
+            <h3 id="beTitle"></h3>
+            <p class="lead" id="beLead"></p>
+            <div class="svgbox" id="beChart"></div>
+          </div>
+        </div>
         <div class="sumrow" id="sums"></div>
         <p class="sens" id="sens"></p>
         <p class="hint exclnote" id="exclNote" role="status"></p>
@@ -513,11 +551,6 @@ details.info a{color:var(--accent)}
             <p class="lead" data-i="em_lead"></p>
             <div class="legend"><span><i style="background:var(--seg-drive)"></i><span data-i="lg_drive"></span></span><span><i style="background:var(--seg-make)"></i><span data-i="lg_make"></span></span></div>
             <div class="svgbox" id="emChart"></div>
-          </div>
-          <div class="chart wide">
-            <h3 id="beTitle"></h3>
-            <p class="lead" id="beLead"></p>
-            <div class="svgbox" id="beChart"></div>
           </div>
         </div>
         <!-- Palaute: peukku yhdellä napautuksella, sen jälkeen vapaaehtoinen teksti. Vastaanottaja tools/feedback-worker/worker.js -->
@@ -596,7 +629,7 @@ fi: {
   all_km:(v)=>`Kaikki kulut kilometriä kohden: ${v} €/km (vuosikulu jaettuna ajomäärällä; suurin osa ei riipu ajetuista kilometreistä).`,
   parts:(d,c,e,o)=>`Vuodessa: arvonalenema ${d} €, rahoitus ${c} €, energia ${e} €, vero, vakuutus, huolto ja renkaat ${o} €.`,
   electricity:'sähkö', p_stat:'Tilastokeskus', p_own:'oma hinta',
-  excl_note:p=>`Vertailusta jätetty pois: ${p}. Palauta kulutaulukosta.`,
+  excl_note:p=>`Vertailusta jätetty pois: ${p}. Palauta kulutaulukosta tai Lisäasetusten kohdasta Muut kulut.`,
   ct:{h:'Kulut eriteltyinä', lead:'€ vuodessa omistusaikana keskimäärin. Ensin käyttökulut, jotka maksat ajaessasi ja omistaessasi, sitten arvonalenema ja rahoitus. Huollon, renkaat ja muut kulut voi jättää pois vertailusta, jos esimerkiksi huollat itse tai ostat käytetyt renkaat.', out:'Jätä pois', back:'Ota mukaan', outv:'pois',
     e100:'Energia, € / 100 km', energy:'Energia', traf:'Liikennevakuutus (pakollinen)', kasko:'Kasko', tax:'Ajoneuvovero', serv:'Huolto ja korjaukset (arvio)',
     src:'lähde', src_price:'hinta', src_cons:'kulutus', src_serv:'kasvukertoimet', assumed:'oletus, ei lähdettä', k_full:'täyskasko', k_part:'osakasko', k_none:'ei kaskoa',
@@ -635,6 +668,13 @@ fi: {
   more_h:'Lisäasetukset', more_n:(n)=>`· ${n} muutettu`, dock_aria:'Näytä tulokset', dock_cheap:'Halvin', dock_clean:'Vähin CO₂',
   city_l:'Kaupunki- ja maantieajo', city_out:p=>`kaupunkiajoa ${p} %, maantieajoa ${100-p} %`,
   city_hint:'Oletus 39 % on suomalaisten keskiarvo.¦Siinä ovat mukana henkilöautojen kilometrit kaduilla ja yksityisteillä sekä enintään 60 km/h maanteillä (Tilastokeskus, <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__tiet/statfin_tiet_pxt_12jx.px/" target="_blank" rel="noopener">12jx</a> ja <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__tiet/statfin_tiet_pxt_12k1.px/" target="_blank" rel="noopener">12k1</a>, 2025). Kaupunkiajo lisää polttomoottoriauton kulutusta, ja sähköauto kuluttaa kaupungissa vähemmän; lähteet kohdassa Näin laskenta toimii.',
+  oc_h:'Muut kulut', oc_lead:'Renkaiden ja huollon hintataso kaikille autoille. Pikanapit ovat lähteistä laskettuja tasoja; voit myös jättää kulun kokonaan pois vertailusta, jos esimerkiksi huollat itse tai ostat käytetyt renkaat. Vannekoko ja euromäärät ovat autokohtaisia (auton kohta Tarkenna).',
+  lv_b:'Budjetti', lv_m:'Keskiverto', lv_p:'Premium', lv_out:'Jätä pois', lv_isout:'jätetty pois vertailusta',
+  tyreLvl_l:'Renkaiden hintataso', tyreLvl_out:(p,e,k)=>`${p} % oletuksesta; 17″ ja ${k} km/v: noin ${e} € / v`,
+  tyreLvl_hint:'Oletus on Premium (epäedullisin valinta).¦Tasot ovat prosentteja oletuksen kesä- ja talvirenkaan yhteishinnasta (279,23 € koossa 205/55 R16: Nokian Wetproof 1 ja Hakkapeliitta R5, Rengas Online 10.11.2026). <b>Premium 100 %</b> on tämä oletus. <b>Keskiverto 83 %</b> on <a href="https://www.rengas365.fi/etsi-tuote/renkaat?Width=205&Profile=55&Diameter=16&Season=1" target="_blank" rel="noopener">Rengas365:n</a> koon 205/55 R16 mediaanihinta 19.11.2026: kesärengas 98,13 € (98 rengasta) ja <a href="https://www.rengas365.fi/etsi-tuote/renkaat?Width=205&Profile=55&Diameter=16&Season=2" target="_blank" rel="noopener">pohjoismainen talvirengas</a>, kitka tai nasta, 132,99 € (32 rengasta). <b>Budjetti 57 %</b> on samojen valikoimien alaneljännes: kesärengas 78,42 € ja talvirengas 81,16 €. Käytettyjä renkaita ja asennusta ei ole mukana.',
+  servLvl_l:'Huollon ja korjausten taso', servLvl_out:p=>`${p} % oletuksesta`,
+  servLvl_hint:'Oletus on Keskiverto.¦<b>Keskiverto 100 %</b> on laskurin oletus, joka on lähellä Tilastokeskuksen kulutustutkimuksen vuoden 2016 tasoa (huolto ja korjaukset noin 1 000 € ja osat 135 € autoa kohden vuodessa, vuoden 2022 rahassa; <a href="https://pxdata.stat.fi/PXWeb/pxweb/fi/StatFin/StatFin__ktutk/statfin_ktutk_pxt_14pg.px" target="_blank" rel="noopener">taulukko 14pg</a>). <b>Budjetti 42 %</b> on saman tutkimuksen vuoden 2022 taso suhteessa vuoteen 2016: (380 + 98) / (1 000 + 135) €. Siinä näkyy myös itse huoltaminen ja säästäminen huolloista, mutta Tilastokeskuksen mukaan pudotus johtuu pääosin keruutavan muutoksesta. <b>Premium 110 %</b> on merkkikorjaamon huolto: määräaikaishuollot olivat merkkikorjaamoissa keskimäärin noin 10 % yleiskorjaamoja kalliimpia (Fordin teettämä Promiran puhelinkysely, 56 merkki- ja noin 120 yleiskorjaamoa; <a href="https://www.taloustaito.fi/vapaalla/auto-huoltoon--merkkihuolto-vai-riippumaton-korjaamo-kumpi-kannattaa/" target="_blank" rel="noopener">Taloustaito 31.5.2019</a>). Tutkimuksen teetti autonvalmistaja, ja ero voi olla korjaustöissä suurempi.',
+  misc_l:'Pesu ja muut', misc_hint:'Summa on autokohtainen (oletus 250 € / v, ADAC 10/2026: pesu ja hoito).',
   ins_h:'Vakuutukset', ins_l:'Kasko', ins_full:'Täyskasko (laaja kasko)', ins_part:'Osakasko', ins_none:'Ei kaskoa, vain liikennevakuutus',
   ins_u:'Koskee kaikkia autoja. Rahoitusyhtiö vaatii yleensä lainalla ostettuun autoon täyskaskon. Auton omat vakuutusmaksut voi vaihtaa kohdassa Tarkenna.',
   ins_src:'<b>Lähteet:</b> liikennevakuutus ja täyskasko ovat Taloustaidon hintavertailujen keskiarvoja (<a href="https://www.taloustaito.fi/vapaalla/2026/taloustaito-vertaili-huimat-erot-autovakuutusten-hinnoissa/" target="_blank" rel="noopener">24.9.2026</a>, 3 v vanhat autot, ja <a href="https://www.taloustaito.fi/vapaalla/sahkoautoilija-nain-paljon-autosi-kayttovoima-korottaa-vakuutusmaksuja/" target="_blank" rel="noopener">20.10.2022</a>), kustakin suurempi: liikennevakuutus 200 €/v (sähkö 205), täyskasko 520 €/v (bensiini, diesel, hybridi), 700 (lataushybridi) ja 835 (sähkö). Osakasko on 37 % täyskaskon hinnasta Taloustaidon <a href="https://www.taloustaito.fi/vapaalla/2025/autovakuutus--ala-maksa-turhasta/" target="_blank" rel="noopener">26.9.2025</a> vertailun mukaan (neljä yhtiötä, 14 v vanha Octavia: osakasko keskimäärin 86 €/v, laaja kasko 231 €/v). Osakasko ei korvaa omaa kolaria. Vertailujen vakuutuksenottaja oli 58–59-vuotias täysillä bonuksilla; nuoremmalle tai bonuksettomalle hinta on usein selvästi suurempi.',
@@ -772,7 +812,7 @@ en: {
   all_km:(v)=>`All costs per kilometre: €${v}/km (yearly cost divided by mileage; most of it does not depend on the kilometres driven).`,
   parts:(d,c,e,o)=>`Per year: depreciation €${d}, financing €${c}, energy €${e}, tax, insurance, servicing and tyres €${o}.`,
   electricity:'electricity', p_stat:'Statistics Finland', p_own:'your price',
-  excl_note:p=>`Left out of the comparison: ${p}. Bring them back in the cost table.`,
+  excl_note:p=>`Left out of the comparison: ${p}. Bring them back in the cost table or under More settings, Other costs.`,
   ct:{h:'Costs itemised', lead:'Euros per year, averaged over the ownership period. Running costs you pay for driving and owning first, then depreciation and financing. Servicing, tyres and other costs can be left out of the comparison, for example if you service the car yourself or buy used tyres.', out:'Leave out', back:'Include', outv:'out',
     e100:'Energy, € / 100 km', energy:'Energy', traf:'Motor liability (compulsory)', kasko:'Comprehensive', tax:'Vehicle tax', serv:'Servicing and repairs (estimate)',
     src:'source', src_price:'price', src_cons:'consumption', src_serv:'rise factors', assumed:'assumption, no source', k_full:'full', k_part:'partial', k_none:'none',
@@ -811,6 +851,13 @@ en: {
   more_h:'More settings', more_n:(n)=>`· ${n} changed`, dock_aria:'Show the results', dock_cheap:'Cheapest', dock_clean:'Lowest CO₂',
   city_l:'City and highway driving', city_out:p=>`${p}% city, ${100-p}% highway`,
   city_hint:'The default 39% is the Finnish average.¦It counts passenger-car kilometres on streets and private roads plus public roads with a limit of 60 km/h or less (Statistics Finland, <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__tiet/statfin_tiet_pxt_12jx.px/" target="_blank" rel="noopener">12jx</a> and <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__tiet/statfin_tiet_pxt_12k1.px/" target="_blank" rel="noopener">12k1</a>, 2025). City driving raises a combustion car\'s consumption, while an electric car uses less in town; sources under How the calculation works.',
+  oc_h:'Other costs', oc_lead:'Price level of tyres and servicing for all cars. The shortcut buttons are levels worked out from sources; you can also leave a cost out of the comparison altogether, for example if you service the car yourself or buy used tyres. Rim size and euro amounts are set per car (Fine-tune on the car).',
+  lv_b:'Budget', lv_m:'Average', lv_p:'Premium', lv_out:'Leave out', lv_isout:'left out of the comparison',
+  tyreLvl_l:'Tyre price level', tyreLvl_out:(p,e,k)=>`${p}% of the default; 17″ at ${k} km/yr: about €${e} / yr`,
+  tyreLvl_hint:'The default is Premium (the less favourable choice).¦The levels are percentages of the default summer plus winter tyre price (€279.23 in size 205/55 R16: Nokian Wetproof 1 and Hakkapeliitta R5, Rengas Online 10 Nov 2026). <b>Premium 100%</b> is this default. <b>Average 83%</b> is the median price for 205/55 R16 at <a href="https://www.rengas365.fi/etsi-tuote/renkaat?Width=205&Profile=55&Diameter=16&Season=1" target="_blank" rel="noopener">Rengas365</a> on 19 Nov 2026: summer tyre €98.13 (98 tyres) and <a href="https://www.rengas365.fi/etsi-tuote/renkaat?Width=205&Profile=55&Diameter=16&Season=2" target="_blank" rel="noopener">Nordic winter tyre</a>, friction or studded, €132.99 (32 tyres). <b>Budget 57%</b> is the lower quartile of the same ranges: summer €78.42 and winter €81.16. Used tyres and fitting are not included.',
+  servLvl_l:'Servicing and repair level', servLvl_out:p=>`${p}% of the default`,
+  servLvl_hint:'The default is Average.¦<b>Average 100%</b> is the calculator\'s default, close to the 2016 level of the Statistics Finland household budget survey (servicing and repairs about €1,000 and parts €135 per car a year, in 2022 money; <a href="https://pxdata.stat.fi/PXWeb/pxweb/fi/StatFin/StatFin__ktutk/statfin_ktutk_pxt_14pg.px" target="_blank" rel="noopener">table 14pg</a>). <b>Budget 42%</b> is the same survey\'s 2022 level relative to 2016: (380 + 98) / (1,000 + 135) €. It also reflects people servicing their own cars and skipping servicing, but Statistics Finland says the drop is mainly due to a change in data collection. <b>Premium 110%</b> is dealer servicing: scheduled servicing at brand dealers cost on average about 10% more than at general garages (Promira telephone survey commissioned by Ford, 56 dealer and about 120 general garages; <a href="https://www.taloustaito.fi/vapaalla/auto-huoltoon--merkkihuolto-vai-riippumaton-korjaamo-kumpi-kannattaa/" target="_blank" rel="noopener">Taloustaito 31 May 2019</a>, in Finnish). A carmaker commissioned the survey, and the gap may be larger for repairs.',
+  misc_l:'Washing and other', misc_hint:'The amount is set per car (default €250 / yr, ADAC 10/2026: washing and care).',
   ins_h:'Insurance', ins_l:'Comprehensive cover', ins_full:'Full comprehensive', ins_part:'Partial comprehensive', ins_none:'None, motor liability only',
   ins_u:'Applies to all cars. A finance company usually requires full comprehensive cover on a car bought with a loan. Each car\'s own premiums can be changed under Fine-tune.',
   ins_src:'<b>Sources:</b> motor liability and full comprehensive are averages from Taloustaito price comparisons (<a href="https://www.taloustaito.fi/vapaalla/2026/taloustaito-vertaili-huimat-erot-autovakuutusten-hinnoissa/" target="_blank" rel="noopener">24 Sept 2026</a>, 3-year-old cars, and <a href="https://www.taloustaito.fi/vapaalla/sahkoautoilija-nain-paljon-autosi-kayttovoima-korottaa-vakuutusmaksuja/" target="_blank" rel="noopener">20 Oct 2022</a>), taking the higher one: motor liability €200/yr (electric €205), full comprehensive €520/yr (petrol, diesel, hybrid), €700 (plug-in hybrid) and €835 (electric). Partial comprehensive is 37% of the full price, from Taloustaito\'s <a href="https://www.taloustaito.fi/vapaalla/2025/autovakuutus--ala-maksa-turhasta/" target="_blank" rel="noopener">26 Sept 2025</a> comparison (four insurers, a 14-year-old Octavia: partial €86/yr on average, full €231/yr). Partial cover does not pay for your own collision. The policyholder in the comparisons was 58–59 years old with full bonus; younger drivers or those without bonus usually pay clearly more.',
@@ -1073,7 +1120,7 @@ const num = (v,def=0) => { const x = parseFloat(String(v).replace(',','.')); ret
 const LIM = {price:[0,1e6], age:[0,60], odo:[0,2e6], dep:[0,100], fuel:[0.5,50], kwh:[5,60], share:[0,100],
   traf:[0,5000], kasko:[0,10000], other:[0,20000], serv:[0,20000], tax:[0,10000], real:[0.5,3], make:[0,100],
   batt:[0,300], rim:[0,22], soh:[30,100], debt:[0,1e6], debtYears:[0,15], life:[1,60], mass:[500,5000],
-  km:[1000,300000], city:[0,100], years:[1,20], budget:[0,1e6], monthly:[0,1e5], own:[0,1e6], loanRate:[0,40], loanFee:[0,100],
+  km:[1000,300000], city:[0,100], tyreLvl:[30,150], servLvl:[30,200], years:[1,20], budget:[0,1e6], monthly:[0,1e5], own:[0,1e6], loanRate:[0,40], loanFee:[0,100],
   loanYears:[1,10], ownRate:[0,20], pBens:[0,10], pDies:[0,10], pEl:[0,2], loss:[0,100], eBens:[0,10], eDies:[0,10]};
 const LIM_OPT = new Set(['dep','tax','soh','debtYears','monthly']); // tyhjä = automaattinen tai ei käytössä
 function fieldOk(el){
@@ -1198,6 +1245,10 @@ function tyreCost(c, km){
   const wear = km/2/TYRES.life_km * (c.pt==='E' ? TYRES.ev_factor : 1);
   return 4*(A.summer_eur + A.winter_eur)*ratio*Math.max(wear, 1/TYRES.max_age_years);
 }
+// Muiden kulujen pikanapit, % laskurin oletuksesta. Renkaat: data/tyres.json levels (Rengas365 205/55 R16 -hinnat).
+// Huolto: b = Tilastokeskuksen kulutustutkimus 2022 / 2016 (huolto, korjaus ja osat autoa kohden), p = merkkihuolto noin
+// 10 % yleiskorjaamoja kalliimpi (Fordin teettämä Promiran kysely, Taloustaito 31.5.2019). Lähteet näkyvät sivulla (tyreLvl_hint, servLvl_hint).
+const LVL = {tyreLvl:TYRES.levels, servLvl:{b:42, m:100, p:110}};
 const RESALE = __RESALE__; // yksittäisen auton arvo / mallin mediaani, persentiilit (tools/resale_spread.py)
 const PRICE_SRC = __PRICE_SRC__; // oletushintojen kuukausi ja lähde (data/prices.json)
 // Tuloskortin energian hinta: käytetty hinta ja sen lähde (Tilastokeskuksen kuukausi tai oma hinta)
@@ -1216,7 +1267,7 @@ const OLD_RATE_DEFS = {loanRate:['4.1'], ownRate:['2.5'], eBens:['2.8'], eDies:[
 const EX_VERSION = 11; // kasvata, kun esimerkkiautot vaihtuvat
 function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF, ev:EX_VERSION})); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
-const GIDS = ['km','years','budget','monthly','own','loanRate','loanFee','loanYears','ownRate','pBens','pDies','pEl','loss','elSrc','eBens','eDies','insKind','city','tradeIn','excl'];
+const GIDS = ['km','years','budget','monthly','own','loanRate','loanFee','loanYears','ownRate','pBens','pDies','pEl','loss','elSrc','eBens','eDies','insKind','city','tradeIn','excl','tyreLvl','servLvl'];
 function readGlobalsRaw(){ const o={}; GIDS.forEach(id=>o[id]=$(id).type==='select-one'?$(id).selectedIndex:gRaw($(id))); return o; }
 function g(){
   const mc = cars.find(c => c.mine), trade = (mc && $('tradeIn').value==='yes') ? num(mc.price,0) - num(mc.debt,0) : 0;
@@ -1224,7 +1275,7 @@ function g(){
     budget:gv('budget',0), monthly:Math.max(0,gv('monthly',0)), own:Math.max(0,gv('own',0)), loanRate:gv('loanRate',4.4)/100,
     loanFee:gv('loanFee',0), loanYears:Math.max(1,gv('loanYears',5)), rate:gv('ownRate',2.48)/100,
     pB:gv('pBens',__P_PETROL__), pD:gv('pDies',__P_DIESEL__), pE:gv('pEl',__P_ELEC__), loss:gv('loss',10)/100,
-    eEl:num($('elSrc').value,42)/1000, eB:gv('eBens',2.78), eD:gv('eDies',3.32), city:gv('city',39)/100, excl:$('excl').value};
+    eEl:num($('elSrc').value,42)/1000, eB:gv('eBens',2.78), eD:gv('eDies',3.32), city:gv('city',39)/100, excl:$('excl').value, tyreL:gv('tyreLvl',100)/100, servL:gv('servLvl',100)/100};
 }
 
 // Tasaerälainan kustannus omistusaikana: korot ja kuukausimaksut vuotta kohden,
@@ -1283,8 +1334,8 @@ function calc(c, G, km){
   const tax = autoTax ? vt.total : num(c.tax);
   // G.excl: käyttäjä voi jättää huollon (s) tai renkaat ja muut (o) pois vertailusta (itse huoltava, käytetyt renkaat...)
   const ex = G.excl || '';
-  const servF = servFactor(c.pt, Math.max(0,num(c.odo,0)), Math.max(0,num(c.odo,0)) + km*n), serv = ex.includes('s') ? 0 : num(c.serv,0)*servF;
-  const tyres = ex.includes('t') ? 0 : tyreCost(c, km); // renkaat (vannekoon mukaan)
+  const servF = servFactor(c.pt, Math.max(0,num(c.odo,0)), Math.max(0,num(c.odo,0)) + km*n), serv = ex.includes('s') ? 0 : num(c.serv,0)*servF*(G.servL ?? 1);
+  const tyres = ex.includes('t') ? 0 : tyreCost(c, km)*(G.tyreL ?? 1); // renkaat (vannekoon ja hintatason mukaan)
   const tyre = ex.includes('o') ? 0 : num(c.other,0);   // muut kulut (pesu ym.)
   const ins = num(c.traf,0) + num(c.kasko,0); // liikennevakuutus + kasko
   const other = tyres + tyre + ins + tax + serv;
@@ -1344,7 +1395,7 @@ function carCard(c,i){
       ${c.pt==='P'?`<div class="field"><label class="label" for="share${i}">${T('share_l')}</label><input type="number" id="share${i}" data-k="share" step="5" value="${c.share}"><span class="unit">${T('share_u')}</span></div>`:''}
       <div class="field"><label class="label" for="traf${i}">${T('traf_l')}</label><input type="number" id="traf${i}" data-k="traf" step="10" min="0" value="${c.traf}"><span class="unit">${T('traf_u')}</span></div>
       <div class="field"><label class="label" for="kasko${i}">${T('kasko_l')}</label><input type="number" id="kasko${i}" data-k="kasko" step="10" min="0" value="${c.kasko}"><span class="unit">${T('kasko_u')}</span></div>
-      <div class="field"><label class="label" for="rim${i}">${T('rim_l')}</label><select id="rim${i}" data-k="rim">${[15,16,17,18,19,20,0].map(v => `<option value="${v}"${num(c.rim,TYRES.default_rim)===v?' selected':''}>${v ? T('rim_o')(v) : T('rim_0')}</option>`).join('')}</select><span class="unit">${T('rim_u')(fmt(Math.round(tyreCost(c, g().km))))}</span></div>
+      <div class="field"><label class="label" for="rim${i}">${T('rim_l')}</label><select id="rim${i}" data-k="rim">${[15,16,17,18,19,20,0].map(v => `<option value="${v}"${num(c.rim,TYRES.default_rim)===v?' selected':''}>${v ? T('rim_o')(v) : T('rim_0')}</option>`).join('')}</select><span class="unit">${T('rim_u')(fmt(Math.round(tyreCost(c, g().km)*g().tyreL)))}</span></div>
       <div class="field"><label class="label" for="other${i}">${T('other_l')}</label><input type="number" id="other${i}" data-k="other" step="50" value="${c.other}"><span class="unit">${T('other_u')}</span></div>
       <div class="field"><label class="label" for="serv${i}">${T('serv_l')}</label><input type="number" id="serv${i}" data-k="serv" step="50" min="0" value="${c.serv}"><span class="unit">${T('serv_u')}</span></div>
       <div class="field"><label class="label" for="tax${i}">${T('tax_l')}</label><input type="number" id="tax${i}" data-k="tax" step="10" min="0" value="${c.tax}" placeholder="auto"><span class="unit">${T('tax_u')}</span></div>
@@ -1708,11 +1759,22 @@ function tipText(t){
   else { const d = close ? 3 : 2; s = T('sens_p')(t.k, t.dir, fmt(roundTo(t.x, Math.pow(10,-d), t.dir), d)); }
   return `${s} (→ ${esc(cars[t.w].name)})`;
 }
+// Muiden kulujen tasot: prosentti ja esimerkki euroina, painettuna se pikanappi, joka vastaa nykyistä arvoa
+function renderLvl(G){
+  const ex = G.excl || '', t = Math.round(G.tyreL*100), sv = Math.round(G.servL*100);
+  const ty = fmt(Math.round(tyreCost({rim:TYRES.default_rim, pt:'B'}, G.km)*G.tyreL));
+  $('tyreLvlOut').textContent = ex.includes('t') ? T('lv_isout') : T('tyreLvl_out')(t, ty, fmt(G.km));
+  $('servLvlOut').textContent = ex.includes('s') ? T('lv_isout') : T('servLvl_out')(sv);
+  document.querySelectorAll('#more [data-lvl]').forEach(box => { const id = box.dataset.lvl, v = Math.round(num($(id).value,100)), out = ex.includes(id==='tyreLvl'?'t':'s');
+    box.querySelectorAll('[data-set]').forEach(b => b.setAttribute('aria-pressed', String(!out && LVL[id][b.dataset.set]===v))); });
+  document.querySelectorAll('#more [data-excl]').forEach(b => b.setAttribute('aria-pressed', String(ex.includes(b.dataset.excl))));
+}
 function update(){
   GIDS.forEach(id => { const el = $(id); if (el.type==='number') markField(el); });
   const G = g(), yr = T('yr');
   $('kmSlider').value = G.km;
   $('cityOut').textContent = T('city_out')(Math.round(G.city*100));
+  renderLvl(G);
   { const mc = cars.find(c => c.mine); $('tradeNote').textContent = !mc ? T('trade_none') : $('tradeIn').value!=='yes' ? T('trade_off')
       : T('trade_on')(fmt(num(mc.price,0)), fmt(num(mc.debt,0)), fmt(G.trade), fmt(Math.max(0, G.own + G.trade))); }
   const R = cars.map(c => calc(c,G));
@@ -1844,10 +1906,16 @@ document.querySelectorAll('.lang').forEach(b => b.onclick = () => applyLang(b.da
 // Ajomäärän voi kirjoittaa tai valita liukusäätimellä; kirjoitettava kenttä (#km) on tallennettava arvo
 $('kmSlider').addEventListener('input', () => { $('km').value = $('kmSlider').value; update(); });
 // Kulun jättäminen pois vertailusta tai palauttaminen (kulutaulukon napit)
+const setExcl = (k, on) => { const el = $('excl'), v = el.value; el.value = ['s','t','o'].filter(x => x===k ? on : v.includes(x)).join(''); };
 $('costs').addEventListener('click', e => { const b = e.target.closest('[data-excl]'); if (!b) return;
-  const k = b.dataset.excl, el = $('excl'), v = el.value;
-  el.value = ['s','t','o'].filter(x => x===k ? !v.includes(x) : v.includes(x)).join('');
+  const k = b.dataset.excl; setExcl(k, !$('excl').value.includes(k));
   update(); save(); const nb = $('costs').querySelector(`[data-excl="${k}"]`); if (nb) nb.focus(); });
+// Lisäasetusten Muut kulut: pikanappi asettaa tason ja ottaa kulun mukaan, Jätä pois vaihtaa tilaa, liukusäädin ottaa mukaan
+$('more').addEventListener('click', e => { const b = e.target.closest('[data-set],[data-excl]'); if (!b) return;
+  if (b.dataset.excl) setExcl(b.dataset.excl, !$('excl').value.includes(b.dataset.excl));
+  else { const id = b.closest('[data-lvl]').dataset.lvl; $(id).value = LVL[id][b.dataset.set]; setExcl(id==='tyreLvl'?'t':'s', false); }
+  update(); save(); });
+['tyreLvl','servLvl'].forEach(id => $(id).addEventListener('input', () => { const k = id==='tyreLvl'?'t':'s'; if ($('excl').value.includes(k)) { setExcl(k, false); update(); } }));
 // Vakuutusvalinta: autot, joiden kasko on edellisen valinnan oletus, siirtyvät uuden valinnan oletukseen
 let insPrev = 'full';
 $('insKind').addEventListener('input', () => { const k = insKind();

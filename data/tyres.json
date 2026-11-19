@@ -8,7 +8,12 @@
   "url": "https://easygarage247.fi/?p=5417"
  },
  "rim_ratio": {
-  "15": 0.748, "16": 1.0, "17": 1.24, "18": 1.426, "19": 1.808, "20": 2.19
+  "15": 0.748,
+  "16": 1.0,
+  "17": 1.24,
+  "18": 1.426,
+  "19": 1.808,
+  "20": 2.19
  },
  "rim_ratio_source": "Median price per rim size of Nokian Hakkapeliitta R5 at Rengas365, read 19.11.2026 (15: 92.12, 16: 123.09, 17: 152.62, 18: 175.53, 19: 222.49, 20: 269.52 EUR), divided by the 16-inch median.",
  "rim_ratio_url": "https://www.rengas365.fi/renkaat/tuotemerkki/nokian/talvirenkaat/kitka/hakkapeliitta-r5/6129",
@@ -24,5 +29,24 @@
  "default_rim": 17,
  "misc_eur": 250,
  "misc_source": "ADAC standard car-cost calculation: 250 EUR a year for washing and care (Germany, version 10/2026). Tyre changes and storage are not included in any source found.",
- "misc_url": "https://assets.adac.de/Autodatenbank/Autokosten/autokosten_grundlagen.pdf"
+ "misc_url": "https://assets.adac.de/Autodatenbank/Autokosten/autokosten_grundlagen.pdf",
+ "levels": {
+  "b": 57,
+  "m": 83,
+  "p": 100,
+  "anchor_pair": 279.23,
+  "summer": {
+   "n": 98,
+   "p25": 78.42,
+   "med": 98.13
+  },
+  "winter": {
+   "n": 32,
+   "p25": 81.16,
+   "med": 132.99
+  },
+  "url_summer": "https://www.rengas365.fi/etsi-tuote/renkaat?Width=205&Profile=55&Diameter=16&Season=1",
+  "url_winter": "https://www.rengas365.fi/etsi-tuote/renkaat?Width=205&Profile=55&Diameter=16&Season=2",
+  "source": "Rengas365 search results for 205/55 R16, read 19.11.2026, prices per tyre incl. VAT: summer tyres (all 98 listed) and Nordic winter tyres (friction \"Pohjoismainen kitka\" + studded, 32; Central European winter tyres excluded). Budget = lower quartile, average = median, both as % of the anchor pair (summer + winter). Premium = the anchor (Nokian at Rengas Online)."
+ }
 }

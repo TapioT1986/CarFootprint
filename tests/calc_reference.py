@@ -121,8 +121,9 @@ def compute(case, vtax, cur_year):
     tax = vehicle_tax(c, vtax, cur_year) if c["tax"] in ("", None) else float(c["tax"])
     # left out of the comparison by the user: "s" = servicing, "o" = tyres and other
     ex = G.get("excl", "")
-    serv = 0 if "s" in ex else c["serv"] * serv_factor(pt, c["odo"], c["odo"] + km * n)
-    tyres = 0 if "t" in ex else tyre_cost(c, km)
+    # price levels from the "Other costs" settings (share of the default; 1 = default)
+    serv = 0 if "s" in ex else c["serv"] * serv_factor(pt, c["odo"], c["odo"] + km * n) * G.get("servL", 1)
+    tyres = 0 if "t" in ex else tyre_cost(c, km) * G.get("tyreL", 1)
     other = tyres + (0 if "o" in ex else c["other"]) + c["traf"] + c["kasko"] + tax + serv
     total = dep + cap + energy + other
     drive = litres * (G["eD"] if pt == "D" else G["eB"]) + kwh * G["eEl"]
