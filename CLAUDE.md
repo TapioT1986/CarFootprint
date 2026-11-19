@@ -267,6 +267,12 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   old "tyres and other" default (PT_DEF.tyre) becomes the new default; a custom value keeps its sum with rim 0; old links with X
   get rim 0. Cross-check in the notes: Statistics Finland household survey 14pg (per car 2022: tyres 47, parts 98, servicing
   ~380 EUR; 2016: ~80, 135, ~1 000). Recheck prices about once a year. Test cases 15-17.
+- Other-costs levels (globals `tyreLvl` 30-150, `servLvl` 30-200, % of default, last in GIDS = share letters u, v): `#more` section
+  'Muut kulut' with sliders + chips `[data-set]` b/m/p from LVL (tyres: data/tyres.json `levels`, Rengas365 205/55 R16 19.11.2026:
+  lower quartile 57 %, median 83 %, Premium 100 % = the Nokian anchor, which is the default; servicing: 42 % = Statistics Finland
+  14pg 2022 vs 2016, 100 % default, 110 % = dealer ~10 % dearer, Ford/Promira via Taloustaito 31.5.2019) and Leave out chips that
+  share `excl` with the cost-table buttons (setExcl); moving a slider re-includes. calc(): serv x G.servL, tyres x G.tyreL. Test case 18.
+- The break-even line chart (`#beChart`, `.charts.befirst`) is the first thing in the results section (owner 2026-11-19).
 - Leaving costs out (global `excl`, last in GIDS, share letter t; a hidden text input, because type=hidden keeps no
   defaultValue): "s" servicing, "t" tyres, "o" other costs; buttons `[data-excl]` in the cost table, `#exclNote` under the results,
   calc() zeroes serv / tyre (r.tyre). Applies to all cars. Test case 14.
