@@ -272,6 +272,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   lower quartile 57 %, median 83 %, Premium 100 % = the Nokian anchor, which is the default; servicing: 42 % = Statistics Finland
   14pg 2022 vs 2016, 100 % default, 110 % = dealer ~10 % dearer, Ford/Promira via Taloustaito 31.5.2019) and Leave out chips that
   share `excl` with the cost-table buttons (setExcl); moving a slider re-includes. calc(): serv x G.servL, tyres x G.tyreL. Test case 18.
+- 'perustelut' links (`why(k)`, class `why`): each 'Näin laskenta toimii' <li> has id `m-<key>` (dep, ex, fin, city, mine, month,
+  real, old, phev, ev, serv, tyre, excl, elem, src, tax, insp, make, share, range, ekm, loss, pick, var, tip, ins; EN also fi).
+  Car-field units, cost-table rows and some settings link there; the click handler scrolls, highlights (`.hl`) and adds a
+  '← takaisin' link (`.whyback`) back to the field. No hash change (the hash carries share links). New notes items need an id.
 - The break-even line chart (`#beChart`, `.charts.befirst`) is the first thing in the results section (owner 2026-11-19).
 - Leaving costs out (global `excl`, last in GIDS, share letter t; a hidden text input, because type=hidden keeps no
   defaultValue): "s" servicing, "t" tyres, "o" other costs; buttons `[data-excl]` in the cost table, `#exclNote` under the results,
