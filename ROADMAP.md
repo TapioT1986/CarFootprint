@@ -129,14 +129,59 @@ mallin valinta täyttää hinnan, iän ja mittarilukeman (MV0, autoPriceAge), ja
   joilla on vähän dataa (pieni rekisterimäärä, ei mallikohtaista kulutusta). Valinta lisää auton vertailuun.
 - Avoin kysymys omistajalle: suodattimet (käyttövoima, koko/korimalli, vain yleiset mallit) – korimallia ei vielä ole datassa.
 
-### 6.2 Taksi ja vuokra-auto pienillä ajomäärillä · koko M, vaatii lähteet
-Vertailu "missä ajomäärässä oma auto tulee halvemmaksi kuin taksi / vuokra-auto / yhteiskäyttöauto".
-- Tarvitaan lähteistetyt hinnat: taksin km- ja perusmaksu (esim. Kuluttajaliiton tai taksiyhtiöiden hinnastot,
-  Traficomin taksiliikenteen tilastot), vuokra-auton vuorokausihinta ja km-raja, yhteiskäyttöauton tunti- ja km-hinta.
-- Oletukset matkan pituudesta ja määrästä (esim. 15 000 km = monta lyhyttä matkaa vai muutama pitkä) vaikuttavat
-  paljon; kerrotaan avoimesti ja näytetään käännekohta ajomääränä kaavioon (sama tyyli kuin nykyinen viivakaavio).
-- Oman auton puolelle jäävät kiinteät kulut (arvonalenema, vakuutus, vero) – ne ovat juuri se, mikä pienellä
-  ajomäärällä tekee omasta autosta kalliin.
+### 6.2 Ilman omaa autoa: taksi, vuokra-auto, yhteiskäyttöauto ja muut · koko L · suunnitelma 20.11.2026, lähteet osin auki
+Kysymys: missä ajomäärässä ja millaisilla matkoilla oma auto tulee halvemmaksi kuin "ei omaa autoa" -yhdistelmä.
+
+**Periaate: matkaprofiili, ei pelkkä kilometrimäärä.** Käyttäjä kuvaa vuotensa matkoina, ja jokaiselle matkatyypille
+valitaan halvin autoton tapa. Oma auto lasketaan nykyisellä laskurilla samalle kilometrimäärälle.
+
+Matkatyypit (oletukset muutettavissa; määrä/vuosi ja pituus):
+1. Lähiasiointi alle 3 km (kauppa, palvelut) → kävely, pyörä/kuormapyörä, kotiinkuljetus tai kuljetusrobotti, taksi.
+2. Arkimatkat 3–25 km (työ, harrastukset) → joukkoliikenteen kausilippu, taksi, yhteiskäyttöauto.
+3. Päiväretket 25–100 km → yhteiskäyttöauto tai vuokra-auto päiväksi, taksi.
+4. Pitkät matkat yli 100 km (mökki, vierailut) → vuokra-auto (vuorokaudet), juna/bussi.
+Oletusprofiili skaalataan niin, että kilometrit vastaavat käyttäjän ajomäärää, ja jakauma tulee Henkilöliikennetutkimuksesta.
+
+**Mitä ihmiset ajavat (lähteet löydetty):**
+- Henkilöliikennetutkimus 2021 (Traficom, Tutkimuksia ja selvityksiä 1/2023, päivitetty 31.5.2024):
+  https://www.traficom.fi/files/media/publication/HLT_2021_p%C3%A4%C3%A4raportti.pdf
+  - henkilöauton kuljettajana tehdyn matkan keskipituus 19,5 km (sama taso kuin 2016)
+  - auton kuljettajan ja matkustajan matkat jakautuvat "varsin tasaisesti" pituusluokille 1–50 km (kuva 19, luvut kaaviosta)
+  - kävelymatkoista 53 % alle 1 km; pyörämatkoista 81 % alle 5 km
+  - noin 2,3 matkaa ja 35 km henkilöä kohden vuorokaudessa (hakuyhteenveto, tarkistettava raportista)
+  - vuoden 2021 tuloksiin vaikutti korona; vertailukohta HLT 2016
+- HLT-faktakortti pyöräliikenteen potentiaalista (päivitetty 12/2024): alle 5 km:n matkoista 42 % tehtiin autolla
+  (tiedosto siirtynyt, haettava uusi osoite).
+- Seuturaportit (Turku, Pori, Oulu, Kajaani, Päijät-Häme): kuljettajan matka 16–20 km, noin 1,1 matkaa/vrk.
+- Avoin tehtävä: matkojen pituusjakauma luvuin (kuva 19 tai HLT:n taulukkopalvelu), mieluiten kuljettajan matkat.
+
+**Hinnat:**
+- Taksi: Traficomin taksiliikenteen hintaindeksi, neljännesvuosittain maakunnittain, esimerkkimatkat 2, 5, 10, 15, 20 ja
+  25 km välitysten toteutuneista kyydeistä (menetelmä: tieto.traficom.fi "Uudistetun taksihintaindeksin metodologia").
+  Uutinen 12.11.2024: 10 km:n kyyti sovelluksella 13–20 €, muuten tilattuna tyypillisesti 30–35 €
+  (https://traficom.fi/en/news/regional-variation-taxi-service-prices-and-availability-continues).
+  Avoin tehtävä: indeksin tuorein taulukko (euroa per esimerkkimatka, alueittain). Epäedullisin valinta = muuten kuin
+  sovelluksella tilattu hinta? (päätös omistajalle: kumpi on "autolle epäedullisempi" – tässä halvempi taksi on autolle epäedullinen).
+- Vuokra-auto: vuorokausihinta + km-raja + polttoaine. Lähde puuttuu (24Rent alk. 13 € / 2 h; isot vuokraamot hinnastoina).
+  Etsittävä: hintavertailu (Taloustaito, Kuluttaja) tai usean vuokraamon hinnasto samalle päivälle.
+- Yhteiskäyttöauto: tunti- ja km-hinta. Tuoreet hinnat puuttuvat (Taloustaito 2024 vertailu; vanhat minuuttihinnat 0,47–0,57 €).
+  Saatavuus vain suurimmissa kaupungeissa – kerrotaan.
+- Joukkoliikenne: kausilippu (HSL, Nysse, Föli, Waltti-kaupungit), hinnat liikennöitsijöiltä; vain kaupunkiseuduilla.
+- Kotiinkuljetus / kuljetusrobotti: tilauskohtainen toimitusmaksu (S-kaupat, K-Ruoka, Starship). Starship: yli 1,5 milj.
+  toimitusta Suomessa; oman kyselyn mukaan 64 % asiakkaista korvasi auton käytön (yrityksen oma tiedote, STT) – mainitaan
+  yrityksen väitteenä. Robottikuljetukset laajenevat Alepoihin pääkaupunkiseudulla ja Lahteen.
+- Kävely, pyörä, kuormapyörä, sähköavusteinen pyörä, invamopo: hankinta- ja ylläpitokulu vuodessa (lähteet puuttuvat;
+  esim. kuluttajahintojen keskiarvo ja käyttöikä).
+
+**Näkymä:** viivakaavio kuten nykyinen: oma auto vs. autoton yhdistelmä ajomäärän funktiona, leikkauspiste merkittynä.
+Lisäksi taulukko: vuoden matkat ja niiden autoton hinta matkatyypeittäin. Aika (odottaminen, joukkoliikenteen hitaus)
+ei ole rahaa laskurissa, mutta se kerrotaan; käyttäjä voi jättää matkatyypin pois tai pitää sen omalla autolla.
+
+**Rehellisyys:** autoton vaihtoehto riippuu paljon asuinpaikasta (taksin saatavuus, ei yhteiskäyttöautoja maaseudulla).
+Hinnat ja oletukset näkyvät perusteluissa; puuttuvat lähteet merkitään oletuksiksi.
+
+**Päätettävää omistajan kanssa:** (1) mitkä vaihtoehdot ensimmäiseen versioon, (2) taksin hinta: sovellus vai muu tilaus
+oletukseksi, (3) näytetäänkö vaihtoehto vain pienillä ajomäärillä (esim. alle 10 000 km) vai aina.
 
 ## Ylläpitokalenteri
 
