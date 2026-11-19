@@ -84,7 +84,7 @@ Feedback and bug reports: [GitHub issues](https://github.com/TapioT1986/CarFootp
 
 ## Running it
 
-Open `index.html` in a browser. No build step, no server, no tracking. Your inputs are stored in your own browser only.
+Open `index.html` in a browser. No build step, no server, no tracking: fonts are served from `fonts/` (SIL Open Font License), and the page loads nothing from other sites. Your inputs are stored in your own browser only.
 
 ## Repository layout
 

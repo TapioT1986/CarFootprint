@@ -160,5 +160,11 @@ async () => {
       sameCars(`after opening the old link "${o.name}"`);
     }
   }
+  // 13. No tracking: the page loads nothing from other hosts (fonts come from fonts/ in the repository)
+  const foreign = performance.getEntriesByType('resource').map(e => e.name).filter(u => new URL(u).host !== location.host);
+  if (foreign.length) problems.push(`${lang}: page loaded files from other hosts: ${[...new Set(foreign)].join(', ')}`);
+  await document.fonts.ready;
+  for (const f of ['16px Barlow', '600 16px "Barlow Condensed"', '16px "IBM Plex Mono"'])
+    if (!document.fonts.check(f)) problems.push(`${lang}: font ${f} did not load from fonts/`);
   return problems;
 }

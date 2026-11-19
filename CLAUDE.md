@@ -228,6 +228,8 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   commit. A plain build only reads the file, so CI's rebuild check stays deterministic; the monthly price workflow
   does not bump it (the price note shows the price month). <title> and the meta
   description follow the language (applyLang). Feedback goes to GitHub issues only (no e-mail address on the page).
+- Fonts are self-hosted in fonts/ (woff2, latin + latin-ext, OFL licences there), @font-face at the top of <style>: no
+  Google Fonts, so no visitor IP goes to Google. The page must load nothing from other hosts (smoke check 13).
 - Search engines: <head> has canonical and schema.org WebApplication JSON-LD; <body> starts with a <noscript> summary
   (FI + EN); sitemap.xml in the root. No analytics or verification tags.
 - Phone layout (≤ 900 px): `#dock` is a fixed summary bar filled in update(), hidden (class `off`) by an
