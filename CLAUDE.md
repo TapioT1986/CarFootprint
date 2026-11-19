@@ -106,8 +106,9 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   assumption (c.mass, editable). Car field `tax` empty = automatic. "Other costs" no longer include tax
   (EX_VERSION 5 subtracts the old tax default from older saves).
 - Manufacturing (car fields `make` = car without battery, `batt` = kWh for E/P): ICCT 2025 Table 1 (8.2 t
-  B/D/H, 8.6 t P, 7.5 t E) + batt × 72.8 kg/kWh; default batt 53.4 / 13.3 kWh, or the kWh in the model name
-  (battFromName). Spread over `life` years. EX_VERSION 7 replaces old defaults (7/8/8/10/12 t) and keeps
+  B/D/H, 8.6 t P, 7.5 t E) + batt × 72.8 kg/kWh; default batt = battDef(row, pt): kWh in the model name (battFromName),
+  else for E battEst = EVR km x row kWh/100 (EEA WLTP; 5-20 % above real gross, pessimistic), for P max(battEst, 13.3);
+  no figures: 53.4 / 13.3. EX_VERSION 10 moves saved E/P cars whose batt equals the old PT default to battDef. Spread over `life` years. EX_VERSION 7 replaces old defaults (7/8/8/10/12 t) and keeps
   custom values (batt 0).
 - Servicing and repairs (car field `serv`, level below 80 000 km): × servFactor() = average over the
   ownership km [odo, odo + km·years] of Consumer Reports 2020 band factors: ICE/hybrids 1 / 2.14 / 2.82,
@@ -168,8 +169,8 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   card. sohAuto = 100 - 2.3 x age (Geotab 28.4.2026, 22,700 EVs; earlier study 1.8 %/yr, pessimistic choice), floor 50.
   Range = WLTP x SOH, winter factors on top. Information only, not in the costs.
 - Battery size on electric cars is visible next to SOH (plug-in hybrids keep it under Fine-tune). Range also scales by
-  c.batt / battRef(c), where battRef = kWh in the model name (LEAF 40KWH); the register has no battery size, so for other
-  models the field only affects production emissions, and the unit text says so.
+  c.batt / battRef(c), where battRef = kWh in the model name (LEAF 40KWH) or battEst; battSrc() picks the unit text (batt_u_ref / batt_u_est /
+  batt_u_noref when neither exists).
 - Car card head: one field for name and model (`#pick<i>`, value = c.name). Focus selects the text (setTimeout for touch),
   typing searches, picking a model renames the car; leaving without a pick (blur, Escape) restores pickText(c).
   Free name: the pencil button (`data-ren`, `renaming`) edits c.name and sets c.ownName; the head then shows the name and

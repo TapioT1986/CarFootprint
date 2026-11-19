@@ -32,7 +32,7 @@ Omat lisähavainnot:
 - **Lähteettömät luvut**: renkaat ja muut (200–250 €/v), arvonaleneman ajomääräkorjaus 0,2 % / 1 000 km, huollon perustaso,
   sähkön toimitusketjun 16 g/kWh (tarkistettu vain toissijaisesta lähteestä). Ne on merkitty sivulle, mutta lähde puuttuu.
 - **Kevythybridit** ovat samassa luokassa kuin täyshybridit (H), vaikka käyttäytyvät kuin bensiiniautot.
-- **Akun koko** tiedetään vain, kun se on mallin nimessä; useimmille sähköautoille akun koko ei vaikuta toimintasäteeseen.
+- **Akun koko** tiedetään vain, kun se on mallin nimessä; useimmille sähköautoille akun koko ei vaikuta toimintasäteeseen. (Korjattu 19.11.2026: arvio WLTP-toimintasäteestä × kulutuksesta.)
 - **Yksi iso tiedosto**: `tools/template.html` on lähes 1 900 riviä. Toimii, mutta laskennan testaaminen erikseen
   helpottuu, jos laskentafunktiot ovat selvästi erillään käyttöliittymästä.
 - **Aineistojen päivitys** on osin käsityötä (EEA, Verohallinto, VCA, Taloustaito). Tarvitaan vuosikalenteri.
@@ -113,7 +113,7 @@ Katselmus 19.11.2026, verrattu Erkan poista-ai-slop-taitoon. Fontit omalta palve
 - Suomalainen tai eurooppalainen lähde huollon kasvukertoimille (nyt Consumer Reports, USA).
 - Lähde renkaille ja muille kuluille, arvonaleneman ajomääräkorjaukselle ja huollon perustasolle.
 - Mallikohtaiset kaupunki/maantie-kertoimet, jos VCA:n ja rekisterin mallinimet saadaan yhdistettyä.
-- Akun koko useammalle sähköautomallille (lähde puuttuu; rekisterissä sitä ei ole).
+- ✅ Akun koko useammalle sähköautomallille (19.11.2026, versio 0.74): arvio EEA:n WLTP-toimintasäde × kulutus, 119/123 sähköautoriviä.
 - €/km → lisäkilometrin hinta, kun huollon ja arvonaleneman kilometririippuvuudelle on lähteet.
 
 ## Ylläpitokalenteri

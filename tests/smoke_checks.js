@@ -160,6 +160,16 @@ async () => {
       sameCars(`after opening the old link "${o.name}"`);
     }
   }
+  // 14. Battery size: the model name wins (LEAF 40KWH -> 40), otherwise WLTP range x consumption; plug-in hybrids never
+  //     below the EU average, and every electric estimate is a plausible car battery
+  if (typeof battDef === 'function') {
+    const leaf = CATALOG.find(r => /LEAF 40KWH/i.test(r[1]) && r[2] === 'E');
+    if (leaf && battDef(leaf, 'E') !== 40) problems.push(`${lang}: Leaf 40 kWh battery is ${battDef(leaf, 'E')}`);
+    CATALOG.forEach(r => {
+      if (r[2] === 'P' && battDef(r, 'P') < PT_DEF.P.batt) problems.push(`${lang}: ${r[1]} plug-in battery ${battDef(r, 'P')} below the average`);
+      if (r[2] === 'E' && !(battDef(r, 'E') >= 15 && battDef(r, 'E') <= 160)) problems.push(`${lang}: ${r[1]} battery ${battDef(r, 'E')} kWh is implausible`);
+    });
+  }
   // 13. No tracking: the page loads nothing from other hosts (fonts come from fonts/ in the repository)
   const foreign = performance.getEntriesByType('resource').map(e => e.name).filter(u => new URL(u).host !== location.host);
   if (foreign.length) problems.push(`${lang}: page loaded files from other hosts: ${[...new Set(foreign)].join(', ')}`);
