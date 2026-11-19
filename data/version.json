@@ -1,5 +1,5 @@
 {
- "version": 82,
+ "version": 83,
  "date": "2026-11-19",
  "note": "Page version shown in the header. Raise with: py tools/build.py --release (number = page releases since the start)."
 }

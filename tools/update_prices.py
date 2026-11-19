@@ -45,14 +45,14 @@ PAGE = "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin"
 TIMEOUT = 60
 
 FUEL_TABLE = "khi/11xx.px"
-FUEL_URL = f"{PAGE}/StatFin__khi/statfin_khi_pxt_11xx.px/"
+FUEL_URL = f"{PAGE}/StatFin__khi/11xx.px/"
 FUEL_ROWS = {"petrol": "0700200", "diesel": "0700100"}   # 95 E10, diesel
 ELEC_TABLE = "ehi/13rb.px"
-ELEC_URL = f"{PAGE}/StatFin__ehi/statfin_ehi_pxt_13rb.px/"
+ELEC_URL = f"{PAGE}/StatFin__ehi/13rb.px/"
 ELEC_COMPONENT = "SSS"                           # Kokonaishinta / total price
 ELEC_CONSUMER = "D"                              # household, 5 000-15 000 kWh/yr
 CPI_TABLE = "khi/11xs.px"
-CPI_URL = f"{PAGE}/StatFin__khi/statfin_khi_pxt_11xs.px/"
+CPI_URL = f"{PAGE}/StatFin__khi/11xs.px/"
 CPI_CODE = "ip_0_2005"                            # Pisteluku, 2005=100 (the 2015 base starts only in 2015)
 RANGE_YEARS = 15
 

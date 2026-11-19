@@ -3,19 +3,19 @@
   "value": 2.28,
   "unit": "EUR/l",
   "period": "2026M10",
-  "url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/"
+  "url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/11xx.px/"
  },
  "diesel": {
   "value": 2.49,
   "unit": "EUR/l",
   "period": "2026M10",
-  "url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/"
+  "url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/11xx.px/"
  },
  "electricity": {
   "value": 0.1791,
   "unit": "EUR/kWh",
   "period": "2026M06",
-  "url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/"
+  "url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/13rb.px/"
  },
  "ranges": {
   "petrol": {
@@ -43,7 +43,7 @@
    "to": "2026M06"
   },
   "cpi_month": "2026M10",
-  "cpi_url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xs.px/",
+  "cpi_url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/11xs.px/",
   "years": 15,
   "method": "Lowest and highest 12-month average price over the period, in the money of cpi_month (price x CPI[cpi_month] / CPI[month], CPI 2005=100)."
  },
@@ -55,7 +55,7 @@
    "ehi/13rb",
    "khi/11xs"
   ],
-  "url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/",
+  "url": "https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/11xx.px/",
   "licence": "CC BY 4.0"
  }
 }

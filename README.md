@@ -77,8 +77,8 @@ Feedback and bug reports: [GitHub issues](https://github.com/TapioT1986/CarFootp
 | Depreciation by age, example-car values | Finnish Tax Administration, applied taxation values of passenger cars: [2024](https://www.vero.fi/contentassets/f3326d05d3954bed9c1686a17917754d/henkiloautojen-sovelletut-verotusarvot-2024.xls), [2025](https://www.vero.fi/contentassets/f3326d05d3954bed9c1686a17917754d/henkiloautojen-sovelletut-verotusarvot-2025.xls), [2026](https://www.vero.fi/contentassets/f3326d05d3954bed9c1686a17917754d/henkiloautojen-sovelletut-verotusarvot-2026.xls) | |
 | Manufacturing and battery emissions | [ICCT, Life-cycle GHG emissions from passenger cars in the EU, 2025 update](https://theicct.org/publication/electric-cars-life-cycle-analysis-emissions-europe-jul25/) | |
 | NEDC-to-real-world gap | [ICCT, From laboratory to road: a 2018 update](https://theicct.org/publication/from-laboratory-to-road-a-2018-update/) | |
-| Fuel prices | [Statistics Finland, StatFin table 11xx](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/), monthly | CC BY 4.0 |
-| Electricity prices | [Statistics Finland, StatFin table 13rb](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/), monthly | CC BY 4.0 |
+| Fuel prices | [Statistics Finland, StatFin table 11xx](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/11xx.px/), monthly | CC BY 4.0 |
+| Electricity prices | [Statistics Finland, StatFin table 13rb](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/13rb.px/), monthly | CC BY 4.0 |
 | Grid emission factor | 26 g/kWh direct: [Finnish Energy, Electricity year 2025](https://energia.fi/wp-content/uploads/2026/01/Sahkovuosi-2025_v1.pdf) and [Fingrid](https://fingridlehti.fi/sahkon-paastojen-lasku-jatkuu/); 16 g/kWh supply chain: [Moro & Lonza 2018](https://doi.org/10.1016/j.trd.2017.07.012) (checked via a secondary source only) | |
 | Lifecycle emissions by generation type | Medians of [IPCC AR5 Annex III](https://www.ipcc.ch/site/assets/uploads/2018/02/ipcc_wg3_ar5_annex-iii.pdf); [UNECE 2021](https://unece.org/sed/documents/2021/10/reports/life-cycle-assessment-electricity-generation-options) gives lower values | |
 | Fuel emission factors (well-to-wheel) | [UK DESNZ conversion factors 2025](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2025), average biofuel blend, incl. biogenic tailpipe CO₂ (2.78 / 3.32 kg/l) | OGL |
@@ -124,10 +124,10 @@ electricity from Statistics Finland's StatFin API into `data/prices.json`, and
 `tools/build.py` bakes them into the page as its default values. A GitHub Action runs both
 on the 5th of each month and commits the result if anything changed.
 
-- **Fuel:** [table 11xx](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/statfin_khi_pxt_11xx.px/),
+- **Fuel:** [table 11xx](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__khi/11xx.px/),
   average prices of 95 E10 petrol and diesel, published with the monthly consumer price
   index, a few weeks after the month ends.
-- **Electricity:** [table 13rb](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/statfin_ehi_pxt_13rb.px/),
+- **Electricity:** [table 13rb](https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ehi/13rb.px/),
   the total price including network charges and taxes for a household using
   5 000-15 000 kWh a year. Updated quarterly, so it runs a few months behind.
 
