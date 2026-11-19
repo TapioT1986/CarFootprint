@@ -107,12 +107,13 @@ header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:spac
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
 .panel+.panel{margin-top:16px}
 .panel h2{font-size:20px;margin-bottom:12px}
-.label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600}
+.label{display:block;font-size:13.5px;color:var(--muted);margin-bottom:4px;font-weight:600}
 .field{display:flex;flex-direction:column;gap:2px;min-width:0}
 .fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .fields .full{grid-column:1/-1}
 input,select{font:inherit;color:var(--ink);background:var(--input);border:1px solid var(--line);border-radius:6px;padding:7px 9px;width:100%;min-width:0}
-input[type=number]{font-family:var(--mono);font-variant-numeric:tabular-nums}
+input[type=number]{font-variant-numeric:tabular-nums}
+.kmin{font-family:var(--mono)}
 input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .unit{font-size:12px;color:var(--muted)}
 input[aria-invalid="true"]{border-color:var(--warn);box-shadow:0 0 0 1px var(--warn)}
@@ -139,16 +140,17 @@ details.adv .fields{margin-top:10px}
 .car .head .label{flex:1;margin:0}
 .car .cname{flex:1;font-size:16px;overflow-wrap:anywhere}
 .car .nameed{flex:1;font-weight:600}
-.car .ren{border:0;background:none;color:var(--muted);font-size:17px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px}
+.car .ren{border:0;background:none;color:var(--muted);line-height:0;cursor:pointer;padding:6px;border-radius:6px}
 .car .ren:hover{color:var(--accent)}
 .mine{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
-.minebtn{font:600 13.5px var(--body);border:1px dashed var(--line);background:none;color:var(--muted);padding:6px 10px;border-radius:999px;cursor:pointer}
-.minebtn[aria-pressed="true"]{border:1px solid var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.minebtn{display:inline-flex;align-items:center;gap:6px;font:600 13.5px var(--body);border:0;background:none;color:var(--muted);padding:6px 0;cursor:pointer}
+.minebtn:hover{color:var(--accent)}
+.minebtn[aria-pressed="true"]{color:var(--accent)}
 .badge.mineb{border-color:var(--accent);color:var(--accent)}
 .sub.vsm{color:var(--ink);font-weight:600}
 .pickwrap input{font-weight:600}
 .pickwrap input::placeholder{font-weight:400}
-.car .x{border:0;background:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px}
+.car .x{border:0;background:none;color:var(--muted);line-height:0;cursor:pointer;padding:6px;border-radius:6px}
 .car .x:hover{color:var(--ink);background:var(--input)}
 .car .fields{gap:9px}
 /* Mallihaun ehdotuslista: oma lista, koska selaimen datalist näkyy osassa puhelimia läpinäkyvänä */
@@ -180,7 +182,7 @@ h2.step{display:flex;align-items:center;gap:10px;font-size:22px;margin:0 0 12px}
 .req .seg{border:1.5px solid var(--accent)}
 /* Laskurin arvio (hinta, ikä, mittarilukema mallin mukaan): katkoviiva, kunnes käyttäjä kirjoittaa oman arvon */
 .est input{border-style:dashed}
-.estb{display:none;font:600 11.5px/1 var(--body);text-transform:none;letter-spacing:0;color:var(--muted);border:1px dashed currentColor;border-radius:999px;padding:2px 6px;margin-left:6px;vertical-align:1px}
+.estb{display:none;font:600 11.5px/1 var(--body);text-transform:none;letter-spacing:0;color:var(--muted);border:1px dashed currentColor;border-radius:4px;padding:2px 5px;margin-left:6px;vertical-align:1px}
 .est .estb{display:inline-block}
 .evr{font-size:12.5px;line-height:1.45}
 .q{font-size:12.5px;line-height:1.45;color:var(--muted)}
@@ -207,11 +209,11 @@ details.carmore .tag,details.carmore .insp{display:block;margin-top:10px}
 @media (prefers-reduced-motion:reduce){.big.flash{animation:none}}
 .sub{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
 .mos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 10px;margin:6px 0 4px}
-.mos .mv{display:block;font:500 15px/1.25 var(--mono);font-variant-numeric:tabular-nums}
+.mos .mv{display:block;font:600 16px/1.25 var(--body);font-variant-numeric:tabular-nums}
 .mos .mv small{font:500 12px var(--body);color:var(--muted);white-space:nowrap}
 .mos .ml{display:block;font-size:12px;line-height:1.3;color:var(--muted)}
 .badges{display:flex;flex-wrap:wrap;gap:6px}
-.badge{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:999px;border:1px solid var(--line)}
+.badge{font-size:12px;font-weight:600;padding:2px 7px;border-radius:4px;border:1px solid var(--line)}
 .badge.win{border-color:var(--good);color:var(--good)}
 .badge.warn{border-color:var(--warn);color:var(--warn)}
 
@@ -281,7 +283,7 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 .dock.n4 .dv .yr{display:none}
 .dock .db{font-size:10.5px;font-weight:600;color:var(--good);line-height:1.25}
 .dock .db:empty{display:none}
-.fb{margin:22px 0 0;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--surface);max-width:640px}
+.fb{margin:24px 0 0;padding:16px 0 0;border-top:1px solid var(--line);max-width:640px}
 .fb h3{font-size:19px;margin-bottom:8px}
 .fbvote{display:flex;gap:8px;flex-wrap:wrap}
 .fbvote .btn[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--input))}
@@ -292,6 +294,9 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 .fbchk input{width:auto;margin-top:3px}
 .fbhp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 #fbMsg:empty{display:none}
+details.fold{margin:4px 0 0}
+details.fold>summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:13px;width:max-content;max-width:100%}
+details.fold[open]>summary{margin-bottom:4px}
 .foot{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 .foot a{color:var(--accent)}
 .foot .feedback{margin:8px 0 0}
@@ -385,7 +390,7 @@ details.info a{color:var(--accent)}
     <aside>
       <div class="panel">
         <div class="phead"><h2><span class="stepn">1</span><span data-i="drive_h"></span></h2><button class="btn sm" type="button" data-reset data-i="reset"></button></div>
-        <p class="reqhint" data-i="req_hint"></p>
+        <div class="reqhint" data-i="req_hint"></div>
         <div class="km req">
           <label class="label" id="kmLabel" for="km" data-i="km_label"></label>
           <div class="read"><input type="number" class="odo kmin" id="km" min="1000" max="300000" step="500" value="15000" inputmode="numeric"><span class="unit" data-i="km_unit"></span></div>
@@ -395,13 +400,13 @@ details.info a{color:var(--accent)}
             <button class="chip" data-km="14500" type="button" data-i="chipAll"></button>
             <button class="chip" data-km="20800" type="button" data-i="chipD"></button>
           </div>
-          <p class="hint" data-i="km_hint"></p>
+          <div class="hint" data-i="km_hint"></div>
         </div>
         <div class="field full citymix" style="margin-top:14px">
           <label class="label" for="city" data-i="city_l"></label>
           <input type="range" id="city" min="0" max="100" step="1" value="39">
           <span class="unit" id="cityOut"></span>
-          <p class="hint" data-i="city_hint"></p>
+          <div class="hint" data-i="city_hint"></div>
         </div>
         <div class="fields" style="margin-top:14px">
           <div class="field full"><label class="label" for="budget" data-i="budget_l"></label><input type="number" id="budget" min="0" step="500" value="12000"><span class="unit" data-i="budget_u"></span></div>
@@ -441,7 +446,7 @@ details.info a{color:var(--accent)}
           <div class="field"><label class="label" for="loanYears" data-i="loanYears_l"></label><input type="number" id="loanYears" min="1" max="10" step="1" value="5"><span class="unit" data-i="years_u"></span></div>
           <div class="field"><label class="label" for="ownRate" data-i="ownRate_l"></label><input type="number" id="ownRate" min="0" max="20" step="0.01" value="2.48"><span class="unit" data-i="rate_u"></span></div>
         </div>
-        <p class="hint" data-i="fin_hint"></p>
+        <div class="hint" data-i="fin_hint"></div>
         </div>
         <div class="morepart">
         <h2 data-i="energy_h"></h2>
@@ -577,7 +582,7 @@ fi: {
   soh_l:'Akun kunto (SOH)', soh_u:'% uuden akun kapasiteetista; tyhjä = arvio iän mukaan',
   evr_old:' Luvut ovat Suomessa vuosina 2020–2025 uutena rekisteröityjen saman mallin autojen virallisia arvoja; vanhemmissa mallivuosissa toimintasäde on usein lyhyempi.',
   evr:(w,m,c)=>`<b>Toimintasäde sähköllä:</b> WLTP ${w} km · lauha talvi noin ${m} km · kova pakkanen noin ${c} km`,
-  en_km:(v)=>`ajon energia ${v} €/km`, sumd:'Lisätietoja',
+  en_km:(v)=>`ajon energia ${v} €/km`, sumd:'Erittely ja vaihteluvälit', fold_s:'Lisätietoja ja lähteet',
   all_km:(v)=>`Kaikki kulut kilometriä kohden: ${v} €/km (vuosikulu jaettuna ajomäärällä; suurin osa ei riipu ajetuista kilometreistä).`,
   parts:(d,c,e,o)=>`Vuodessa: arvonalenema ${d} €, rahoitus ${c} €, energia ${e} €, vero, vakuutus, huolto ja renkaat ${o} €.`,
   electricity:'sähkö', p_stat:'Tilastokeskus', p_own:'oma hinta',
@@ -585,8 +590,8 @@ fi: {
     e100:'Energia, € / 100 km', energy:'Energia', traf:'Liikennevakuutus (pakollinen)', kasko:'Kasko', tax:'Ajoneuvovero', serv:'Huolto ja korjaukset (arvio)',
     src:'lähde', src_price:'hinta', src_cons:'kulutus', src_serv:'kasvukertoimet', assumed:'oletus, ei lähdettä', k_full:'täyskasko', k_part:'osakasko', k_none:'ei kaskoa',
     tyre:'Renkaat ja muut', run:'Käyttökulut yhteensä', dep:'Arvonalenema (arvio)', cap:'Rahoitus: korot, kulut, oman rahan tuotto', total:'Kaikki yhteensä',
-    dep_note:'Arvonalenema on mallien keskiarvo Verohallinnon verotusarvoista, ei ennuste juuri sinun autollesi: kunto, huoltohistoria, varustelu ja sähköautossa akun kunto voivat muuttaa jälleenmyyntihintaa paljon. Samassa aineistossa puolet yksittäisistä autoista on arvoltaan 7 % mallinsa tyypillistä arvoa halvempia tai kalliimpia, ja joka viides yli 15 %; tuloskortin jälleenmyyntiväli käyttää tuota keskimmäistä puolikasta.',
-    foot:'Lähteet ja oletukset kohdassa Näin laskenta toimii: vakuutukset Taloustaidon hintavertailuista, vero ajoneuvoverolain taulukoista, huolto tasoarviona ajomäärän mukaan (Consumer Reports 2020), arvonalenema Verohallinnon verotusarvoista. Kaikki arvot voi muuttaa auton kohdassa Tarkenna.'},
+    dep_note:'Arvonalenema on mallien keskiarvo Verohallinnon verotusarvoista, ei ennuste juuri sinun autollesi.¦Kunto, huoltohistoria, varustelu ja sähköautossa akun kunto voivat muuttaa jälleenmyyntihintaa paljon. Samassa aineistossa puolet yksittäisistä autoista on arvoltaan 7 % mallinsa tyypillistä arvoa halvempia tai kalliimpia, ja joka viides yli 15 %; tuloskortin jälleenmyyntiväli käyttää tuota keskimmäistä puolikasta.',
+    foot:'Kaikki arvot voi muuttaa auton kohdassa Tarkenna.¦Lähteet ja oletukset kohdassa Näin laskenta toimii: vakuutukset Taloustaidon hintavertailuista, vero ajoneuvoverolain taulukoista, huolto tasoarviona ajomäärän mukaan (Consumer Reports 2020), arvonalenema Verohallinnon verotusarvoista. Kaikki arvot voi muuttaa auton kohdassa Tarkenna.'},
   q_h:'Kulutustieto:', q_model:n=>`mallikohtainen mittaus, ${n} autoa (EEA)`, q_brand:(b,n)=>`merkin keskiarvo (${b}, ${n} autoa, EEA)`,
   q_fleet:'käyttövoiman keskiarvo (EEA)', q_own:'oma tieto', q_nedc:'mallin virallinen NEDC-arvo ja vuoden keskimääräinen ero (ICCT)',
   q_ev:'mallin virallinen WLTP-arvo (EEA), mitattua tietoa ei ole', q_def:'käyttövoiman oletusarvo',
@@ -604,12 +609,12 @@ fi: {
   fb_priv_s:'Mihin palaute menee?',
   fb_priv:'Palaute tallentuu laskurin tekijän yksityiseen GitHub-repositorioon, jota vain hän lukee. Välittäjänä on Cloudflare Workers -palvelu, joka näkee yhteyden teknisesti, kuten verkkopalvelut aina. Tallentuvat vain peukku, kirjoittamasi teksti, jakolinkki jos valitsit sen, sivun versio, kieli ja aika. IP-osoitetta, evästeitä tai laitetietoja ei tallenneta; IP-osoitetta käytetään vain hetken muistissa liian tiheiden lähetysten estoon. Älä kirjoita tekstiin nimeä tai muita henkilötietoja. Lähdekoodi: tools/feedback-worker/worker.js GitHubissa.',
   feedback:'Palaute ja virheilmoitukset: <a href="https://github.com/TapioT1986/CarFootprint/issues/new" target="_blank" rel="noopener">kirjoita GitHubiin</a> (vaatii ilmaisen GitHub-tunnuksen).',
-  meta:'Beta __VERSION__ – päivitetty __UPDATED_FI__. Laskee arvonaleneman, rahoituksen, energian ja muut kulut sekä elinkaaren päästöt omalla ajomäärälläsi. Esimerkkiautot ovat esimerkkejä – vaihda omasi.',
-  req_hint:'Riittää, että täytät <b>sinisellä</b> merkityt: ajomäärän ja automallin. Kaikki muu on valmiina: <span class="estb" style="display:inline-block">arvio</span> ja katkoviiva tarkoittavat laskurin arviota automallin mukaan, ja muut ovat oletuksia. Voit muuttaa mitä tahansa, kun tiedät oikean arvon.', est:'arvio',
+  meta:'Beta __VERSION__ – päivitetty __UPDATED_FI__. Laskee arvonaleneman, rahoituksen, energian ja muut kulut sekä elinkaaren päästöt omalla ajomäärälläsi. <b>Esimerkkiautot ovat vain alku: vaihda tilalle autot, joita itse harkitset.</b>',
+  req_hint:'Riittää, että täytät <b>sinisellä</b> merkityt: ajomäärän ja automallin. Kaikki muu on valmiina.¦<span class="estb" style="display:inline-block">arvio</span> ja katkoviiva tarkoittavat laskurin arviota automallin mukaan, ja muut ovat oletuksia. Voit muuttaa mitä tahansa, kun tiedät oikean arvon.', est:'arvio',
   step_cars:'Vertailtavat autot', step_res:'Tulos', car_more:'Tarkenna: käyttövoima, kulutus, kulut ja päästöt',
   drive_h:'Oma ajosi', km_label:'Vuotuinen ajomäärä', km_unit:'km / vuosi',
   chipB:'Bensa-auto 11 800', chipAll:'Kaikki 14 500', chipD:'Diesel 20 800',
-  km_hint:'Liukusäädin ulottuu 100 000 km:iin; suuremman ajomäärän (enintään 300 000 km) voi kirjoittaa kenttään. Pikavalinnat ovat suomalaisten autojen toteutuneita ajomääriä (mediaani, <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficomin avoin ajoneuvodata</a> 30.6.2026).',
+  km_hint:'Liukusäädin ulottuu 100 000 km:iin; suuremman ajomäärän (enintään 300 000 km) voi kirjoittaa kenttään.¦Pikavalinnat ovat suomalaisten autojen toteutuneita ajomääriä (mediaani, <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficomin avoin ajoneuvodata</a> 30.6.2026).',
   years_l:'Omistusaika', years_u:'vuotta', rate_u:'% / vuosi',
   budget_l:'Enimmäishinta', budget_u:'€; esimerkkiautot valitaan tämän mukaan',
   monthly_l:'Kuukausibudjetti (valinnainen)', monthly_u:'€ / kk autoon: lainaerä, energia ja muut kulut; tyhjä = ei käytössä',
@@ -618,14 +623,14 @@ fi: {
   pay_n_more:' Summan ja lainaehdot voi tarkentaa Lisäasetuksissa.', own_h:'Omistus ja kuukausibudjetti',
   more_h:'Lisäasetukset', more_n:(n)=>`· ${n} muutettu`, dock_aria:'Näytä tulokset', dock_cheap:'Halvin', dock_clean:'Vähin CO₂',
   city_l:'Kaupunki- ja maantieajo', city_out:p=>`kaupunkiajoa ${p} %, maantieajoa ${100-p} %`,
-  city_hint:'Oletus 39 % on suomalaisten keskiarvo: henkilöautojen kilometrit kaduilla ja yksityisteillä sekä enintään 60 km/h maanteillä (Tilastokeskus, <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__tiet/statfin_tiet_pxt_12jx.px/" target="_blank" rel="noopener">12jx</a> ja <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__tiet/statfin_tiet_pxt_12k1.px/" target="_blank" rel="noopener">12k1</a>, 2025). Kaupunkiajo lisää polttomoottoriauton kulutusta, ja sähköauto kuluttaa kaupungissa vähemmän; lähteet kohdassa Näin laskenta toimii.',
+  city_hint:'Oletus 39 % on suomalaisten keskiarvo.¦Siinä ovat mukana henkilöautojen kilometrit kaduilla ja yksityisteillä sekä enintään 60 km/h maanteillä (Tilastokeskus, <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__tiet/statfin_tiet_pxt_12jx.px/" target="_blank" rel="noopener">12jx</a> ja <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__tiet/statfin_tiet_pxt_12k1.px/" target="_blank" rel="noopener">12k1</a>, 2025). Kaupunkiajo lisää polttomoottoriauton kulutusta, ja sähköauto kuluttaa kaupungissa vähemmän; lähteet kohdassa Näin laskenta toimii.',
   ins_h:'Vakuutukset', ins_l:'Kasko', ins_full:'Täyskasko (laaja kasko)', ins_part:'Osakasko', ins_none:'Ei kaskoa, vain liikennevakuutus',
   ins_u:'Koskee kaikkia autoja. Rahoitusyhtiö vaatii yleensä lainalla ostettuun autoon täyskaskon. Auton omat vakuutusmaksut voi vaihtaa kohdassa Tarkenna.',
   ins_src:'<b>Lähteet:</b> liikennevakuutus ja täyskasko ovat Taloustaidon hintavertailujen keskiarvoja (<a href="https://www.taloustaito.fi/vapaalla/2026/taloustaito-vertaili-huimat-erot-autovakuutusten-hinnoissa/" target="_blank" rel="noopener">24.9.2026</a>, 3 v vanhat autot, ja <a href="https://www.taloustaito.fi/vapaalla/sahkoautoilija-nain-paljon-autosi-kayttovoima-korottaa-vakuutusmaksuja/" target="_blank" rel="noopener">20.10.2022</a>), kustakin suurempi: liikennevakuutus 200 €/v (sähkö 205), täyskasko 520 €/v (bensiini, diesel, hybridi), 700 (lataushybridi) ja 835 (sähkö). Osakasko on 37 % täyskaskon hinnasta Taloustaidon <a href="https://www.taloustaito.fi/vapaalla/2025/autovakuutus--ala-maksa-turhasta/" target="_blank" rel="noopener">26.9.2025</a> vertailun mukaan (neljä yhtiötä, 14 v vanha Octavia: osakasko keskimäärin 86 €/v, laaja kasko 231 €/v). Osakasko ei korvaa omaa kolaria. Vertailujen vakuutuksenottaja oli 58–59-vuotias täysillä bonuksilla; nuoremmalle tai bonuksettomalle hinta on usein selvästi suurempi.',
   fin_h:'Rahoitus', own_l:'Oma raha ja vaihtohyvitys', own_u:'€ käteistä ja vaihtohyvitys (nykyiseksi merkityn auton arvo lisätään alla erikseen); loppu lainaa',
   loanRate_l:'Lainan korko', loanRate_u:'% / vuosi (nimellinen)', loanFee_l:'Lainan kulut', loanFee_u:'€ / kk, tilinhoito ja laskutus',
   loanYears_l:'Laina-aika', ownRate_l:'Oman rahan tuotto',
-  fin_hint:'Oletukset, kun on valittava, autolle epäedullisempi luku: <b>lainan korko 4,40 %</b> = pankkien ajoneuvolainakannan keskikorko toukokuun 2026 lopussa (<a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/" target="_blank" rel="noopener">Suomen Pankki 30.6.2026</a>; uusien ajoneuvolainojen korko oli 4,08 %). <b>Oman rahan tuotto 2,48 %</b> = uusien määräaikaistalletusten keskikorko toukokuussa 2026 (<a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/" target="_blank" rel="noopener">sama tiedote</a>; talletuskannan keskikorko oli 0,82 %). <b>Lainan kulut 12,50 €/kk</b> = Nordean autolainan esimerkkilaskelman tilinhoitomaksu (<a href="https://www.nordea.fi/henkiloasiakkaat/palvelumme/lainat/kulutusluotot/autolaina.html" target="_blank" rel="noopener">Nordea</a>). Oman rahan tuotto kuvaa, mitä rahat tuottaisivat muualla; 0, jos ne olisivat korottomalla tilillä.',
+  fin_hint:'Oletuksina autolle epäedullisemmat luvut: lainan korko 4,40 %, oman rahan tuotto 2,48 %, lainan kulut 12,50 €/kk.¦Oletukset, kun on valittava, autolle epäedullisempi luku: <b>lainan korko 4,40 %</b> = pankkien ajoneuvolainakannan keskikorko toukokuun 2026 lopussa (<a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/" target="_blank" rel="noopener">Suomen Pankki 30.6.2026</a>; uusien ajoneuvolainojen korko oli 4,08 %). <b>Oman rahan tuotto 2,48 %</b> = uusien määräaikaistalletusten keskikorko toukokuussa 2026 (<a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/" target="_blank" rel="noopener">sama tiedote</a>; talletuskannan keskikorko oli 0,82 %). <b>Lainan kulut 12,50 €/kk</b> = Nordean autolainan esimerkkilaskelman tilinhoitomaksu (<a href="https://www.nordea.fi/henkiloasiakkaat/palvelumme/lainat/kulutusluotot/autolaina.html" target="_blank" rel="noopener">Nordea</a>). Oman rahan tuotto kuvaa, mitä rahat tuottaisivat muualla; 0, jos ne olisivat korottomalla tilillä.',
   over:'Yli budjetin', over_mo:'Yli kuukausibudjetin', mo_true:'todellinen kustannus, sis. arvonaleneman', mo_cash:l=>l?'tililtä lähtee: lainaerä ja käyttökulut keskimäärin':'tililtä lähtee: käyttökulut keskimäärin', cash_after:m=>`, lainan jälkeen ${m} €/kk`,
   up_cash:p=>`Kertaostoon tarvitaan ${p} €`, up_part:(o,l)=>`Omaa rahaa heti ${o} € ja laina ${l} €`, loan_tag:(l,m)=>` · laina ${l} €, ${m} €/kk`,
   energy_h:'Energia', petrol:'Bensiini', diesel:'Diesel', el_home:'Sähkö kotona', el_home_u:'€ / kWh, siirto ja verot mukana',
@@ -668,7 +673,7 @@ fi: {
   ex_mild:' (kevythybridi)',
   ex_name:(l,y,pt)=>pt==='H'?`${l}-hybridi ${y}`:pt==='B'?`${l} ${y}, bensiini`:`${l} ${y}`,
   new_car:'Uusi auto', car_n:'Auto', car_name:'Auton nimi', ren:'Nimeä auto', mine_on:'Nykyinen autosi', mine_off:'Merkitse nykyiseksi autoksesi', price_mine_l:'Nykyinen arvo', age_mine_l:'Ikä nyt', odo_mine_u:'km nyt',
-  mine_hint:'Kirjoita arvoksi, paljonko saisit autosta myymällä, ja mahdollinen jäljellä oleva laina. Vaihda kohtaan Tarkenna omat toteutuneet lukusi (kulutus, vakuutukset, huollot). Muita autoja verrataan tähän. Tiedot tallentuvat vain tähän selaimeen.',
+  mine_hint:'Kirjoita arvoksi, paljonko saisit autosta myymällä, ja mahdollinen jäljellä oleva laina.¦Vaihda kohtaan Tarkenna omat toteutuneet lukusi (kulutus, vakuutukset, huollot). Muita autoja verrataan tähän. Tiedot tallentuvat vain tähän selaimeen.',
   debt_l:'Jäljellä oleva laina', debtY_l:'Lainaa jäljellä', debtY_u:'vuotta; tyhjä = Rahoituksen laina-aika',
   trade_l:'Nykyisen auton arvo vaihtohyvitykseksi', trade_yes:'Kyllä: myyntiarvo − laina lisätään omaan rahaan', trade_no:'Ei: oma raha sisältää jo vaihtohyvityksen',
   trade_none:'Merkitse auto nykyiseksi autoksesi, niin sen nettoarvo voidaan käyttää muiden autojen ostoon.', trade_off:'Nykyisen auton arvoa ei lisätä omaan rahaan.',
@@ -677,7 +682,7 @@ fi: {
   sw_vs:(y,t,d)=>`Vaihtopäätöksenä ${y} v: ${t} t CO₂e, pitämiseen verrattuna ${d} t`,
   sw_keep:(y,t)=>`Pitäminen ${y} v: ${t} t CO₂e (vain ajo, valmistus on jo tapahtunut)`,
   mine_val:p=>`Arvo ${p} €, omaa rahaa kiinni autossa`, vs_mine:(e,t)=>`Nykyiseen autoosi verrattuna ${e} €/v · ${t} t CO₂e/v`, del:'Poista auto',
-  pick_l:'Hae automalli', pick_hint:'Kirjoita merkki tai malli ja valitse listasta. Valinta täyttää mallin todellisen kulutuksen (EEA:n mittaukset), hinta-arvion (Verohallinnon verotusarvot) sekä iän ja mittarilukeman (Traficomin rekisteri). Voit muuttaa kaikkia arvoja.', pick_ph:'esim. Volkswagen Golf', pick_none:'Ei osumia', pt_l:'Käyttövoima',
+  pick_l:'Hae automalli', pick_hint:'Kirjoita merkki tai malli ja valitse listasta.¦Valinta täyttää mallin todellisen kulutuksen (EEA:n mittaukset), hinta-arvion (Verohallinnon verotusarvot) sekä iän ja mittarilukeman (Traficomin rekisteri). Voit muuttaa kaikkia arvoja.', pick_ph:'esim. Volkswagen Golf', pick_none:'Ei osumia', pt_l:'Käyttövoima',
   price_l:'Ostohinta', age_l:'Ikä ostaessa', age_u:'v (0 = uusi)', odo_l:'Mittarilukema', odo_u:'km ostaessa',
   dep_l:'Arvonalenema', dep_u:'% / v, tyhjä = iän mukaan',
   fuel_l:'Polttoaine', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, vanha mittaus)', fuel_u_p:'l / 100 km polttoaineella ajaessa',
@@ -748,7 +753,7 @@ en: {
   soh_l:'Battery health (SOH)', soh_u:'% of the new battery capacity; empty = estimate by age',
   evr_old:' The figures are official values of the same model registered new in Finland in 2020–2025; older model years often have a shorter range.',
   evr:(w,m,c)=>`<b>Electric range:</b> WLTP ${w} km · mild winter about ${m} km · hard frost about ${c} km`,
-  en_km:(v)=>`driving energy €${v}/km`, sumd:'More details',
+  en_km:(v)=>`driving energy €${v}/km`, sumd:'Breakdown and ranges', fold_s:'More detail and sources',
   all_km:(v)=>`All costs per kilometre: €${v}/km (yearly cost divided by mileage; most of it does not depend on the kilometres driven).`,
   parts:(d,c,e,o)=>`Per year: depreciation €${d}, financing €${c}, energy €${e}, tax, insurance, servicing and tyres €${o}.`,
   electricity:'electricity', p_stat:'Statistics Finland', p_own:'your price',
@@ -756,8 +761,8 @@ en: {
     e100:'Energy, € / 100 km', energy:'Energy', traf:'Motor liability (compulsory)', kasko:'Comprehensive', tax:'Vehicle tax', serv:'Servicing and repairs (estimate)',
     src:'source', src_price:'price', src_cons:'consumption', src_serv:'rise factors', assumed:'assumption, no source', k_full:'full', k_part:'partial', k_none:'none',
     tyre:'Tyres and other', run:'Running costs total', dep:'Depreciation (estimate)', cap:'Financing: interest, fees, return on own money', total:'All costs total',
-    dep_note:'Depreciation is an average over models from Tax Administration values, not a forecast for your car: condition, service history, equipment and, for an electric car, the battery can move the resale price a lot. In the same data half of the individual cars are within 7% of their model\'s typical value, and one in five differ by more than 15%; the resale range on the result cards uses that middle half.',
-    foot:'Sources and assumptions under How the calculation works: insurance from Taloustaito price comparisons, tax from the Vehicle Tax Act tables, servicing as a level estimate scaled by mileage (Consumer Reports 2020), depreciation from Tax Administration values. Every value can be changed under Fine-tune on the car.'},
+    dep_note:'Depreciation is an average over models from Tax Administration values, not a forecast for your car.¦Condition, service history, equipment and, for an electric car, the battery can move the resale price a lot. In the same data half of the individual cars are within 7% of their model\'s typical value, and one in five differ by more than 15%; the resale range on the result cards uses that middle half.',
+    foot:'Every value can be changed under Fine-tune on the car.¦Sources and assumptions under How the calculation works: insurance from Taloustaito price comparisons, tax from the Vehicle Tax Act tables, servicing as a level estimate scaled by mileage (Consumer Reports 2020), depreciation from Tax Administration values. Every value can be changed under Fine-tune on the car.'},
   q_h:'Consumption data:', q_model:n=>`model-specific measurement, ${n} cars (EEA)`, q_brand:(b,n)=>`brand average (${b}, ${n} cars, EEA)`,
   q_fleet:'powertrain average (EEA)', q_own:'your own figure', q_nedc:"the model's official NEDC figure and the average gap for its year (ICCT)",
   q_ev:"the model's official WLTP figure (EEA); no measured data", q_def:'powertrain default',
@@ -775,12 +780,12 @@ en: {
   fb_priv_s:'Where does the feedback go?',
   fb_priv:'Feedback is stored in a private GitHub repository that only the author of the calculator reads. It passes through Cloudflare Workers, which sees the connection technically, as any web service does. Only the thumb, the text you write, the share link if you chose it, the page version, language and time are stored. No IP address, cookies or device data are stored; the IP address is kept briefly in memory only to stop too frequent sends. Please do not write names or other personal data. Source code: tools/feedback-worker/worker.js on GitHub.',
   feedback:'Feedback and bug reports: <a href="https://github.com/TapioT1986/CarFootprint/issues/new" target="_blank" rel="noopener">write on GitHub</a> (needs a free GitHub account).',
-  meta:'Beta __VERSION__ – updated __UPDATED_EN__. Calculates depreciation, financing, energy and other costs plus lifecycle emissions at your own annual mileage. Prices, taxes and the model list are for Finland. The example cars are examples, so swap in your own.',
-  req_hint:'You only need to fill in the fields marked in <b>blue</b>: annual mileage and the car model. Everything else is ready: <span class="estb" style="display:inline-block">estimate</span> and a dashed border mark the calculator\'s estimate from the car model, and the rest are defaults. Change anything when you know the real value.', est:'estimate',
+  meta:'Beta __VERSION__ – updated __UPDATED_EN__. Calculates depreciation, financing, energy and other costs plus lifecycle emissions at your own annual mileage. Prices, taxes and the model list are for Finland. <b>The example cars are only a starting point: swap in the cars you are considering.</b>',
+  req_hint:'You only need to fill in the fields marked in <b>blue</b>: annual mileage and the car model. Everything else is ready.¦<span class="estb" style="display:inline-block">estimate</span> and a dashed border mark the calculator\'s estimate from the car model, and the rest are defaults. Change anything when you know the real value.', est:'estimate',
   step_cars:'Cars to compare', step_res:'Result', car_more:'Fine-tune: powertrain, consumption, costs and emissions',
   drive_h:'Your driving', km_label:'Annual mileage', km_unit:'km / year',
   chipB:'Petrol car 11,800', chipAll:'All cars 14,500', chipD:'Diesel 20,800',
-  km_hint:'The slider goes up to 100,000 km; a higher mileage (up to 300,000 km) can be typed in the field. Shortcuts are actual annual mileages of cars in Finland (median, <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficom open vehicle data</a>, 30 June 2026).',
+  km_hint:'The slider goes up to 100,000 km; a higher mileage (up to 300,000 km) can be typed in the field.¦Shortcuts are actual annual mileages of cars in Finland (median, <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficom open vehicle data</a>, 30 June 2026).',
   years_l:'Ownership period', years_u:'years', rate_u:'% / year',
   budget_l:'Maximum price', budget_u:'€; the example cars follow it',
   monthly_l:'Monthly budget (optional)', monthly_u:'€ / month for the car: loan payment, energy and other costs; empty = off',
@@ -789,14 +794,14 @@ en: {
   pay_n_more:' The amount and loan terms can be fine-tuned under More settings.', own_h:'Ownership and monthly budget',
   more_h:'More settings', more_n:(n)=>`· ${n} changed`, dock_aria:'Show the results', dock_cheap:'Cheapest', dock_clean:'Lowest CO₂',
   city_l:'City and highway driving', city_out:p=>`${p}% city, ${100-p}% highway`,
-  city_hint:'The default 39% is the Finnish average: passenger-car kilometres on streets and private roads plus public roads with a limit of 60 km/h or less (Statistics Finland, <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__tiet/statfin_tiet_pxt_12jx.px/" target="_blank" rel="noopener">12jx</a> and <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__tiet/statfin_tiet_pxt_12k1.px/" target="_blank" rel="noopener">12k1</a>, 2025). City driving raises a combustion car\'s consumption, while an electric car uses less in town; sources under How the calculation works.',
+  city_hint:'The default 39% is the Finnish average.¦It counts passenger-car kilometres on streets and private roads plus public roads with a limit of 60 km/h or less (Statistics Finland, <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__tiet/statfin_tiet_pxt_12jx.px/" target="_blank" rel="noopener">12jx</a> and <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__tiet/statfin_tiet_pxt_12k1.px/" target="_blank" rel="noopener">12k1</a>, 2025). City driving raises a combustion car\'s consumption, while an electric car uses less in town; sources under How the calculation works.',
   ins_h:'Insurance', ins_l:'Comprehensive cover', ins_full:'Full comprehensive', ins_part:'Partial comprehensive', ins_none:'None, motor liability only',
   ins_u:'Applies to all cars. A finance company usually requires full comprehensive cover on a car bought with a loan. Each car\'s own premiums can be changed under Fine-tune.',
   ins_src:'<b>Sources:</b> motor liability and full comprehensive are averages from Taloustaito price comparisons (<a href="https://www.taloustaito.fi/vapaalla/2026/taloustaito-vertaili-huimat-erot-autovakuutusten-hinnoissa/" target="_blank" rel="noopener">24 Sept 2026</a>, 3-year-old cars, and <a href="https://www.taloustaito.fi/vapaalla/sahkoautoilija-nain-paljon-autosi-kayttovoima-korottaa-vakuutusmaksuja/" target="_blank" rel="noopener">20 Oct 2022</a>), taking the higher one: motor liability €200/yr (electric €205), full comprehensive €520/yr (petrol, diesel, hybrid), €700 (plug-in hybrid) and €835 (electric). Partial comprehensive is 37% of the full price, from Taloustaito\'s <a href="https://www.taloustaito.fi/vapaalla/2025/autovakuutus--ala-maksa-turhasta/" target="_blank" rel="noopener">26 Sept 2025</a> comparison (four insurers, a 14-year-old Octavia: partial €86/yr on average, full €231/yr). Partial cover does not pay for your own collision. The policyholder in the comparisons was 58–59 years old with full bonus; younger drivers or those without bonus usually pay clearly more.',
   fin_h:'Financing', own_l:'Own money and trade-in', own_u:'€ cash and trade-in (a car marked as current is added separately below); the rest is a loan',
   loanRate_l:'Loan interest', loanRate_u:'% / year (nominal)', loanFee_l:'Loan fees', loanFee_u:'€ / month, account and billing',
   loanYears_l:'Loan term', ownRate_l:'Return on own money',
-  fin_hint:'Defaults, taking the figure less favourable to the car where there is a choice: <b>loan interest 4.40%</b> = average rate on the stock of vehicle loans at the end of May 2026 (<a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/" target="_blank" rel="noopener">Bank of Finland, 30 June 2026, in Finnish</a>; new vehicle loans 4.08%). <b>Return on own money 2.48%</b> = average rate on new term deposits in May 2026 (<a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/" target="_blank" rel="noopener">same release</a>; all deposits 0.82%). <b>Loan fees €12.50/month</b> = the account fee in the Nordea car loan example (<a href="https://www.nordea.fi/en/personal/our-services/loans/consumer-credit/autolaina.html" target="_blank" rel="noopener">Nordea</a>). Return on own money is what the money would earn elsewhere; 0 if it would sit in an account without interest.',
+  fin_hint:'The defaults are the figures less favourable to the car: loan interest 4.40%, return on own money 2.48%, loan fees €12.50/month.¦Defaults, taking the figure less favourable to the car where there is a choice: <b>loan interest 4.40%</b> = average rate on the stock of vehicle loans at the end of May 2026 (<a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/" target="_blank" rel="noopener">Bank of Finland, 30 June 2026, in Finnish</a>; new vehicle loans 4.08%). <b>Return on own money 2.48%</b> = average rate on new term deposits in May 2026 (<a href="https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/" target="_blank" rel="noopener">same release</a>; all deposits 0.82%). <b>Loan fees €12.50/month</b> = the account fee in the Nordea car loan example (<a href="https://www.nordea.fi/en/personal/our-services/loans/consumer-credit/autolaina.html" target="_blank" rel="noopener">Nordea</a>). Return on own money is what the money would earn elsewhere; 0 if it would sit in an account without interest.',
   over:'Over budget', over_mo:'Over monthly budget', mo_true:'true cost, incl. depreciation', mo_cash:l=>l?'paid out: loan payment and running costs on average':'paid out: running costs on average', cash_after:m=>`, after the loan €${m}/mo`,
   up_cash:p=>`A cash purchase needs €${p}`, up_part:(o,l)=>`Own money up front €${o} and a loan of €${l}`, loan_tag:(l,m)=>` · loan €${l}, €${m}/month`,
   energy_h:'Energy', petrol:'Petrol', diesel:'Diesel', el_home:'Home electricity', el_home_u:'€ / kWh, incl. grid fees and taxes',
@@ -840,7 +845,7 @@ en: {
   ex_mild:' (mild hybrid)',
   ex_name:(l,y,pt)=>pt==='H'?`${l} hybrid ${y}`:pt==='B'?`${l} ${y}, petrol`:`${l} ${y}`,
   new_car:'New car', car_n:'Car', car_name:'Car name', ren:'Rename car', mine_on:'Your current car', mine_off:'Mark as your current car', price_mine_l:'Current value', age_mine_l:'Age now', odo_mine_u:'km now',
-  mine_hint:'Enter what you would get by selling it, and any loan still on it. Put your own actual figures under Fine-tune (consumption, insurance, servicing). Other cars are compared with this one. The data stays in this browser only.',
+  mine_hint:'Enter what you would get by selling it, and any loan still on it.¦Put your own actual figures under Fine-tune (consumption, insurance, servicing). Other cars are compared with this one. The data stays in this browser only.',
   debt_l:'Loan still on it', debtY_l:'Loan years left', debtY_u:'years; empty = the loan term under Financing',
   trade_l:'Current car\'s value as trade-in', trade_yes:'Yes: sale value − loan is added to own money', trade_no:'No: own money already includes the trade-in',
   trade_none:'Mark a car as your current car, and its net value can be used to buy the others.', trade_off:'The current car\'s value is not added to own money.',
@@ -849,7 +854,7 @@ en: {
   sw_vs:(y,t,d)=>`As a switching decision over ${y} yrs: ${t} t CO₂e, ${d} t compared with keeping`,
   sw_keep:(y,t)=>`Keeping it ${y} yrs: ${t} t CO₂e (driving only, it is already built)`,
   mine_val:p=>`Value €${p}, own money tied up in the car`, vs_mine:(e,t)=>`Compared with your current car ${e} €/yr · ${t} t CO₂e/yr`, del:'Remove car',
-  pick_l:'Find a car model', pick_hint:'Type a make or model and pick it from the list. This fills in the real-world consumption of the model (EEA measurements), an estimated price (Tax Administration values) and age and odometer (Traficom register). You can change every value.', pick_ph:'e.g. Volkswagen Golf', pick_none:'No matches', pt_l:'Powertrain',
+  pick_l:'Find a car model', pick_hint:'Type a make or model and pick it from the list.¦This fills in the real-world consumption of the model (EEA measurements), an estimated price (Tax Administration values) and age and odometer (Traficom register). You can change every value.', pick_ph:'e.g. Volkswagen Golf', pick_none:'No matches', pt_l:'Powertrain',
   price_l:'Purchase price', age_l:'Age at purchase', age_u:'years (0 = new)', odo_l:'Odometer', odo_u:'km at purchase',
   dep_l:'Depreciation', dep_u:'% / yr, blank = by age',
   fuel_l:'Fuel', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, old test)', fuel_u_p:'l / 100 km when running on fuel',
@@ -1277,14 +1282,14 @@ function carCard(c,i){
     <div class="head"><span class="dot" style="--cc:${COLORS[i]}"></span>${renaming===i
         ? `<input class="nameed" id="name${i}" data-name="${i}" value="${esc(c.name)}" aria-label="${T('car_name')}" maxlength="40">`
         : c.ownName ? `<b class="cname">${esc(c.name)}</b>` : `<label class="label" for="pick${i}">${T('pick_l')}</label>`}
-      ${renaming===i ? '' : `<button class="ren" type="button" data-ren="${i}" aria-label="${T('ren')}" title="${T('ren')}">✎</button>`}
-      ${cars.length>1?`<button class="x" type="button" data-del="${i}" aria-label="${T('del')}">×</button>`:''}</div>
+      ${renaming===i ? '' : `<button class="ren" type="button" data-ren="${i}" aria-label="${T('ren')}" title="${T('ren')}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></button>`}
+      ${cars.length>1?`<button class="x" type="button" data-del="${i}" aria-label="${T('del')}" title="${T('del')}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>`:''}</div>
     <div class="field pickwrap req">
       <div class="pickbox"><input id="pick${i}" data-pick="${i}" value="${esc(pickText(c))}"${c.ownName?` aria-label="${T('pick_l')}"`:''} placeholder="${T('pick_ph')}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sg${i}"${i===0?' aria-describedby="pickh0"':''}>
       <div class="sugg" id="sg${i}" role="listbox" aria-label="${T('pick_l')}" hidden></div></div>
-      ${i===0?`<span class="hint" id="pickh${i}">${T('pick_hint')}</span>`:''}</div>
-    <div class="mine"><button class="minebtn" type="button" data-mine="${i}" aria-pressed="${!!c.mine}">${c.mine ? '★ '+T('mine_on') : '☆ '+T('mine_off')}</button>
-      ${c.mine?`<span class="hint">${T('mine_hint')}</span>
+      ${i===0?`<div class="hint" id="pickh${i}">${fold(T('pick_hint'))}</div>`:''}</div>
+    <div class="mine"><button class="minebtn" type="button" data-mine="${i}" aria-pressed="${!!c.mine}">${c.mine ? '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg> '+T('mine_on') : '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg> '+T('mine_off')}</button>
+      ${c.mine?`<div class="hint">${fold(T('mine_hint'))}</div>
       <div class="fields" style="width:100%"><div class="field"><label class="label" for="debt${i}">${T('debt_l')}</label><input type="number" id="debt${i}" data-k="debt" step="500" min="0" value="${c.debt||0}"><span class="unit">€</span></div>
         <div class="field"><label class="label" for="debtYears${i}">${T('debtY_l')}</label><input type="number" id="debtYears${i}" data-k="debtYears" step="0.5" min="0" value="${c.debtYears??''}" placeholder="${fmt(g().loanYears)}"><span class="unit">${T('debtY_u')}</span></div></div>`:''}</div>
     <div class="fields">
@@ -1507,7 +1512,7 @@ function costTable(R, G){
     ${row(L.dep, r => fmt(r.dep), '', src('https://www.vero.fi/contentassets/f3326d05d3954bed9c1686a17917754d/henkiloautojen-sovelletut-verotusarvot-2026.xls'))}
     ${row(L.cap, r => fmt(r.cap), '', src('https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/'))}
     ${row(L.total, r => fmt(r.total), 'sub1')}
-    </tbody></table></div><p class="hint evb">${L.dep_note}</p><p class="hint">${L.foot}</p>`;
+    </tbody></table></div><div class="hint evb">${fold(L.dep_note)}</div><div class="hint">${fold(L.foot)}</div>`;
 }
 // Kulutustiedon laatu lyhyesti auton kortissa: mistä kulutus tulee (sama tieto kuin rwText, tiivistettynä)
 function qualText(c){
@@ -1688,12 +1693,9 @@ function update(){
       ${c.mine?`<div class="sub">${T('mine_val')(fmt(c.price))}</div>`:mineR && !c.mine?`<div class="sub vsm">${T('vs_mine')(sgn(r.total-mineR.total), sgn((r.em-mineR.em)/1000,1))}<br>${T('vs_mine_n')(G.years, sgn((r.total-mineR.total)*G.years))}<br>${T('sw_vs')(G.years, fmt(r.swEm/1000,1), sgn((r.swEm-mineR.swEm)/1000,1))}</div>`:''}
       ${c.mine && cars.length>1?`<div class="sub vsm">${T('sw_keep')(G.years, fmt(r.swEm/1000,1))}</div>`:''}
       ${c.mine?'':r.loan<=0?`<div class="sub">${T('up_cash')(fmt(c.price))}</div>`:(c.price-r.loan>0?`<div class="sub">${T('up_part')(fmt(c.price-r.loan), fmt(r.loan))}</div>`:'')}
-      <div class="sub">${T('en_km')(fmt(r.energy/G.km,2))} · ${priceText(c, G)}</div>
-      ${rng[i]?`<div class="sub">${T('rng')(fmt(rng[i][0]), fmt(rng[i][1]))}</div>`:''}
-      ${rsr[i]?`<div class="sub">${T('rs_rng')(fmt(Math.round(rsr[i][0]/10)*10), fmt(Math.round(rsr[i][1]/10)*10))}</div>`:''}
       <div class="sub">${fmt(r.em)} kg CO₂e/${yr} · ${fmt(r.em*1000/G.km)} g/km</div>
-      <div class="badges">${c.mine?`<span class="badge mineb">★ ${T('mine_on')}</span>`:''}${!c.mine&&G.budget>0&&c.price>G.budget?`<span class="badge warn">${T('over')}</span>`:''}${G.monthly>0&&Math.round(r.cash)>G.monthly?`<span class="badge warn">${T('over_mo')}</span>`:''}${cars.length>1&&r.total===minCost?`<span class="badge win">${T('cheapest')}</span>`:''}${cars.length>1&&r.em===minEm?`<span class="badge win">${T('cleanest')}</span>`:''}</div>
-      <details class="sumd"><summary>${T('sumd')}</summary><div class="sub">${T('all_km')(fmt(r.total/G.km,2))}</div><div class="sub">${T('parts')(fmt(r.dep), fmt(r.cap), fmt(r.energy), fmt(r.other))}</div></details>
+      <div class="badges">${c.mine?`<span class="badge mineb">${T('mine_on')}</span>`:''}${!c.mine&&G.budget>0&&c.price>G.budget?`<span class="badge warn">${T('over')}</span>`:''}${G.monthly>0&&Math.round(r.cash)>G.monthly?`<span class="badge warn">${T('over_mo')}</span>`:''}${cars.length>1&&r.total===minCost?`<span class="badge win">${T('cheapest')}</span>`:''}${cars.length>1&&r.em===minEm?`<span class="badge win">${T('cleanest')}</span>`:''}</div>
+      <details class="sumd"><summary>${T('sumd')}</summary><div class="sub">${T('parts')(fmt(r.dep), fmt(r.cap), fmt(r.energy), fmt(r.other))}</div><div class="sub">${T('all_km')(fmt(r.total/G.km,2))}</div><div class="sub">${T('en_km')(fmt(r.energy/G.km,2))} · ${priceText(c, G)}</div>${rng[i]?`<div class="sub">${T('rng')(fmt(rng[i][0]), fmt(rng[i][1]))}</div>`:''}${rsr[i]?`<div class="sub">${T('rs_rng')(fmt(Math.round(rsr[i][0]/10)*10), fmt(Math.round(rsr[i][1]/10)*10))}</div>`:''}</details>
     </div>`;}).join('');
   const dock = $('dock');
   dock.classList.toggle('n4', cars.length>3);
@@ -1782,12 +1784,16 @@ function moreCount(){
 })();
 
 // --- kielen vaihto ---
+// Pitkä ohje: '¦' erottaa näkyvän alun ja loppuosan, joka taitetaan "Lisätietoja ja lähteet" -avauksen taakse.
+// Tieto ja lähdeviitteet pysyvät sivulla tekstinä (omistajan periaate 19.11.2026), vain piilossa tavalliselta käyttäjältä.
+const fold = v => typeof v==='string' && v.includes('¦')
+  ? (([a, ...b]) => `${a}<details class="fold"><summary>${T('fold_s')}</summary>${b.join('')}</details>`)(v.split('¦')) : v;
 function applyLang(lang){
   const prev = LANG; LANG = I18N[lang] ? lang : 'fi';
   try { localStorage.setItem('carfootprint.lang', LANG); } catch(e){}
   document.documentElement.lang = LANG;
   document.title = T('title'); $('metaDesc').content = T('desc');
-  document.querySelectorAll('[data-i]').forEach(el => { const v = T(el.dataset.i); if (typeof v === 'string') el.innerHTML = v; });
+  document.querySelectorAll('[data-i]').forEach(el => { const v = T(el.dataset.i); if (typeof v === 'string') el.innerHTML = fold(v); });
   document.querySelectorAll('.lang').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang===LANG)));
   cars.forEach(c => { if (c.exAuto && c.ex) c.name = exName(c.ex, c.pt); });
   buildModels(); renderCars(); update();

@@ -88,7 +88,7 @@ Tavoite: vastata kysymykseen "kannattaako nykyinen auto pitää vai vaihtaa, rah
 ### 4.1 Palautekanava · koko M · ✅ tehty 19.11.2026 (versio 0.73): peukku + vapaaehtoinen teksti → Cloudflare Worker → yksityinen GitHub-repositorio CarFootprint-palaute
 - Suunnitelma valmiina CLAUDE.md:ssä: 👍/👎 + vapaaehtoinen teksti, vastaanotin esim. Cloudflare Workers, ei seurantaa.
 
-### 4.2 Käyttäjätestaus · omistajan työ, Claude valmistelee
+### 4.2 Käyttäjätestaus · omistajan työ, Claude valmistelee · ohje valmis 19.11.2026: docs/kayttajatestit.md (testit tekemättä)
 - 5 oikeaa autonostajaa, sama tehtävä kaikille ("vertaa nykyistä autoasi kahteen vaihtoehtoon").
 - Claude laatii tehtävät ja kysymyslistan; tulokset palautekanavaan tai muistiinpanoina.
 
@@ -96,7 +96,7 @@ Tavoite: vastata kysymykseen "kannattaako nykyinen auto pitää vai vaihtaa, rah
 - Staattinen lyhyt selitys ja laskentaperiaatteet HTML:ään (ei vain JavaScriptillä), `noscript`-teksti,
   jäsennelty data (WebApplication), englanninkielinen kuvaus.
 
-### 4.4 Ulkoasukatselmus (palaute: "monelle liian monimutkainen") · koko M · odottaa omistajan päätöstä
+### 4.4 Ulkoasukatselmus (palaute: "monelle liian monimutkainen") · koko M · ✅ tehty 19.11.2026 (versio 0.75)
 Katselmus 19.11.2026, verrattu Erkan poista-ai-slop-taitoon. Fontit omalta palvelimelta tehty (versio 0.71). Jäljellä:
 - Tuloskortti tiiviimmäksi (nyt 11 riviä): vaihteluvälit yhdeksi riviksi, energian hinta lisätietoihin.
 - Ohjetekstit lyhyiksi: yksi lause näkyviin, loput lähteineen "Lisätietoja"-avauksen taakse.

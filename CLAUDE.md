@@ -256,6 +256,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
 - Payment choice (`[data-pay]`, payState/setPay/renderPay) is derived from `own` vs `budget` (0 = loan, ≥ budget = cash,
   else part) and is not stored: saves and links keep only `own`. Cash follows budget changes (listener before update).
   `own` counts as changed in moreCount() only in the 'part' state.
+- Long hints fold: an I18N string with '¦' shows the part before it and puts the rest (sources included) in
+  `details.fold` ("Lisätietoja ja lähteet") via fold(); applyLang and the card/cost-table renders call it. Owner's rule: keep
+  information and sources on the page, fold them away. Result card shows total, monthly, financing, emissions; energy price
+  and both ranges are in its `details.sumd`. User test guide: docs/kayttajatestit.md.
 - Phone touch targets >= 44 px and small text >= 13 px (CSS block at the end of <style>; smoke check 11).
 - Calculation tests: tests/calc_reference.py is a separate Python implementation of the method; tests/calc_cases.json holds
   8 cases with explicit inputs and its expected figures. CI runs the reference check, and smoke_checks.js (check 12)
