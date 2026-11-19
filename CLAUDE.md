@@ -309,4 +309,6 @@ calculator (trade-in, remaining loan, switching emissions), uncertainty scenario
 - Per-model total mass from the Traficom register (needs the ~200 MB source file) for the propulsion tax.
 - A Finnish or European source for the servicing-and-repair rise (now US Consumer Reports factors).
 - A "what the same yearly money buys" view, once the above exist.
+- "Hae edullisin minun ajollani" (cheapest models for my mileage and budget) and a taxi / rental / car-sharing
+  break-even for low mileages: owner's wishes 20.11.2026, planned in ROADMAP.md stage 6.
 

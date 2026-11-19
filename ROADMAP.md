@@ -117,6 +117,27 @@ Katselmus 19.11.2026, verrattu Erkan poista-ai-slop-taitoon. Fontit omalta palve
 - ✅ Akun koko useammalle sähköautomallille (19.11.2026, versio 0.74): arvio EEA:n WLTP-toimintasäde × kulutus, 119/123 sähköautoriviä.
 - €/km → lisäkilometrin hinta, kun huollon ja arvonaleneman kilometririippuvuudelle on lähteet.
 
+## Vaihe 6 – Uudet kysymykset (omistajan toiveet 20.11.2026)
+
+### 6.1 "Hae edullisin minun ajollani" · koko M–L
+Laskuri etsii koko malliluettelosta (588 mallia) ne autot, jotka ovat käyttäjän ajomäärällä ja enimmäishinnalla
+halvimpia vuodessa, ja näyttää esim. viisi parasta (malli, vuosimalli, €/v, CO₂). Valmiina on jo melkein kaikki:
+mallin valinta täyttää hinnan, iän ja mittarilukeman (MV0, autoPriceAge), ja calc() laskee vuosikulun.
+- Toteutus: käy läpi rivit, joilla on hinta-arvio (noin 80 %), sovita nuorin vuosimalli budjettiin, laske calc() ja
+  järjestä. Puhelimella nopea (588 × calc on kevyt).
+- Rehellisyys: arvio on mallien keskiarvo, ei yksittäinen auto; näytetään jälleenmyyntiväli ja merkitään mallit,
+  joilla on vähän dataa (pieni rekisterimäärä, ei mallikohtaista kulutusta). Valinta lisää auton vertailuun.
+- Avoin kysymys omistajalle: suodattimet (käyttövoima, koko/korimalli, vain yleiset mallit) – korimallia ei vielä ole datassa.
+
+### 6.2 Taksi ja vuokra-auto pienillä ajomäärillä · koko M, vaatii lähteet
+Vertailu "missä ajomäärässä oma auto tulee halvemmaksi kuin taksi / vuokra-auto / yhteiskäyttöauto".
+- Tarvitaan lähteistetyt hinnat: taksin km- ja perusmaksu (esim. Kuluttajaliiton tai taksiyhtiöiden hinnastot,
+  Traficomin taksiliikenteen tilastot), vuokra-auton vuorokausihinta ja km-raja, yhteiskäyttöauton tunti- ja km-hinta.
+- Oletukset matkan pituudesta ja määrästä (esim. 15 000 km = monta lyhyttä matkaa vai muutama pitkä) vaikuttavat
+  paljon; kerrotaan avoimesti ja näytetään käännekohta ajomääränä kaavioon (sama tyyli kuin nykyinen viivakaavio).
+- Oman auton puolelle jäävät kiinteät kulut (arvonalenema, vakuutus, vero) – ne ovat juuri se, mikä pienellä
+  ajomäärällä tekee omasta autosta kalliin.
+
 ## Ylläpitokalenteri
 
 - Rengashinnat (data/tyres.json): tarkista kerran vuodessa syksyllä, samat renkaat ja kaupat, ja kirjaa päivämäärä.
