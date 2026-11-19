@@ -597,10 +597,10 @@ fi: {
   parts:(d,c,e,o)=>`Vuodessa: arvonalenema ${d} €, rahoitus ${c} €, energia ${e} €, vero, vakuutus, huolto ja renkaat ${o} €.`,
   electricity:'sähkö', p_stat:'Tilastokeskus', p_own:'oma hinta',
   excl_note:p=>`Vertailusta jätetty pois: ${p}. Palauta kulutaulukosta.`,
-  ct:{h:'Kulut eriteltyinä', lead:'€ vuodessa omistusaikana keskimäärin. Ensin käyttökulut, jotka maksat ajaessasi ja omistaessasi, sitten arvonalenema ja rahoitus. Huollon sekä renkaat ja muut voi jättää pois vertailusta, jos esimerkiksi huollat itse tai ostat käytetyt renkaat.', out:'Jätä pois', back:'Ota mukaan', outv:'pois',
+  ct:{h:'Kulut eriteltyinä', lead:'€ vuodessa omistusaikana keskimäärin. Ensin käyttökulut, jotka maksat ajaessasi ja omistaessasi, sitten arvonalenema ja rahoitus. Huollon, renkaat ja muut kulut voi jättää pois vertailusta, jos esimerkiksi huollat itse tai ostat käytetyt renkaat.', out:'Jätä pois', back:'Ota mukaan', outv:'pois',
     e100:'Energia, € / 100 km', energy:'Energia', traf:'Liikennevakuutus (pakollinen)', kasko:'Kasko', tax:'Ajoneuvovero', serv:'Huolto ja korjaukset (arvio)',
     src:'lähde', src_price:'hinta', src_cons:'kulutus', src_serv:'kasvukertoimet', assumed:'oletus, ei lähdettä', k_full:'täyskasko', k_part:'osakasko', k_none:'ei kaskoa',
-    tyre:'Renkaat ja muut', run:'Käyttökulut yhteensä', dep:'Arvonalenema (arvio)', cap:'Rahoitus: korot, kulut, oman rahan tuotto', total:'Kaikki yhteensä',
+    tyre:'Muut (pesu ym.)', tyres:'Renkaat (kesä ja talvi)', src_life:'kesto', src_stat:'Tilastokeskus', run:'Käyttökulut yhteensä', dep:'Arvonalenema (arvio)', cap:'Rahoitus: korot, kulut, oman rahan tuotto', total:'Kaikki yhteensä',
     dep_note:'Arvonalenema on mallien keskiarvo Verohallinnon verotusarvoista, ei ennuste juuri sinun autollesi.¦Kunto, huoltohistoria, varustelu ja sähköautossa akun kunto voivat muuttaa jälleenmyyntihintaa paljon. Samassa aineistossa puolet yksittäisistä autoista on arvoltaan 7 % mallinsa tyypillistä arvoa halvempia tai kalliimpia, ja joka viides yli 15 %; tuloskortin jälleenmyyntiväli käyttää tuota keskimmäistä puolikasta.',
     foot:'Kaikki arvot voi muuttaa auton kohdassa Tarkenna.¦Lähteet ja oletukset kohdassa Näin laskenta toimii: vakuutukset Taloustaidon hintavertailuista, vero ajoneuvoverolain taulukoista, huolto tasoarviona ajomäärän mukaan (Consumer Reports 2020), arvonalenema Verohallinnon verotusarvoista. Kaikki arvot voi muuttaa auton kohdassa Tarkenna.'},
   q_h:'Kulutustieto:', q_model:n=>`mallikohtainen mittaus, ${n} autoa (EEA)`, q_brand:(b,n)=>`merkin keskiarvo (${b}, ${n} autoa, EEA)`,
@@ -667,7 +667,8 @@ fi: {
 <li><b>Lataushybridit:</b> oletuskulutus on mallin oma mitattu keskiarvo, tai jos sitä ei ole, merkin keskiarvo. Koko EU:ssa se on 6,0 l/100 km, kun WLTP lupaa 1,4. Oletuksena 25 % ajosta kulkee sähköllä. Nosta osuutta, jos lataat ahkerasti.</li>
 <li><b>Sähköautot:</b> kulutus on mallin WLTP-arvo EEA:n rekisteristä (Suomessa 2025 rekisteröidyt autot; jo myynnistä poistuneille malleille 2020–2022). Mitattua kulutusta ei kerätä täyssähköautoista, joten kerroin 1,20 on oletus. Akun kulumisesta laskuri ei lisää kulua: <a href="https://www.geotab.com/blog/ev-battery-health/" target="_blank" rel="noopener">Geotabin tutkimuksessa</a> (22 700 autoa) kapasiteetti laski keskimäärin 2,3 % vuodessa, kotona ladatuissa noin 1,5 % ja paljon pikaladatuissa noin 3 %. Kulunut akku lyhentää toimintamatkaa, mutta ei juuri lisää kulutusta. Akun vaihdoista ei löytynyt luotettavaa yleisyyslukua.</li>
 <li><b>Huolto ja korjaukset</b> kasvavat ajokilometrien mukaan. Kentän arvo on vähän ajetun auton (alle 80 000 km) taso, ja se on karkea oletus. Kasvu perustuu <a href="https://advocacy.consumerreports.org/wp-content/uploads/2020/10/TCO-Fact-Sheet-Chapter-2-FINAL.pdf" target="_blank" rel="noopener">Consumer Reportsin</a> omistajakyselyihin (Yhdysvallat, 2020): 80 000–160 000 km ajetun polttomoottoriauton huolto ja korjaukset maksavat kilometriä kohden 2,1-kertaisesti ja sitä enemmän ajetun 2,8-kertaisesti. Sähköautoilla kertoimet ovat 2,3 ja 3,6, mutta lähtötaso on alle puolet polttomoottoriauton tasosta. Laskuri laskee kertoimen keskiarvona sille matkalle, jonka ajat omistusaikana; auton kortti näyttää sen. Lataushybrideille ja tavallisille hybrideille käytetään polttomoottoriauton kertoimia. Lähde on yhdysvaltalainen, joten euromäärät ovat laskurin omia ja vain kasvu on lähteestä. Saksalainen <a href="https://www.datgroup.com/fileadmin/at/DAT_Report/2025/DAT-Report-2025-Kurzbericht.pdf" target="_blank" rel="noopener">DAT-Report 2025</a> näyttää, että yli 6-vuotiaiden autojen omistajat käyttävät huoltoon jopa vähemmän kuin 3–6-vuotiaiden: vanhan auton omistaja usein säästää huolloista, mikä voi tulla myöhemmin kalliiksi.</li>
-<li><b>Kulun jättäminen pois:</b> huollon sekä renkaat ja muut voi jättää pois vertailusta kulutaulukon napeilla (Jätä pois / Ota mukaan), esimerkiksi jos huollat auton itse tai ostat käytetyt renkaat. Valinta koskee kaikkia autoja, jotta vertailu pysyy reiluna, ja se näkyy tulosten alla. Kulu poistuu vuosikulusta ja kuukausimenoista; pois jätetty rivi näkyy taulukossa himmennettynä.</li>
+<li><b>Renkaat</b> lasketaan valitun vannekoon mukaan (oletus 17″, muutettavissa auton kohdassa Tarkenna; rekisterissä ei ole rengaskokoa). Suomessa tarvitaan kesä- ja talvisarja, ja kumpikin ajaa puolet vuoden kilometreistä. Sarja uusitaan, kun se on ajettu loppuun, 30 000 km (<a href="https://www.verkkouutiset.fi/a/joka-toinen-ajaa-renkaansa-loppuun-ei-kannattaisi/" target="_blank" rel="noopener">Autonrengasliitto: kesärengas tavallisesti 30 000–35 000 km</a>, alaraja), tai viimeistään 6 vuoden käytön jälkeen (<a href="https://moottori.fi/uutinen/autoliitto-ohjeistaa-muista-nama-asiat-renkaanvaihdon-yhteydessa/" target="_blank" rel="noopener">Autoliitto</a>). Sähköauton renkaat kuluvat 20 % nopeammin (<a href="https://www.moveelectric.com/e-cars/do-electric-cars-wear-out-tyres-faster" target="_blank" rel="noopener">Michelin ja Emissions Analytics</a>). Hinnat: 16″ talvirengas Nokian Hakkapeliitta R5 185,07 € ja kesärengas Nokian Wetproof 1 94,16 € kappaleelta, Rengas Online 10.11.2026 (<a href="https://easygarage247.fi/?p=5417" target="_blank" rel="noopener">Easy Garage 24/7:n hintavertailu</a>; vertailun kalliimpia kauppoja, edullisin 149,47 € ja 73,99 €). Muut koot samassa suhteessa kuin Hakkapeliitta R5:n mediaanihinta vannekoon mukaan (<a href="https://www.rengas365.fi/renkaat/tuotemerkki/nokian/talvirenkaat/kitka/hakkapeliitta-r5/6129" target="_blank" rel="noopener">Rengas365</a> 19.11.2026): 15″ 0,75, 17″ 1,24, 18″ 1,43, 19″ 1,81, 20″ 2,19 kertaa 16″. Esimerkiksi 17″ ja 15 000 km/v: 4 × (117 + 229) € × 7 500 / 30 000 ≈ 350 €/v. <b>Muut kulut</b> ovat oletuksena ADAC:n pesun ja hoidon 250 €/v (<a href="https://assets.adac.de/Autodatenbank/Autokosten/autokosten_grundlagen.pdf" target="_blank" rel="noopener">ADAC 10/2026</a>, Saksa); renkaanvaihdoille ja säilytykselle ei löytynyt lähdettä. <b>Vertailu Tilastokeskuksen kulutustutkimukseen</b> (<a href="https://pxdata.stat.fi/PXWeb/pxweb/fi/StatFin/StatFin__ktutk/statfin_ktutk_pxt_14pg.px" target="_blank" rel="noopener">taulukko 14pg</a>; noin yksi auto kotitaloutta kohden, <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ktutk/statfin_ktutk_pxt_13qy.px/" target="_blank" rel="noopener">13qy</a>): suomalaiset kotitaloudet käyttivät autoa kohden vuonna 2022 renkaisiin noin 47 €, osiin noin 98 € ja huoltoon ja korjauksiin noin 380 €; vuonna 2016 vastaavasti noin 80, 135 ja 1 000 € (vuoden 2022 rahassa). Tilastokeskuksen mukaan huolto- ja korjausmenojen pudotus johtuu pääosin keruutavan muutoksesta. Laskurin huoltooletus on lähellä korkeampaa tasoa ja rengaskulu selvästi tilastoa suurempi: tilasto on koko autokannan keskiarvo, ja moni ostaa edullisia tai käytettyjä renkaita. Tämä on tarkoituksella epäedullisempi valinta.</li>
+<li><b>Kulun jättäminen pois:</b> huollon, renkaat ja muut kulut voi jättää pois vertailusta kulutaulukon napeilla (Jätä pois / Ota mukaan), esimerkiksi jos huollat auton itse tai ostat käytetyt renkaat. Valinta koskee kaikkia autoja, jotta vertailu pysyy reiluna, ja se näkyy tulosten alla. Kulu poistuu vuosikulusta ja kuukausimenoista; pois jätetty rivi näkyy taulukossa himmennettynä.</li>
 <li><b>Sähkön päästöt:</b> Suomen sähköntuotannon suorat päästöt 26 g/kWh vuonna 2025 (<a href="https://energia.fi/wp-content/uploads/2026/01/Sahkovuosi-2025_v1.pdf" target="_blank" rel="noopener">Energiateollisuus, Sähkövuosi 2025</a>; sama luku <a href="https://fingridlehti.fi/sahkon-paastojen-lasku-jatkuu/" target="_blank" rel="noopener">Fingridiltä</a>) + polttoaineiden tuotantoketju 16 g/kWh (<a href="https://doi.org/10.1016/j.trd.2017.07.012" target="_blank" rel="noopener">Moro ja Lonza 2018, EU:n JRC</a>; luku on tarkistettu vain toissijaisesta lähteestä). Tuotantotapojen elinkaariarvot (ydin- ja tuulisähkö 12, vesi 24, aurinko 48 g/kWh) ovat <a href="https://www.ipcc.ch/site/assets/uploads/2018/02/ipcc_wg3_ar5_annex-iii.pdf" target="_blank" rel="noopener">IPCC:n AR5-raportin liitteen III</a> mediaaneja. <a href="https://unece.org/sed/documents/2021/10/reports/life-cycle-assessment-electricity-generation-options" target="_blank" rel="noopener">UNECE:n 2021 elinkaariarvio</a> antaa ydin- ja tuulisähkölle pienempiä arvoja (noin 5–16 g/kWh); oletuksena on suurempi.</li>
 <li><b>Lähteet:</b> malliluettelo ja CO₂-arvot <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficomin avoimesta datasta</a> 30.6.2026, mitattu kulutus <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA:n OBFCM-aineistosta</a> ja sähkönkulutus <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA:n uusien autojen rekisteristä</a> (Suomessa 2020–2025 rekisteröidyt). Kaikki CC BY 4.0. Arvonalenema Verohallinnon verotusarvoista ja NEDC-korjaus ICCT:ltä. Koko laskentamalli ja käytetty data ovat <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">GitHubissa</a>.</li>
 <li><b>Ajoneuvovero</b> lasketaan vuoden 2026 verotaulukoista (<a href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814" target="_blank" rel="noopener">ajoneuvoverolaki, muutos 814/2024</a>). Perusvero määräytyy auton virallisen CO₂-päästön mukaan, ja se on 106–654 €/v. Päästö lasketaan mallin virallisesta kulutuksesta: vuosimallit 2017 ja vanhemmat NEDC-taulukolla 1, uudemmat WLTP-taulukolla 1 A. Sähköautoista, jotka on otettu käyttöön 1.10.2021 tai myöhemmin, perusvero on 171 €/v; laskuri pitää vuosimallia 2022 ja uudempia tällaisina. Lataushybridien perusvero on alin porras, koska niiden WLTP-päästö on lähes aina alle 103 g/km. Diesel-, sähkö- ja lataushybridiautoista maksetaan lisäksi käyttövoimaveroa: 5,5, 1,9 tai 0,95 senttiä päivässä jokaiselta kokonaismassan alkavalta 100 kg:lta. Kokonaismassa ei ole vielä malliluettelossa, joten se on oletus (diesel 2 000 kg, sähkö 2 200 kg, lataushybridi 2 300 kg). Oman auton kokonaismassa löytyy rekisteröintitodistuksesta, ja sen voi vaihtaa kohdassa Lisää oletuksia. <a href="https://www.edilex.fi/he/20260173" target="_blank" rel="noopener">Hallituksen esitys HE 173/2026</a> alentaisi verotaulukoilla 1 ja 2 verotettujen autojen (pääosin vähintään 10 vuotta vanhat polttomoottoriautot) perusveroa keskimäärin noin 6 €/v vuodesta 2028 alkaen. Esitys on vielä eduskunnan käsittelyssä, eikä sitä ole otettu huomioon.</li>
@@ -699,7 +700,9 @@ fi: {
   dep_l:'Arvonalenema', dep_u:'% / v, tyhjä = iän mukaan',
   fuel_l:'Polttoaine', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, vanha mittaus)', fuel_u_p:'l / 100 km polttoaineella ajaessa',
   el_l:'Sähkö', kwh_u:'kWh / 100 km (WLTP)', share_l:'Sähköllä ajettu', share_u:'% ajosta',
-  other_l:'Renkaat ja muut', other_u:'€ / v', traf_l:'Liikennevakuutus (pakollinen)', traf_u:'€ / v; oletus Taloustaidon vertailuista (lähteet: Lisäasetukset → Vakuutukset)',
+  other_l:'Muut kulut (pesu, renkaanvaihdot ym.)', other_u:'€ / v; oletus ADAC:n pesu ja hoito 250 €/v',
+  rim_l:'Renkaiden koko', rim_o:v=>v===15?'15″ tai pienempi':v===20?'20″ tai suurempi':`${v}″`, rim_0:'Sisältyy muihin kuluihin',
+  rim_u:e=>`vanne; kesä- ja talvirenkaat noin ${e} € / v tällä ajomäärällä`, traf_l:'Liikennevakuutus (pakollinen)', traf_u:'€ / v; oletus Taloustaidon vertailuista (lähteet: Lisäasetukset → Vakuutukset)',
   kasko_l:'Kasko (vapaaehtoinen)', kasko_u:'€ / v; oletus Lisäasetusten kaskovalinnan mukaan, 0 = ei kaskoa',
   ins_tag:(a,b)=>` · liikennevakuutus ${a} €/v, kasko ${b} €/v`,
   serv_l:'Huolto ja korjaukset', serv_u:'€ / v vähän ajetulle (alle 80 000 km); kasvaa ajon mukaan',
@@ -770,10 +773,10 @@ en: {
   parts:(d,c,e,o)=>`Per year: depreciation €${d}, financing €${c}, energy €${e}, tax, insurance, servicing and tyres €${o}.`,
   electricity:'electricity', p_stat:'Statistics Finland', p_own:'your price',
   excl_note:p=>`Left out of the comparison: ${p}. Bring them back in the cost table.`,
-  ct:{h:'Costs itemised', lead:'Euros per year, averaged over the ownership period. Running costs you pay for driving and owning first, then depreciation and financing. Servicing and tyres and other can be left out of the comparison, for example if you service the car yourself or buy used tyres.', out:'Leave out', back:'Include', outv:'out',
+  ct:{h:'Costs itemised', lead:'Euros per year, averaged over the ownership period. Running costs you pay for driving and owning first, then depreciation and financing. Servicing, tyres and other costs can be left out of the comparison, for example if you service the car yourself or buy used tyres.', out:'Leave out', back:'Include', outv:'out',
     e100:'Energy, € / 100 km', energy:'Energy', traf:'Motor liability (compulsory)', kasko:'Comprehensive', tax:'Vehicle tax', serv:'Servicing and repairs (estimate)',
     src:'source', src_price:'price', src_cons:'consumption', src_serv:'rise factors', assumed:'assumption, no source', k_full:'full', k_part:'partial', k_none:'none',
-    tyre:'Tyres and other', run:'Running costs total', dep:'Depreciation (estimate)', cap:'Financing: interest, fees, return on own money', total:'All costs total',
+    tyre:'Other (washing etc.)', tyres:'Tyres (summer and winter)', src_life:'lifetime', src_stat:'Statistics Finland', run:'Running costs total', dep:'Depreciation (estimate)', cap:'Financing: interest, fees, return on own money', total:'All costs total',
     dep_note:'Depreciation is an average over models from Tax Administration values, not a forecast for your car.¦Condition, service history, equipment and, for an electric car, the battery can move the resale price a lot. In the same data half of the individual cars are within 7% of their model\'s typical value, and one in five differ by more than 15%; the resale range on the result cards uses that middle half.',
     foot:'Every value can be changed under Fine-tune on the car.¦Sources and assumptions under How the calculation works: insurance from Taloustaito price comparisons, tax from the Vehicle Tax Act tables, servicing as a level estimate scaled by mileage (Consumer Reports 2020), depreciation from Tax Administration values. Every value can be changed under Fine-tune on the car.'},
   q_h:'Consumption data:', q_model:n=>`model-specific measurement, ${n} cars (EEA)`, q_brand:(b,n)=>`brand average (${b}, ${n} cars, EEA)`,
@@ -841,7 +844,8 @@ en: {
 <li><b>Plug-in hybrids:</b> the default consumption is the model's own measured average where there is one, otherwise the brand's. Across the EU that is 6.0 l/100 km, where WLTP promises 1.4. By default 25% of driving is electric. Raise the share if you charge diligently.</li>
 <li><b>Electric cars:</b> consumption is the model's WLTP figure from the EEA register (cars registered in Finland in 2025; 2020–2022 for models no longer sold). Measured consumption is not collected from battery-electric cars, so the 1.20 factor is an assumption. Battery wear adds no cost in the calculator: in a <a href="https://www.geotab.com/blog/ev-battery-health/" target="_blank" rel="noopener">Geotab study</a> (22,700 cars) capacity fell by 2.3% a year on average, about 1.5% for cars charged mostly at home and about 3% for heavy fast-charger users. A worn battery shortens the range but barely raises consumption. No reliable figure was found for how often batteries are replaced.</li>
 <li><b>Servicing and repairs</b> rise with mileage. The value in the field is the level for a low-mileage car (under 80,000 km) and is a rough assumption. The rise follows <a href="https://advocacy.consumerreports.org/wp-content/uploads/2020/10/TCO-Fact-Sheet-Chapter-2-FINAL.pdf" target="_blank" rel="noopener">Consumer Reports</a> owner surveys (United States, 2020): per kilometre, a combustion car with 80,000–160,000 km costs 2.1 times as much to service and repair, and beyond that 2.8 times. For electric cars the factors are 2.3 and 3.6, but from a starting level under half that of a combustion car. The calculator averages the factor over the distance you drive during ownership; each car's card shows it. Plug-in and regular hybrids use the combustion factors. The source is American, so the euro amounts are the calculator's own and only the rise comes from the source. The German <a href="https://www.datgroup.com/fileadmin/at/DAT_Report/2025/DAT-Report-2025-Kurzbericht.pdf" target="_blank" rel="noopener">DAT Report 2025</a> shows owners of cars over 6 years old spending even less on servicing than owners of 3–6-year-old cars: owners of old cars often save on servicing, which can cost more later.</li>
-<li><b>Leaving a cost out:</b> servicing and tyres and other can be left out of the comparison with the buttons in the cost table (Leave out / Include), for example if you service the car yourself or buy used tyres. The choice applies to all cars so the comparison stays fair, and a note under the results says so. The cost leaves the yearly total and the monthly figures; the row stays in the table, dimmed.</li>
+<li><b>Tyres</b> are costed by the chosen rim size (default 17″, change it under Fine-tune on the car; the register has no tyre size). Finland needs a summer and a winter set, each covering half the year's kilometres. A set is replaced when worn out, after 30,000 km (<a href="https://www.verkkouutiset.fi/a/joka-toinen-ajaa-renkaansa-loppuun-ei-kannattaisi/" target="_blank" rel="noopener">Finnish Tyre Association: summer tyres usually 30,000–35,000 km</a>, lower bound), or after 6 years of use at the latest (<a href="https://moottori.fi/uutinen/autoliitto-ohjeistaa-muista-nama-asiat-renkaanvaihdon-yhteydessa/" target="_blank" rel="noopener">Autoliitto</a>). Electric cars wear tyres 20% faster (<a href="https://www.moveelectric.com/e-cars/do-electric-cars-wear-out-tyres-faster" target="_blank" rel="noopener">Michelin and Emissions Analytics</a>). Prices: 16″ winter tyre Nokian Hakkapeliitta R5 €185.07 and summer tyre Nokian Wetproof 1 €94.16 each at Rengas Online on 10 Nov 2026 (<a href="https://easygarage247.fi/?p=5417" target="_blank" rel="noopener">Easy Garage 24/7 price comparison</a>; one of the dearer shops, cheapest €149.47 and €73.99). Other sizes in the same proportion as the median Hakkapeliitta R5 price by rim size (<a href="https://www.rengas365.fi/renkaat/tuotemerkki/nokian/talvirenkaat/kitka/hakkapeliitta-r5/6129" target="_blank" rel="noopener">Rengas365</a>, 19 Nov 2026): 15″ 0.75, 17″ 1.24, 18″ 1.43, 19″ 1.81, 20″ 2.19 times 16″. For example 17″ at 15,000 km/yr: 4 × (117 + 229) € × 7,500 / 30,000 ≈ €350/yr. <b>Other costs</b> default to ADAC's washing and care, €250/yr (<a href="https://assets.adac.de/Autodatenbank/Autokosten/autokosten_grundlagen.pdf" target="_blank" rel="noopener">ADAC 10/2026</a>, Germany); no source was found for tyre changes and storage. <b>Cross-check with the Statistics Finland household budget survey</b> (<a href="https://pxdata.stat.fi/PXWeb/pxweb/fi/StatFin/StatFin__ktutk/statfin_ktutk_pxt_14pg.px" target="_blank" rel="noopener">table 14pg</a>; about one car per household, <a href="https://pxdata.stat.fi/PxWeb/pxweb/fi/StatFin/StatFin__ktutk/statfin_ktutk_pxt_13qy.px/" target="_blank" rel="noopener">13qy</a>): in 2022 Finnish households spent per car about €47 on tyres, €98 on parts and €380 on servicing and repairs; in 2016 about €80, €135 and €1,000 (in 2022 money). Statistics Finland says the drop in servicing and repairs is mainly due to a change in how the data were collected. The calculator's servicing default is near the higher level and its tyre cost well above the survey: the survey averages the whole fleet, and many people buy cheap or used tyres. This is deliberately the less favourable choice.</li>
+<li><b>Leaving a cost out:</b> servicing, tyres and other costs can be left out of the comparison with the buttons in the cost table (Leave out / Include), for example if you service the car yourself or buy used tyres. The choice applies to all cars so the comparison stays fair, and a note under the results says so. The cost leaves the yearly total and the monthly figures; the row stays in the table, dimmed.</li>
 <li><b>Electricity emissions:</b> direct emissions of Finnish generation 26 g/kWh in 2025 (<a href="https://energia.fi/wp-content/uploads/2026/01/Sahkovuosi-2025_v1.pdf" target="_blank" rel="noopener">Finnish Energy, Electricity year 2025</a>; the same figure from <a href="https://fingridlehti.fi/sahkon-paastojen-lasku-jatkuu/" target="_blank" rel="noopener">Fingrid</a>) + fuel supply chain 16 g/kWh (<a href="https://doi.org/10.1016/j.trd.2017.07.012" target="_blank" rel="noopener">Moro and Lonza 2018, EU JRC</a>; checked only through a secondary source). Lifecycle values by generation type (nuclear and wind 12, hydro 24, solar 48 g/kWh) are medians from <a href="https://www.ipcc.ch/site/assets/uploads/2018/02/ipcc_wg3_ar5_annex-iii.pdf" target="_blank" rel="noopener">IPCC AR5 Annex III</a>. <a href="https://unece.org/sed/documents/2021/10/reports/life-cycle-assessment-electricity-generation-options" target="_blank" rel="noopener">UNECE's 2021 life-cycle assessment</a> gives lower values for nuclear and wind (about 5–16 g/kWh); the default uses the higher ones.</li>
 <li><b>Sources:</b> model list and CO₂ values from <a href="https://avoindata.suomi.fi/data/fi/dataset/ajoneuvojen-avoin-data" target="_blank" rel="noopener">Traficom open vehicle data</a> (30 June 2026), measured consumption from the <a href="https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/additional_information" target="_blank" rel="noopener">EEA's OBFCM dataset</a> and electricity consumption from the <a href="https://co2cars.apps.eea.europa.eu/" target="_blank" rel="noopener">EEA new-car register</a> (cars registered in Finland 2020–2025). All CC BY 4.0. Depreciation from the Finnish Tax Administration's taxation values and the NEDC correction from the ICCT. The full calculation model and the data behind it are <a href="https://github.com/TapioT1986/CarFootprint" target="_blank" rel="noopener">on GitHub</a>.</li>
 <li><b>Vehicle tax</b> follows the 2026 tax tables (<a href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814" target="_blank" rel="noopener">Vehicle Tax Act, amendment 814/2024</a>). The base tax depends on the car's official CO₂ emissions and is €106–654 a year. The emissions are worked out from the model's official consumption: model years 2017 and older use the NEDC table 1, newer cars the WLTP table 1 A. Electric cars first registered on or after 1 October 2021 pay €171 a year; the calculator treats model years 2022 and newer as such. Plug-in hybrids pay the lowest band, as their WLTP emissions are almost always below 103 g/km. Diesel, electric and plug-in hybrid cars also pay a propulsion tax: 5.5, 1.9 or 0.95 cents a day for every started 100 kg of total mass. Total mass is not yet in the model list, so it is an assumption (diesel 2,000 kg, electric 2,200 kg, plug-in hybrid 2,300 kg). Your own car's total mass is on its registration certificate; change it under More assumptions. <a href="https://www.edilex.fi/he/20260173" target="_blank" rel="noopener">Government proposal HE 173/2026</a> would lower the base tax of cars taxed under tables 1 and 2 (mainly combustion cars at least 10 years old) by about €6 a year on average from 2028. It is still before Parliament and is not included.</li>
@@ -873,7 +877,9 @@ en: {
   dep_l:'Depreciation', dep_u:'% / yr, blank = by age',
   fuel_l:'Fuel', fuel_u:'l / 100 km (WLTP)', fuel_u_nedc:'l / 100 km (NEDC, old test)', fuel_u_p:'l / 100 km when running on fuel',
   el_l:'Electricity', kwh_u:'kWh / 100 km (WLTP)', share_l:'Driven on electricity', share_u:'% of driving',
-  other_l:'Tyres and other', other_u:'€ / yr', traf_l:'Motor liability insurance (compulsory)', traf_u:'€ / yr; default from Taloustaito comparisons (sources: More settings → Insurance)',
+  other_l:'Other costs (washing, tyre changes etc.)', other_u:'€ / yr; default ADAC washing and care 250 €/yr',
+  rim_l:'Tyre size', rim_o:v=>v===15?'15″ or smaller':v===20?'20″ or larger':`${v}″`, rim_0:'Included in other costs',
+  rim_u:e=>`rim; summer and winter tyres about €${e} / yr at this mileage`, traf_l:'Motor liability insurance (compulsory)', traf_u:'€ / yr; default from Taloustaito comparisons (sources: More settings → Insurance)',
   kasko_l:'Comprehensive cover (optional)', kasko_u:'€ / yr; default follows the cover chosen in More settings, 0 = none',
   ins_tag:(a,b)=>` · motor liability insurance €${a}/yr, comprehensive €${b}/yr`,
   serv_l:'Servicing and repairs', serv_u:'€ / yr at low mileage (under 80,000 km); rises with mileage',
@@ -1066,7 +1072,7 @@ const num = (v,def=0) => { const x = parseFloat(String(v).replace(',','.')); ret
 // eikä sitä käytetä laskennassa (laskenta käyttää edellistä kelvollista arvoa). Avain = auton kenttä (data-k) tai id.
 const LIM = {price:[0,1e6], age:[0,60], odo:[0,2e6], dep:[0,100], fuel:[0.5,50], kwh:[5,60], share:[0,100],
   traf:[0,5000], kasko:[0,10000], other:[0,20000], serv:[0,20000], tax:[0,10000], real:[0.5,3], make:[0,100],
-  batt:[0,300], soh:[30,100], debt:[0,1e6], debtYears:[0,15], life:[1,60], mass:[500,5000],
+  batt:[0,300], rim:[0,22], soh:[30,100], debt:[0,1e6], debtYears:[0,15], life:[1,60], mass:[500,5000],
   km:[1000,300000], city:[0,100], years:[1,20], budget:[0,1e6], monthly:[0,1e5], own:[0,1e6], loanRate:[0,40], loanFee:[0,100],
   loanYears:[1,10], ownRate:[0,20], pBens:[0,10], pDies:[0,10], pEl:[0,2], loss:[0,100], eBens:[0,10], eDies:[0,10]};
 const LIM_OPT = new Set(['dep','tax','soh','debtYears','monthly']); // tyhjä = automaattinen tai ei käytössä
@@ -1117,7 +1123,7 @@ let cars = [];
 function newCar(o={}){
   const pt = o.pt || (o.pick && o.pick[2]) || 'B', d = PT_DEF[pt];
   const c = {name:o.name||T('new_car'), exKey:null, ex:o.ex??null, exAuto:o.exAuto??false, pt, price:o.price??20000, age:o.age??0, odo:o.odo??0, dep:o.dep??'',
-    fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??d.tyre, traf:o.traf??d.traf, kasko:o.kasko??kaskoDef(pt), serv:o.serv??d.serv, tax:o.tax??'', mass:o.mass??d.mass,
+    fuel:o.fuel??d.fuel, kwh:o.kwh??d.kwh, share:o.share??d.share, other:o.other??TYRES.misc_eur, rim:o.rim??TYRES.default_rim, traf:o.traf??d.traf, kasko:o.kasko??kaskoDef(pt), serv:o.serv??d.serv, tax:o.tax??'', mass:o.mass??d.mass,
     make:o.make??d.make, batt:o.batt??d.batt, soh:o.soh??'', debt:o.debt??0, debtYears:o.debtYears??'', life:o.life??d.life, real:o.real??d.real, rw:o.rw??null};
   c.std = o.std ?? null; c.autoFuel = o.autoFuel ?? (o.fuel===undefined);
   c.own = o.own ?? {}; c.priceAuto = o.priceAuto ?? false; c.ownName = o.ownName ?? false; c.mine = o.mine ?? false;
@@ -1182,6 +1188,16 @@ function choose(inp, label){ inp.value = label; closeSugg(inp); inp.dispatchEven
 // Hinnat, jotka sivu tarjosi oletuksena. Tallennetaan mukaan, jotta käyttäjän itse
 // muuttamat hinnat säilyvät mutta koskemattomat oletukset päivittyvät uusiin.
 const PRICE_DEF = {pBens:'__P_PETROL__', pDies:'__P_DIESEL__', pEl:'__P_ELEC__'};
+// Renkaat (data/tyres.json): kesä- ja talvisarja valitulla vannekoolla, kumpikin ajaa puolet vuoden kilometreistä.
+// Sarja uusitaan, kun se on ajettu loppuun (life_km, sähköauto kuluttaa ev_factor kertaa nopeammin) tai viimeistään
+// max_age_years vuoden käytön jälkeen. Hinnat ja lähteet tiedostossa; misc_eur = muiden kulujen oletus (ADAC, pesu ja hoito).
+const TYRES = __TYRES__;
+function tyreCost(c, km){
+  const rim = num(c.rim, TYRES.default_rim); if (!rim) return 0; // 0 = renkaat sisältyvät Muihin kuluihin
+  const ratio = TYRES.rim_ratio[Math.min(20, Math.max(15, Math.round(rim)))] ?? 1, A = TYRES.anchor;
+  const wear = km/2/TYRES.life_km * (c.pt==='E' ? TYRES.ev_factor : 1);
+  return 4*(A.summer_eur + A.winter_eur)*ratio*Math.max(wear, 1/TYRES.max_age_years);
+}
 const RESALE = __RESALE__; // yksittäisen auton arvo / mallin mediaani, persentiilit (tools/resale_spread.py)
 const PRICE_SRC = __PRICE_SRC__; // oletushintojen kuukausi ja lähde (data/prices.json)
 // Tuloskortin energian hinta: käytetty hinta ja sen lähde (Tilastokeskuksen kuukausi tai oma hinta)
@@ -1197,7 +1213,7 @@ function priceText(c, G){
 const OLD_DEFS = ['1.85','1.75','0.15','2.09','2.15','0.1791']; // ennen tallennettuja oletuksia
 // Korko-oletukset, jotka ovat vaihtuneet: koskematon vanha oletus tallennuksessa -> käytä uutta
 const OLD_RATE_DEFS = {loanRate:['4.1'], ownRate:['2.5'], eBens:['2.8'], eDies:['3.2']};
-const EX_VERSION = 10; // kasvata, kun esimerkkiautot vaihtuvat
+const EX_VERSION = 11; // kasvata, kun esimerkkiautot vaihtuvat
 function save(){ try{ localStorage.setItem('carfootprint.v1', JSON.stringify({cars, g:readGlobalsRaw(), d:PRICE_DEF, ev:EX_VERSION})); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem('carfootprint.v1')||'null'); }catch(e){ return null; } }
 const GIDS = ['km','years','budget','monthly','own','loanRate','loanFee','loanYears','ownRate','pBens','pDies','pEl','loss','elSrc','eBens','eDies','insKind','city','tradeIn','excl'];
@@ -1268,9 +1284,10 @@ function calc(c, G, km){
   // G.excl: käyttäjä voi jättää huollon (s) tai renkaat ja muut (o) pois vertailusta (itse huoltava, käytetyt renkaat...)
   const ex = G.excl || '';
   const servF = servFactor(c.pt, Math.max(0,num(c.odo,0)), Math.max(0,num(c.odo,0)) + km*n), serv = ex.includes('s') ? 0 : num(c.serv,0)*servF;
-  const tyre = ex.includes('o') ? 0 : num(c.other,0);
+  const tyres = ex.includes('t') ? 0 : tyreCost(c, km); // renkaat (vannekoon mukaan)
+  const tyre = ex.includes('o') ? 0 : num(c.other,0);   // muut kulut (pesu ym.)
   const ins = num(c.traf,0) + num(c.kasko,0); // liikennevakuutus + kasko
-  const other = tyre + ins + tax + serv;
+  const other = tyres + tyre + ins + tax + serv;
   const total = dep+cap+energy+other;
   const drive = litres*fuelEm + kwh*G.eEl;
   const makeT = num(c.make,0) + battT(c); // t CO2e: auto + akku
@@ -1282,7 +1299,7 @@ function calc(c, G, km){
   // Kuukausimenot (kassavirta): lainaerä kuluineen + energia ja muut kulut kuukautta kohden.
   // Arvonalenema ja oman rahan tuotto eivät ole kuukausittaisia maksuja.
   const runMo = (energy+other)/12, cash = L.pay + runMo, cashAfter = (L.pay>0 && G.loanYears<n) ? runMo : null;
-  return {ins,rate,resid,dep,cap,loan,pay:L.pay,cash,cashAfter,energy,other,tax,vt,autoTax,serv,servF,tyre,total,drive,make,makeT,em:drive+make,swMake,swEm:drive*n+swMake,litres,kwh,
+  return {ins,rate,resid,dep,cap,loan,pay:L.pay,cash,cashAfter,energy,other,tax,vt,autoTax,serv,servF,tyres,tyre,total,drive,make,makeT,em:drive+make,swMake,swEm:drive*n+swMake,litres,kwh,
     endAge:c.age+n, endOdo:c.odo+km*n};
 }
 
@@ -1327,6 +1344,7 @@ function carCard(c,i){
       ${c.pt==='P'?`<div class="field"><label class="label" for="share${i}">${T('share_l')}</label><input type="number" id="share${i}" data-k="share" step="5" value="${c.share}"><span class="unit">${T('share_u')}</span></div>`:''}
       <div class="field"><label class="label" for="traf${i}">${T('traf_l')}</label><input type="number" id="traf${i}" data-k="traf" step="10" min="0" value="${c.traf}"><span class="unit">${T('traf_u')}</span></div>
       <div class="field"><label class="label" for="kasko${i}">${T('kasko_l')}</label><input type="number" id="kasko${i}" data-k="kasko" step="10" min="0" value="${c.kasko}"><span class="unit">${T('kasko_u')}</span></div>
+      <div class="field"><label class="label" for="rim${i}">${T('rim_l')}</label><select id="rim${i}" data-k="rim">${[15,16,17,18,19,20,0].map(v => `<option value="${v}"${num(c.rim,TYRES.default_rim)===v?' selected':''}>${v ? T('rim_o')(v) : T('rim_0')}</option>`).join('')}</select><span class="unit">${T('rim_u')(fmt(Math.round(tyreCost(c, g().km))))}</span></div>
       <div class="field"><label class="label" for="other${i}">${T('other_l')}</label><input type="number" id="other${i}" data-k="other" step="50" value="${c.other}"><span class="unit">${T('other_u')}</span></div>
       <div class="field"><label class="label" for="serv${i}">${T('serv_l')}</label><input type="number" id="serv${i}" data-k="serv" step="50" min="0" value="${c.serv}"><span class="unit">${T('serv_u')}</span></div>
       <div class="field"><label class="label" for="tax${i}">${T('tax_l')}</label><input type="number" id="tax${i}" data-k="tax" step="10" min="0" value="${c.tax}" placeholder="auto"><span class="unit">${T('tax_u')}</span></div>
@@ -1366,7 +1384,7 @@ $('cars').addEventListener('input', e => {
     const r = byLabel.get(el.value); if (!r){ suggest(el); return; }
     const d = PT_DEF[r[2]];
     Object.assign(c, {name:c.ownName ? c.name : `${r[0]} ${r[1]}`, exKey:null, pt:r[2], kwh:d.kwh, share:d.share,
-      other:d.tyre, traf:d.traf, kasko:kaskoDef(r[2]), serv:d.serv, tax:'', mass:d.mass, make:d.make, batt:d.batt, life:d.life});
+      other:TYRES.misc_eur, traf:d.traf, kasko:kaskoDef(r[2]), serv:d.serv, tax:'', mass:d.mass, make:d.make, batt:d.batt, life:d.life});
     c.picked = r; autoPriceAge(c, r); fromRow(c, r); c.batt = battDef(r, r[2]);
     renderCars(); update(); return;
   }
@@ -1526,8 +1544,9 @@ function costTable(R, G){
     ${row(L.traf, (r,c) => fmt(num(c.traf,0)), '', src('https://www.taloustaito.fi/vapaalla/2026/taloustaito-vertaili-huimat-erot-autovakuutusten-hinnoissa/'))}
     ${row(L.kasko + ': ' + L['k_'+kind], (r,c) => fmt(num(c.kasko,0)), '', kind==='part' ? src('https://www.taloustaito.fi/vapaalla/2025/autovakuutus--ala-maksa-turhasta/') : kind==='full' ? src('https://www.taloustaito.fi/vapaalla/2026/taloustaito-vertaili-huimat-erot-autovakuutusten-hinnoissa/') : '')}
     ${row(L.tax, r => fmt(r.tax), '', src('https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2024/814'))}
-    ${row(L.serv, r => out('s') ? L.outv : fmt(r.serv), out('s') ? 'off' : '', src('https://advocacy.consumerreports.org/wp-content/uploads/2020/10/TCO-Fact-Sheet-Chapter-2-FINAL.pdf', L.src_serv) + exb('s'))}
-    ${row(L.tyre, r => out('o') ? L.outv : fmt(r.tyre), out('o') ? 'off' : '', ` <span class="src">${L.assumed}</span>` + exb('o'))}
+    ${row(L.serv, r => out('s') ? L.outv : fmt(r.serv), out('s') ? 'off' : '', src('https://advocacy.consumerreports.org/wp-content/uploads/2020/10/TCO-Fact-Sheet-Chapter-2-FINAL.pdf', L.src_serv) + src('https://pxdata.stat.fi/PXWeb/pxweb/fi/StatFin/StatFin__ktutk/statfin_ktutk_pxt_14pg.px', L.src_stat) + exb('s'))}
+    ${row(L.tyres, (r,c) => out('t') ? L.outv : fmt(r.tyres) + (num(c.rim,TYRES.default_rim) ? ` <span class="src">${num(c.rim,TYRES.default_rim)}″</span>` : ''), out('t') ? 'off' : '', src(TYRES.anchor.url, L.src_price) + src(TYRES.life_url, L.src_life) + src('https://pxdata.stat.fi/PXWeb/pxweb/fi/StatFin/StatFin__ktutk/statfin_ktutk_pxt_14pg.px', L.src_stat) + exb('t'))}
+    ${row(L.tyre, r => out('o') ? L.outv : fmt(r.tyre), out('o') ? 'off' : '', src(TYRES.misc_url, 'ADAC') + exb('o'))}
     ${row(L.run, r => fmt(run(r)), 'sub1')}
     ${row(L.dep, r => fmt(r.dep), '', src('https://www.vero.fi/contentassets/f3326d05d3954bed9c1686a17917754d/henkiloautojen-sovelletut-verotusarvot-2026.xls'))}
     ${row(L.cap, r => fmt(r.cap), '', src('https://www.suomenpankki.fi/fi/tilastot/tilastotiedotteet/rahalaitosten-tase/2026/kotitalouslainojen-korot-nousivat-toukokuussa-2026/'))}
@@ -1734,7 +1753,7 @@ function update(){
   cars.forEach((c,i)=>{ const e=$('evr'+i); if(e) e.innerHTML = evRangeText(c); });
   cars.forEach((c,i)=>{ const e=$('q'+i); if(e) e.innerHTML = qualText(c); });
   $('costs').innerHTML = costTable(R, G);
-  { const ex = G.excl || '', parts = [ex.includes('s') && T('ct').serv, ex.includes('o') && T('ct').tyre].filter(Boolean);
+  { const ex = G.excl || '', parts = [ex.includes('s') && T('ct').serv, ex.includes('t') && T('ct').tyres, ex.includes('o') && T('ct').tyre].filter(Boolean);
     $('exclNote').textContent = parts.length ? T('excl_note')(parts.join(', ').toLowerCase()) : ''; }
   cars.forEach((c,i)=>{ const e=$('cc'+i); if(!e) return; const n = carChanged(c,i); e.textContent = n ? T('more_n')(n) : ''; });
   cars.forEach((c,i)=>{ const t=$('tag'+i); if(!t) return; const r=R[i];
@@ -1827,7 +1846,7 @@ $('kmSlider').addEventListener('input', () => { $('km').value = $('kmSlider').va
 // Kulun jättäminen pois vertailusta tai palauttaminen (kulutaulukon napit)
 $('costs').addEventListener('click', e => { const b = e.target.closest('[data-excl]'); if (!b) return;
   const k = b.dataset.excl, el = $('excl'), v = el.value;
-  el.value = ['s','o'].filter(x => x===k ? !v.includes(x) : v.includes(x)).join('');
+  el.value = ['s','t','o'].filter(x => x===k ? !v.includes(x) : v.includes(x)).join('');
   update(); save(); const nb = $('costs').querySelector(`[data-excl="${k}"]`); if (nb) nb.focus(); });
 // Vakuutusvalinta: autot, joiden kasko on edellisen valinnan oletus, siirtyvät uuden valinnan oletukseen
 let insPrev = 'full';
@@ -1874,10 +1893,14 @@ function migrateCars(list, ev){
     .map(c=>ev===8 && PT_DEF[c.pt] ? {...c, // koskemattomat vanhat vakuutusoletukset uusiin (EX_VERSION 9)
       traf: num(c.traf,NaN)===200 ? PT_DEF[c.pt].traf : c.traf, kasko: num(c.kasko,NaN)===OLD_KASKO[c.pt] ? PT_DEF[c.pt].kasko : c.kasko} : c)
     .map(c=>{ if (ev>=10 || !(c.pt==='E'||c.pt==='P') || num(c.batt,NaN)!==PT_DEF[c.pt].batt) return c; // EX_VERSION 10: mallin akku
-      const r = Array.isArray(c.picked) ? findRow(c.picked) : c.p ? findRow(c.p) : null; return r ? {...c, batt:battDef(r, c.pt)} : c; });
+      const r = Array.isArray(c.picked) ? findRow(c.picked) : c.p ? findRow(c.p) : null; return r ? {...c, batt:battDef(r, c.pt)} : c; })
+    // EX_VERSION 11: renkaat omaksi kuluksi. Koskematon vanha "renkaat ja muut" -oletus -> uusi muiden kulujen oletus ja
+    // laskettu rengaskulu; itse kirjoitettu summa sisälsi jo renkaat, joten rengaskulu 0 (vannekoko "sisältyy muihin").
+    .map(c=>ev<11 && PT_DEF[c.pt] ? (num(c.other,NaN)===PT_DEF[c.pt].tyre ? {...c, other:undefined} : {...c, rim:0}) : c);
 }
 const saved = load();
 // Koskemattomat vanhat esimerkkiautot korvataan uusilla; omat autot säilyvät.
+// PT_DEF.tyre = vanha "renkaat ja muut" -oletus (ennen EX_VERSION 11), käytetään vain vanhojen tallennusten tunnistamiseen.
 const oldExamples = saved && saved.ev !== EX_VERSION && Array.isArray(saved.cars) && saved.cars.every(c => c.exKey || c.exAuto);
 if (saved){ // asetukset ensin, jotta esimerkkiautot osataan valita enimmäishinnan mukaan
   const trustAll = (saved.ev||0) >= 4; // vanhemmissa tallennuksissa selain saattoi sekoittaa kenttien arvot
@@ -1903,8 +1926,8 @@ else cars = examples();
 //   xB/xE/xH  muokattu esimerkkiauto, pB3k7  rekisteristä valittu malli (rivi + tarkiste), nB  oma auto
 //  Johdettuja kenttiä (todellinen kulutus, NEDC-tiedot, lähdeselitteet) ei tallenneta: ne lasketaan uudelleen.
 // Vanhat linkit 'z' (pakattu JSON) ja 'j' (JSON) avautuvat edelleen.
-const SHARE_KEYS = ['name','pt','price','age','odo','dep','fuel','kwh','share','other','traf','kasko','serv','tax','mass','make','batt','soh','debt','debtYears','life','real','autoFuel','std','rw'];
-const SHARE_F = {N:'name',P:'price',A:'age',O:'odo',D:'dep',K:'kwh',S:'share',X:'other',Y:'traf',Z:'kasko',V:'serv',T:'tax',M:'mass',W:'make',B:'batt',H:'soh',G:'debt',J:'debtYears',L:'life',F:'fuel',R:'real'};
+const SHARE_KEYS = ['name','pt','price','age','odo','dep','fuel','kwh','share','other','rim','traf','kasko','serv','tax','mass','make','batt','soh','debt','debtYears','life','real','autoFuel','std','rw'];
+const SHARE_F = {N:'name',P:'price',A:'age',O:'odo',D:'dep',K:'kwh',S:'share',X:'other',Q:'rim',Y:'traf',Z:'kasko',V:'serv',T:'tax',M:'mass',W:'make',B:'batt',H:'soh',G:'debt',J:'debtYears',L:'life',F:'fuel',R:'real'};
 const SHARE_STR = ['name','dep','tax','soh','debtYears'];
 const escS = t => encodeURIComponent(t).replace(/[!'()*_~]/g, ch => '%'+ch.charCodeAt(0).toString(16).toUpperCase()).replace(/\.$/,'%2E');
 const decS = t => { try { return decodeURIComponent(t); } catch(e){ return t; } };
@@ -1936,6 +1959,8 @@ function carFromShare(tok, i, ver){
   if (parts[0][0]==='e') return c;
   // linkki ennen EX_VERSION 8: muutettu "muut kulut" sisälsi vakuutuksen
   if ((ver||0) < 8 && 'other' in f && !('traf' in f)){ f.traf = 0; f.kasko = 0; }
+  // linkki ennen EX_VERSION 11: muutettu "renkaat ja muut" sisälsi renkaat
+  if ((ver||0) < 11 && 'other' in f && !('rim' in f)) f.rim = 0;
   Object.entries(f).forEach(([key,v]) => { if (key!=='age') c[key] = v; });
   if (parts.includes('U')) c.autoFuel = false;
   if (parts.includes('C')){ c.mine = true; c.exAuto = false; }

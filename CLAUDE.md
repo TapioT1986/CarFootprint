@@ -260,8 +260,15 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   `details.fold` ("Lisätietoja ja lähteet") via fold(); applyLang and the card/cost-table renders call it. Owner's rule: keep
   information and sources on the page, fold them away. Result card shows total, monthly, financing, emissions; energy price
   and both ranges are in its `details.sumd`. User test guide: docs/kayttajatestit.md.
+- Tyres (car field `rim`, share letter Q, 15-20 or 0 = included in "other"; default 17): tyreCost() from data/tyres.json
+  (injected as TYRES): 4 x (summer + winter price at 16") x rim ratio x max(km/2 / 30 000 km x 1.2 for EV, 1/6 yr). Prices:
+  Rengas Online 10.11.2026 via Easy Garage comparison (dearer shop), rim ratios from Rengas365 Hakkapeliitta R5 medians
+  19.11.2026. Field `other` is now "Other costs" (washing etc.), default TYRES.misc_eur 250 (ADAC). EX_VERSION 11: an untouched
+  old "tyres and other" default (PT_DEF.tyre) becomes the new default; a custom value keeps its sum with rim 0; old links with X
+  get rim 0. Cross-check in the notes: Statistics Finland household survey 14pg (per car 2022: tyres 47, parts 98, servicing
+  ~380 EUR; 2016: ~80, 135, ~1 000). Recheck prices about once a year. Test cases 15-17.
 - Leaving costs out (global `excl`, last in GIDS, share letter t; a hidden text input, because type=hidden keeps no
-  defaultValue): "s" servicing, "o" tyres and other; buttons `[data-excl]` in the cost table, `#exclNote` under the results,
+  defaultValue): "s" servicing, "t" tyres, "o" other costs; buttons `[data-excl]` in the cost table, `#exclNote` under the results,
   calc() zeroes serv / tyre (r.tyre). Applies to all cars. Test case 14.
 - Phone touch targets >= 44 px and small text >= 13 px (CSS block at the end of <style>; smoke check 11).
 - Calculation tests: tests/calc_reference.py is a separate Python implementation of the method; tests/calc_cases.json holds

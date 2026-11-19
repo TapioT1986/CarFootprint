@@ -1,0 +1,28 @@
+{
+ "description": "Tyre cost model for CarFootprint. Yearly tyre cost = 4 x (summer + winter price per tyre at the chosen rim size) x max(km/2 / life_km x EV factor, 1 / max_age_years). Each set covers half of the annual kilometres.",
+ "anchor": {
+  "rim": 16,
+  "winter_eur": 185.07,
+  "summer_eur": 94.16,
+  "source": "Easy Garage 24/7 price comparison 10.11.2026 (205/55 R16, Rengas Online): winter Nokian Hakkapeliitta R5 185.07 EUR, summer Nokian Wetproof 1 94.16 EUR per tyre. Rengas Online is one of the dearer shops in the comparison (pessimistic choice; cheapest 149.47 and 73.99 EUR).",
+  "url": "https://easygarage247.fi/?p=5417"
+ },
+ "rim_ratio": {
+  "15": 0.748, "16": 1.0, "17": 1.24, "18": 1.426, "19": 1.808, "20": 2.19
+ },
+ "rim_ratio_source": "Median price per rim size of Nokian Hakkapeliitta R5 at Rengas365, read 19.11.2026 (15: 92.12, 16: 123.09, 17: 152.62, 18: 175.53, 19: 222.49, 20: 269.52 EUR), divided by the 16-inch median.",
+ "rim_ratio_url": "https://www.rengas365.fi/renkaat/tuotemerkki/nokian/talvirenkaat/kitka/hakkapeliitta-r5/6129",
+ "life_km": 30000,
+ "life_source": "Summer tyre usually lasts about 30,000-35,000 km (Autonrengasliitto via Verkkouutiset); the lower bound is used, also for winter tyres (no km figure found).",
+ "life_url": "https://www.verkkouutiset.fi/a/joka-toinen-ajaa-renkaansa-loppuun-ei-kannattaisi/",
+ "max_age_years": 6,
+ "max_age_source": "Sensible maximum: 6 years in use or 10 years from manufacture (Autoliitto in Moottori).",
+ "max_age_url": "https://moottori.fi/uutinen/autoliitto-ohjeistaa-muista-nama-asiat-renkaanvaihdon-yhteydessa/",
+ "ev_factor": 1.2,
+ "ev_source": "EVs can wear tyres up to 20% faster (Michelin); about 20% more wear per extra 450 kg (Emissions Analytics). Fleet data: first change about 10,000 km earlier (Epyx 2023).",
+ "ev_url": "https://www.moveelectric.com/e-cars/do-electric-cars-wear-out-tyres-faster",
+ "default_rim": 17,
+ "misc_eur": 250,
+ "misc_source": "ADAC standard car-cost calculation: 250 EUR a year for washing and care (Germany, version 10/2026). Tyre changes and storage are not included in any source found.",
+ "misc_url": "https://assets.adac.de/Autodatenbank/Autokosten/autokosten_grundlagen.pdf"
+}

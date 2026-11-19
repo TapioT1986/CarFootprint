@@ -667,6 +667,8 @@ def main():
     rsp = root / "data" / "resale_spread.json"
     rs = json.loads(rsp.read_text(encoding="utf-8")).get("percentiles") if rsp.exists() else None
     page = page.replace("__RESALE__", json.dumps(rs or {}, separators=(",", ":")))
+    # Tyre cost model: prices by rim size, lifetime, EV wear (data/tyres.json)
+    page = page.replace("__TYRES__", (root / "data" / "tyres.json").read_text(encoding="utf-8").strip())
     page = page.replace("__CITY_M__", json.dumps(cr_model, separators=(",", ":")))
     # Estimated value when new for every catalogue row (tools/budget_values.py), for prices when a model is picked
     mvp = root / "data" / "model_values.json"

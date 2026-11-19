@@ -29,6 +29,7 @@ SERV_F = {"ice": [1, .060 / .028, .079 / .028], "ev": [1, .028 / .012, .043 / .0
 CO2_PER_L = {"B": 23.3, "H": 23.3, "D": 26.4}
 BATT_T_PER_KWH = 0.0728
 CITY0 = 0.39
+TYRES = json.loads((ROOT / "data" / "tyres.json").read_text(encoding="utf-8"))
 CITY_R = json.loads((ROOT / "data" / "city_ratio.json").read_text(encoding="utf-8"))["ratios"]  # powertrain medians
 LAST_NEDC = 2017
 TOL = 0.5                   # euros or kg: rounding noise allowed between the two implementations
@@ -83,6 +84,16 @@ def vehicle_tax(car, vtax, cur_year):
     return (base + prop) * 3.65   # cents per day -> euros per year
 
 
+def tyre_cost(c, km):
+    """Summer + winter set at the rim size; each set covers half the km; replaced when worn out or at max age."""
+    rim = c.get("rim", TYRES["default_rim"])
+    if not rim:
+        return 0.0
+    ratio = TYRES["rim_ratio"][str(min(20, max(15, round(rim))))]
+    wear = km / 2 / TYRES["life_km"] * (TYRES["ev_factor"] if c["pt"] == "E" else 1)
+    return 4 * (TYRES["anchor"]["summer_eur"] + TYRES["anchor"]["winter_eur"]) * ratio * max(wear, 1 / TYRES["max_age_years"])
+
+
 def city_mix(share, r):
     return (share * r + 1 - share) / (CITY0 * r + 1 - CITY0)
 
@@ -111,7 +122,8 @@ def compute(case, vtax, cur_year):
     # left out of the comparison by the user: "s" = servicing, "o" = tyres and other
     ex = G.get("excl", "")
     serv = 0 if "s" in ex else c["serv"] * serv_factor(pt, c["odo"], c["odo"] + km * n)
-    other = (0 if "o" in ex else c["other"]) + c["traf"] + c["kasko"] + tax + serv
+    tyres = 0 if "t" in ex else tyre_cost(c, km)
+    other = tyres + (0 if "o" in ex else c["other"]) + c["traf"] + c["kasko"] + tax + serv
     total = dep + cap + energy + other
     drive = litres * (G["eD"] if pt == "D" else G["eB"]) + kwh * G["eEl"]
     batt = c["batt"] if pt in "EP" else 0
@@ -120,7 +132,7 @@ def compute(case, vtax, cur_year):
     # switching decision over the whole ownership: current car 0, new car (age < 1) all, used car years / remaining life
     sw_make = 0 if c.get("mine") else make_t if c["age"] < 1 else make_t * n / max(n, c["life"] - c["age"])
     cash = pay + (energy + other) / 12
-    r = dict(dep=dep, resid=resid, cap=cap, energy=energy, tax=tax, serv=serv, other=other, total=total,
+    r = dict(dep=dep, resid=resid, cap=cap, energy=energy, tax=tax, serv=serv, tyres=tyres, other=other, total=total,
              drive=drive, make=make, em=drive + make, swMake=sw_make, swEm=drive * n + sw_make, pay=pay, cash=cash)
     return {k: round(v, 2) for k, v in r.items()}
 

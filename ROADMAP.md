@@ -111,12 +111,15 @@ Katselmus 19.11.2026, verrattu Erkan poista-ai-slop-taitoon. Fontit omalta palve
 - Katsastuksiin perustuva käyttöikä `life`-oletukseksi (avoin idea).
 - Mallikohtainen kokonaismassa Traficomin rekisteristä käyttövoimaveroon (vaatii ~200 Mt tiedoston).
 - Suomalainen tai eurooppalainen lähde huollon kasvukertoimille (nyt Consumer Reports, USA).
-- Lähde renkaille ja muille kuluille, arvonaleneman ajomääräkorjaukselle ja huollon perustasolle.
+- ✅ Renkaat vannekoon mukaan lähteistetyin hinnoin ja kestoin, muut kulut ADAC:n mukaan, huolto ja renkaat tarkistettu
+  Tilastokeskuksen kulutustutkimusta vasten (19.11.2026, versio 0.77). Lähde puuttuu yhä arvonaleneman ajomääräkorjaukselle.
 - Mallikohtaiset kaupunki/maantie-kertoimet, jos VCA:n ja rekisterin mallinimet saadaan yhdistettyä.
 - ✅ Akun koko useammalle sähköautomallille (19.11.2026, versio 0.74): arvio EEA:n WLTP-toimintasäde × kulutus, 119/123 sähköautoriviä.
 - €/km → lisäkilometrin hinta, kun huollon ja arvonaleneman kilometririippuvuudelle on lähteet.
 
 ## Ylläpitokalenteri
+
+- Rengashinnat (data/tyres.json): tarkista kerran vuodessa syksyllä, samat renkaat ja kaupat, ja kirjaa päivämäärä.
 
 | Milloin | Mitä | Miten |
 |---|---|---|
