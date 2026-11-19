@@ -257,7 +257,7 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   else part) and is not stored: saves and links keep only `own`. Cash follows budget changes (listener before update).
   `own` counts as changed in moreCount() only in the 'part' state.
 - Long hints fold: an I18N string with '¦' shows the part before it and puts the rest (sources included) in
-  `details.fold` ("Lisätietoja ja lähteet") via fold(); applyLang and the card/cost-table renders call it. Owner's rule: keep
+  `details.fold` ("Perustelut ja lähteet"; '¦¦' = user guidance, old name "Lisätietoja ja lähteet", fold_i) via fold(); applyLang and the card/cost-table renders call it. Owner's rule: keep
   information and sources on the page, fold them away. Result card shows total, monthly, financing, emissions; energy price
   and both ranges are in its `details.sumd`. User test guide: docs/kayttajatestit.md.
 - Tyres (car field `rim`, share letter Q, 15-20 or 0 = included in "other"; default 17): tyreCost() from data/tyres.json
