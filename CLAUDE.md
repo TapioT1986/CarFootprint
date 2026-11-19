@@ -291,6 +291,12 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   renderFinder() only when open (also from update()); [data-find] adds the car (max 4). Notes item m-find. Smoke check 15.
   With a current car (c.mine) it shows its yearly cost as a reference and each result's difference; #findRepl
   (replaceWithCheapest, confirm) keeps the current car and fills the rest of the four slots with the cheapest results.
+- No car of your own (`#nocar` <details> after the charts, ROADMAP 6.2, 0.89): global NC {book, rent, rentKm, share, shareKm,
+  pt, rows[{name, n, km, m}]} saved in localStorage (save() field nc; var NC is set right after load() so an early save never
+  drops it), not in share links; reset restores ncDefault(). ncCost(G, k): rows with n = '' take the rest of the mileage at
+  their trip length (default one row of 19.5 km = HLT 2021 car-driver trip), scaled by k / G.km; taxi = km/10 x NC_TAXI10
+  (app 20 = top of Traficom 13-20 EUR, call 34.92 = Taksiliitto median 30.77 + VAT 13.5 %), rental/share user prices (empty =
+  missing), season ticket 12 x pt once, walk 0. ncUpdate() draws #ncChart and the crossing km per car. Notes m-nocar. Smoke 16.
 - The break-even line chart (`#beChart`, `.charts.befirst`) is the first thing in the results section (owner 2026-11-19).
 - Leaving costs out (global `excl`, last in GIDS, share letter t; a hidden text input, because type=hidden keeps no
   defaultValue): "s" servicing, "t" tyres, "o" other costs; buttons `[data-excl]` in the cost table, `#exclNote` under the results,
@@ -318,5 +324,5 @@ calculator (trade-in, remaining loan, switching emissions), uncertainty scenario
 - Per-model total mass from the Traficom register (needs the ~200 MB source file) for the propulsion tax.
 - A Finnish or European source for the servicing-and-repair rise (now US Consumer Reports factors).
 - A "what the same yearly money buys" view, once the above exist.
-- Taxi / rental / car-sharing break-even for low mileages: owner's wish 20.11.2026, ROADMAP.md 6.2 (needs sources).
+- No car of your own: v1 done (0.89); more sourced prices (rental, car-sharing, transit, delivery, cargo bike) in ROADMAP 6.2.
 

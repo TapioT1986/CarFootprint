@@ -27,7 +27,7 @@ async () => {
     if (document.documentElement.scrollWidth > vw + 1)
       problems.push(`${lang} ${when}: page is ${document.documentElement.scrollWidth}px wide on a ${vw}px screen`);
     const wide = [...document.querySelectorAll('body *')]
-      .filter(e => !e.closest('#beChart') && !e.closest('[hidden]'))
+      .filter(e => !e.closest('#beChart, #ncChart') && !e.closest('[hidden]')) // wide charts scroll inside their own box
       .filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.right > vw + 1; })
       .slice(0, 3).map(e => e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + (e.className && typeof e.className === 'string' ? '.' + e.className.split(' ')[0] : ''));
     if (wide.length) problems.push(`${lang} ${when}: elements over the right edge: ${wide.join(', ')}`);
@@ -182,6 +182,19 @@ async () => {
     if (findCheapest(G, 'E').some(o => o.r[2] !== 'E')) problems.push(`${lang}: powertrain filter E lets other powertrains through`);
     if (all[0]) { const c = carFromRow(all[0].r), t = calc(c, G).total;
       if (Math.abs(t - all[0].t.total) > 0.5) problems.push(`${lang}: added car costs ${t} but the search showed ${all[0].t.total}`); }
+  }
+  // 16. No car of your own: the default profile (the whole mileage as app-booked taxi trips) costs mileage / 10 x €20,
+  //     a fixed rental-car row adds trips x (day price + km x fuel), and the cost scales with mileage
+  if (typeof ncCost === 'function') {
+    const keep = NC, G = g();
+    NC = ncDefault();
+    const a = ncCost(G, G.km).total;
+    if (Math.abs(a - G.km / 10 * 20) > 0.5) problems.push(`${lang}: no-car default ${a} instead of ${G.km / 10 * 20}`);
+    NC.rows.push({name: '', n: 2, km: 250, m: 'rent'}); NC.rent = 60; NC.rentKm = 0.1;
+    const b = ncCost(G, G.km).total, want = (G.km - 500) / 10 * 20 + 2 * (60 + 25);
+    if (Math.abs(b - want) > 0.5) problems.push(`${lang}: no-car with rental ${b} instead of ${want}`);
+    if (Math.abs(ncCost(G, G.km / 2).total - b / 2) > 0.5) problems.push(`${lang}: no-car cost does not scale with mileage`);
+    NC = keep;
   }
   // 13. No tracking: the page loads nothing from other hosts (fonts come from fonts/ in the repository)
   const foreign = performance.getEntriesByType('resource').map(e => e.name).filter(u => new URL(u).host !== location.host);

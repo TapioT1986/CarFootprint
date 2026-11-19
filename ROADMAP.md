@@ -130,6 +130,8 @@ mallin valinta täyttää hinnan, iän ja mittarilukeman (MV0, autoPriceAge), ja
 - Avoin kysymys omistajalle: suodattimet (käyttövoima, koko/korimalli, vain yleiset mallit) – korimallia ei vielä ole datassa.
 
 ### 6.2 Ilman omaa autoa: taksi, vuokra-auto, yhteiskäyttöauto ja muut · koko L · suunnitelma 20.11.2026, lähteet osin auki
+**Versio 1 tehty 20.11.2026 (0.89):** matkaprofiili, taksi lähteistetysti (sovellus 20 € / puhelin 34,92 € per 10 km), vuokra-auto,
+yhteiskäyttöauto ja kausilippu käyttäjän hinnoilla, kävely/pyörä 0 €, kaavio ja leikkauspisteet. Jäljellä alla luetellut lähteet.
 Kysymys: missä ajomäärässä ja millaisilla matkoilla oma auto tulee halvemmaksi kuin "ei omaa autoa" -yhdistelmä.
 
 **Periaate: matkaprofiili, ei pelkkä kilometrimäärä.** Käyttäjä kuvaa vuotensa matkoina, ja jokaiselle matkatyypille
