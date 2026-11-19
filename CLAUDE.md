@@ -274,7 +274,10 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   14pg 2022 vs 2016, 100 % default, 110 % = dealer ~10 % dearer, Ford/Promira via Taloustaito 31.5.2019) and Leave out chips that
   share `excl` with the cost-table buttons (setExcl); moving a slider re-includes. calc(): serv x G.servL, tyres x G.tyreL. Test case 18.
 - 'perustelut' links (`why(k)`, class `why`): each 'Näin laskenta toimii' <li> has id `m-<key>` (dep, ex, fin, city, mine, month,
-  real, old, phev, ev, serv, tyre, excl, elem, src, tax, insp, make, share, range, ekm, loss, pick, var, tip, ins; EN also fi).
+  km, real, old, phev, ev, serv, tyre, excl, elem, fuelem, src, tax, insp, make, share, range, ekm, loss, pick, var, tip, ins;
+  EN also fi). One source list (owner 2026-11-20): sources and reasoning live in the notes items; hints in the calculator
+  keep a short sentence + why link. Folds (¦) remain only for user guidance (req_hint, mine_hint, '¦¦'); the cost table
+  keeps its short per-row source links and the energy-range panel its own sources.
   Car-field units, cost-table rows and some settings link there; the click handler scrolls, highlights (`.hl`) and adds a
   '← takaisin' link (`.whyback`) back to the field. No hash change (the hash carries share links). New notes items need an id.
 - The break-even line chart (`#beChart`, `.charts.befirst`) is the first thing in the results section (owner 2026-11-19).
