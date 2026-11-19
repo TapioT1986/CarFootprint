@@ -179,7 +179,7 @@ details.adv .fields{margin-top:10px}
 .sugg .none{padding:9px 10px;color:var(--muted);font-size:14px}
 .addcar{border:1.5px dashed var(--line);border-radius:10px;background:transparent;color:var(--muted);font:600 15px var(--body);cursor:pointer;min-height:120px}
 .addcar:hover{border-color:var(--accent);color:var(--accent)}
-.finder{margin:16px 0 0}
+.finder{margin:0 0 24px}
 .finder .ref{margin:0 0 8px;padding:8px 12px;border-left:3px solid var(--accent);background:var(--input);border-radius:0 8px 8px 0}
 .finder .diff{font-size:13.5px}
 .finder .diff.better{color:var(--good)}
@@ -475,15 +475,6 @@ details.info a{color:var(--accent)}
         </div>
       </div>
 
-      <!-- Hae edullisin: mallit, joilla on hinta-arvio, sovitettuna enimmäishintaan; järjestys vuosikulun mukaan (ROADMAP 6.1) -->
-      <details class="panel finder" id="finder">
-        <summary><span data-i="find_h"></span></summary>
-        <p class="hint" data-i="find_lead"></p>
-        <div class="field"><label class="label" for="findPt" data-i="find_pt"></label>
-          <select id="findPt"><option value=""></option><option value="B"></option><option value="D"></option><option value="H"></option><option value="P"></option><option value="E"></option></select></div>
-        <div id="findRes" aria-live="polite"></div>
-      </details>
-
       <details class="panel more" id="more">
         <summary><span data-i="more_h"></span><span class="morecount" id="moreCount"></span></summary>
         <div class="morepart">
@@ -574,6 +565,14 @@ details.info a{color:var(--accent)}
     </aside>
 
     <main style="min-width:0">
+      <!-- Hae edullisin: mallit, joilla on hinta-arvio, sovitettuna enimmäishintaan; järjestys vuosikulun mukaan (ROADMAP 6.1) -->
+      <details class="panel finder" id="finder">
+        <summary><span data-i="find_h"></span></summary>
+        <p class="hint" data-i="find_lead"></p>
+        <div class="field"><label class="label" for="findPt" data-i="find_pt"></label>
+          <select id="findPt"><option value=""></option><option value="B"></option><option value="D"></option><option value="H"></option><option value="P"></option><option value="E"></option></select></div>
+        <div id="findRes" aria-live="polite"></div>
+      </details>
       <h2 class="step" id="s-cars"><span class="stepn">2</span><span data-i="step_cars"></span></h2>
       <div class="cars" id="cars"></div>
 

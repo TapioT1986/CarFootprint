@@ -285,7 +285,7 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   (setTimeout throttle: the preview pane runs as a background page, so rAF and scroll events stall there; dispatch
   scroll events by hand when testing). html scroll-padding-top 64px keeps targets clear of it. Topic list `#ntoc` is built
   by buildToc() from the notes items' bold titles; its links are a.why, so they highlight and offer the back link.
-- Find the cheapest (`#finder` <details> in the aside right under the Oma ajosi panel since 0.88, ROADMAP 6.1, 0.86): findCheapest(G, pt) runs carFromRow() (same as a
+- Find the cheapest (`#finder` <details> at the top of <main>, right above step 2, since 0.882, ROADMAP 6.1, 0.86): findCheapest(G, pt) runs carFromRow() (same as a
   model pick: autoPriceAge + fromRow + battDef) over catalogue rows with MV0 and >= FIND_MIN (200) register cars, drops
   those over budget, calc() with the current globals, keeps the cheapest version per make + first model word + pt, sorted.
   renderFinder() only when open (also from update()); [data-find] adds the car (max 4). Notes item m-find. Smoke check 15.
