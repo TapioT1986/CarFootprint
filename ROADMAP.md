@@ -230,6 +230,38 @@ Tuloskorttien ja kulutaulukon yksikön vaihto välilehdillä (€/kk, €/v, €
 - Taloustaidon vertailut käyttävät 57–59-vuotiasta täysillä bonuksilla (nykyinen oletus). Etsittävä vertailu, jossa
   sama auto eri ikäisille tai bonuksille, tai vakuutusyhtiöiden julkiset bonusasteikot.
 
+## Muut laskurit ja vertailukohdat (kartoitus 20.11.2026)
+
+Hyödyllisiä oletusten tarkistamiseen ja ideoiksi. Mikään löydetty ei yhdistä käytettyjä autoja, mallikohtaista todellista
+kulutusta, elinkaaripäästöjä, avointa lähdekoodia ja näkyviä lähteitä samaan työkaluun.
+
+- **bilbil.fi, Auton kustannukset** (Actus Analytics Group Oy, käytettyjen autojen kauppapaikka): kilpihaku, vakuutusarvio
+  bonuksen ja iän mukaan, kilometrikorvausvertailu, pikalataus. Arvonalenema, huolto ja renkaat omia oletuksia. Ks. vaihe 7.
+  https://bilbil.fi/laskurit/auton-kustannukset
+- **Ilmastopaneeli / Traficom, Autokalkulaattori** (henkilöautot; päivitetty 6/2023, erillinen paketti- ja kuorma-autoille):
+  1–6 uutta autoa, kumulatiiviset päästöt ja kustannukset 15 vuodelle, kotilaturin asennus mukana, akun vaihto 300 000 km:n välein
+  (Moottori kyseenalaisti), sähkön elinkaarikerroin noin 95 g CO₂e/kWh laskevana. Vertailukohta laskurin 42 g/kWh:lle
+  (suorat 26 + tuotantoketju 16) – tarkista ja mainitse ero perusteluissa.
+  https://www.ilmastopaneeli.fi/autokalkulaattori/ ja käyttöopas tieto.traficom.fi (HENKILÖAUTOT_KÄYTTÖOPAS JA LASKENNAN PERUSTEET.pdf)
+- **Ayvens Car Cost Index 2026** (27.4.2026, raportti, ei laskuri): 30 maata, 4 v huoltoleasing yritysasiakkaille, 30 000 km/v,
+  Q4 2025 leasingtarjoukset; Suomi €/kk: pieni BEV 773 / bensa 806, keskikokoinen BEV 956 / bensa 988 / PHEV 972, suuri BEV 1 014 /
+  bensa 1 120 / diesel 1 339 / PHEV 1 088. Hyvä tarkistuspiste uusille autoille suurella ajomäärällä (sisältää täyskaskon ja korot).
+  https://www.ayvens.com/fi-fi/tietoa-meista/uutiset-ja-artikkelit/uutiset/car-cost-index-2026/
+- **Taloustaito, sähkö vai bensa -kokonaiskustannuslaskuri** (oletukset näkyvillä: sähköauto 38 000 €, 18 kWh/100 km; bensa 30 000 €,
+  6,5 l/100 km, 1,95 €/l). https://www.taloustaito.fi/vapaalla/2025/sahko-vai-bensa-tekoaly-laskee-kumpi-on-edullisempi/
+- **Traficom Autovertaamo**: uusien autojen kulutus, päästöt ja ajoneuvovero, vertailu omaan rekisteröityyn autoon.
+- **Valmistajien laskurit** (esim. Kia): vain energiakulut.
+- **EU Alternative Fuels Observatory, kuluttajalaskuri** (Euroopan komissio): kustannus ja CO₂ käyttövoimittain.
+  https://alternative-fuels-observatory.ec.europa.eu/consumer-portal/calculator
+- **autocosts** (avoin lähdekoodi, GPL-3.0, 30+ maata): kuluttajan auton kokonaiskulut, ei päästöjä. https://github.com/jfoclpf/autocosts
+- **BEUC-raportit** (Euroopan kuluttajajärjestö, 2021 ja 2025): käytetyn täyssähköauton kokonaiskustannus edullisin; raportteja,
+  ei laskureita. Hyvä lähde perusteluihin. https://www.beuc.eu/reports/cost-zero-emissions-cars-europe
+- **NMN TCO Calculator** (Benelux), **Fleet News / Cap hpi** (Iso-Britannia, kaupallinen data), **ADAC Autokosten** (Saksa; jo lähteenä).
+
+Ideoita kartoituksesta: (1) vertaa omat oletukset Autokalkulaattorin ja Ayvensin lukuihin ja kerro ero perusteluissa;
+(2) kotilaturin asennus valinnaiseksi kuluksi sähköautolle (lähde tarvitaan); (3) BEUC 2025 käytettyjen autojen
+kokonaiskustannuksista perusteluihin.
+
 ## Ylläpitokalenteri
 
 - Rengashinnat (data/tyres.json): tarkista kerran vuodessa syksyllä, samat renkaat ja kaupat, ja kirjaa päivämäärä.
