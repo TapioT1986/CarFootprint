@@ -185,6 +185,51 @@ Hinnat ja oletukset näkyvät perusteluissa; puuttuvat lähteet merkitään olet
 **Päätettävää omistajan kanssa:** (1) mitkä vaihtoehdot ensimmäiseen versioon, (2) taksin hinta: sovellus vai muu tilaus
 oletukseksi, (3) näytetäänkö vaihtoehto vain pienillä ajomäärillä (esim. alle 10 000 km) vai aina.
 
+## Vaihe 7 – Ideoita bilbil.fi:n laskurista (omistaja 20.11.2026)
+
+Vertailukohta: https://bilbil.fi/laskurit/auton-kustannukset (Actus Analytics Group Oy, käytettyjen autojen kauppapaikka).
+Heillä rekisterikilpihaku, vakuutusarvio bonuksen ja iän mukaan, kilometrikorvausvertailu, pikalataus erikseen,
+kuukausi/vuosi/km-välilehdet ja renkaanvaihdot 70 €/v. Arvonalenema, huolto ja renkaat ovat heidän omia oletuksiaan
+ilman avointa tilastoa (heidän oma maininta). Rekisterikilpihakua ei tehdä: Traficomin avoimessa datassa ei ole kilpiä,
+ja maksullinen rajapinta toisi kustannuksia ja yksityisyyskysymyksiä.
+
+### 7.1 Kilometrikorvausvertailu · koko S · lähde löydetty
+Kattaako verovapaa kilometrikorvaus auton kulut per km (ja kuinka paljon jää yli tai puuttuu), kun osa ajosta on työajoa.
+- Lähde: Verohallinnon päätös verovapaista matkakustannusten korvauksista vuonna 2026, VH/6575/00.01.00/2025, 7.11.2025:
+  oma auto 55 senttiä/km (korotukset: perävaunu +9, matkustaja +4 jne.; ei porrastusta 5 000 km:n jälkeen, se on
+  työehtosopimusten asia). https://www.vero.fi/syventavat-vero-ohjeet/paatokset/47405/
+- Vuoden 2027 päätös on julkaistu (sivulla linkki uudempaan); tarkista summa ennen toteutusta (blogin mukaan 58 snt, ei varmistettu).
+- Toteutus: kenttä "työajoa km/v", tuloskorttiin korvaus vs. lisäkilometrin hinta. Huom: rehellisin vertailu on
+  lisäkilometrin hinta (energia + huollon kasvu + arvon lasku km:n mukaan), ei keskimääräinen €/km – liittyy avoimeen
+  ideaan "€/km → lisäkilometrin hinta".
+
+### 7.2 Pikalatauksen osuus · koko S · hintalähde löydetty, osuuden lähde puuttuu
+Sähköautoille ja lataushybrideille kotilatauksen lisäksi pikalatauksen osuus (%) ja hinta.
+- Hinta: Eleport, Fast-charging price report lokakuu 2026 (julk. 27.10.2026): Suomen mediaani 0,35 €/kWh, 11 operaattoria
+  (Tesla, Lidl, ABC, Plugit, K-Lataus, Neste, Faast, St1, Autoliitto, Recharge, IONITY), satunnaislataajan hinnat,
+  vaihteluväli 0,21–0,47 €/kWh; Euroopan mediaani 0,55. https://eleport.com/?p=21160 (raportit neljännesvuosittain,
+  myös Q1 2026). Hinnat ilman aloitusmaksuja; pessimistinen valinta voisi olla vaihteluvälin yläpää tai mediaani + aloitusmaksut.
+- Osuus: lähde puuttuu. Traficom 17.12.2025: julkisesta latauksesta maksettiin 2024 yli 50 milj. €, tieliikenteen
+  sähkönkulutus 777 GWh (https://traficom.fi/en/news/electric-vehicle-drivers-paid-more-eur-50-million-charging-2024);
+  julkisen latauksen kWh-määrää ei kerrota. Jos löytyy julkisen latauksen GWh, osuuden voi laskea. Muuten oletus, merkitty.
+- Pikalatauksessa ei lisätä kotilatauksen häviötä samalla tavalla (häviö maksetaan jo kWh-hinnassa? tarkista).
+
+### 7.3 Kuukausi-, vuosi- ja km-näkymä · koko S · ei vaadi lähteitä
+Tuloskorttien ja kulutaulukon yksikön vaihto välilehdillä (€/kk, €/v, €/km). Kuukausiluvut ovat jo korteissa.
+
+### 7.4 Renkaanvaihdot ja rengashotelli · koko S · lähde vanha
+- Kuluttajaliiton hintakysely 19.3.2020 (Moottori): renkaanvaihto 20–45 € kerta (16″, kesärenkaat ilman vanteita,
+  44 vastausta 13 kunnasta) → kaksi vaihtoa vuodessa 40–90 €. https://moottori.fi/uutinen/ala-maksa-liikaa-renkaanvaihdossa-hurjat-hintaerot/
+- Rengashotelli: ei luotettavaa hintaa (vanhoja 30–120 €). Etsittävä tuoreempi kysely tai ketjujen hinnastot.
+- Toteutus: osaksi Muut kulut -erittelyä (nyt ADAC:n pesu ja hoito 250 €), oma rivi "renkaanvaihdot", Jätä pois -nappi.
+
+### 7.5 Vakuutus kuljettajan iän ja bonuksen mukaan · koko M · lähde puuttuu
+- Yle 21.10.2024: kolmen suuren yhtiön laskelmat 20-, 30- ja 40-vuotiaalle (uusi Corolla, Hämeenlinna, laaja kasko);
+  20-vuotias maksaa "useita satoja euroja" enemmän kuin 30-vuotias, täydet bonukset 5–8 vuodessa. Luvut ovat
+  infografiikassa, jota ei saatu luettua: https://yle.fi/a/74-20118095
+- Taloustaidon vertailut käyttävät 57–59-vuotiasta täysillä bonuksilla (nykyinen oletus). Etsittävä vertailu, jossa
+  sama auto eri ikäisille tai bonuksille, tai vakuutusyhtiöiden julkiset bonusasteikot.
+
 ## Ylläpitokalenteri
 
 - Rengashinnat (data/tyres.json): tarkista kerran vuodessa syksyllä, samat renkaat ja kaupat, ja kirjaa päivämäärä.
