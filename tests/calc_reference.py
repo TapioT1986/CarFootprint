@@ -124,7 +124,9 @@ def compute(case, vtax, cur_year):
     # price levels from the "Other costs" settings (share of the default; 1 = default)
     serv = 0 if "s" in ex else c["serv"] * serv_factor(pt, c["odo"], c["odo"] + km * n) * G.get("servL", 1)
     tyres = 0 if "t" in ex else tyre_cost(c, km) * G.get("tyreL", 1)
-    other = tyres + (0 if "o" in ex else c["other"]) + c["traf"] + c["kasko"] + tax + serv
+    # home charger EUR/yr: default 1200 / 10 for electric cars and plug-in hybrids (page: chgDef)
+    chg = c.get("chg", round(1200 / 10) if pt in "EP" else 0)
+    other = tyres + (0 if "o" in ex else c["other"]) + chg + c["traf"] + c["kasko"] + tax + serv
     total = dep + cap + energy + other
     drive = litres * (G["eD"] if pt == "D" else G["eB"]) + kwh * G["eEl"]
     batt = c["batt"] if pt in "EP" else 0
