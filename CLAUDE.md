@@ -298,9 +298,11 @@ Build: `python tools/build.py` (rebuilds index.html from data/). With the large 
   (app 20 = top of Traficom 13-20 EUR, call 34.92 = Taksiliitto median 30.77 + VAT 13.5 %), rental/share user prices (empty =
   missing), season ticket 12 x pt once, walk 0. ncUpdate() draws #ncChart and the crossing km per car. Notes m-nocar. Smoke 16.
 - The break-even line chart (`#beChart`, `.charts.befirst`) is the first thing in the results section (owner 2026-11-19).
-- Home charger (car field `chg`, share letter I, owner 2026-11-20): default chgDef(pt) = 1200 / 10 = 120 EUR/yr for E and P, else 0
-  (Elisa device 699 + installation from 499; Nettiauto examples 1 037-1 395; 10-year life is an assumption); shown under Fine-tune
-  for E/P, own cost-table row, added to other in calc(). Old saves get the default through newCar(). calc_reference mirrors it.
+- Home charger (car field `chg` = one-off EUR, share letter I; owner 2026-11-20/21): default chgDef(pt) = 1200 for E and P
+  (Elisa device 699 + installation from 499; Nettiauto 1 037-1 395). calc(): bought with the car (buy = price + chg, financed like
+  the car: loan and own money tied), value wears out over CHARGER.years 10 (assumption) -> r.chg = wear per year, rest of the value
+  serves the next car; none for the current car. Up-front texts say "incl. home charger". EX_VERSION 12 and links before y12
+  multiply the 0.91 EUR/yr value by 10. calc_reference mirrors it.
 - Leaving costs out (global `excl`, last in GIDS, share letter t; a hidden text input, because type=hidden keeps no
   defaultValue): "s" servicing, "t" tyres, "o" other costs; buttons `[data-excl]` in the cost table, `#exclNote` under the results,
   calc() zeroes serv / tyre (r.tyre). Applies to all cars. Test case 14.

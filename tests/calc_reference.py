@@ -106,13 +106,19 @@ def compute(case, vtax, cur_year):
     km_adj = max(0, 1 - KM_ADJ * max(0, km - 15000) / 1000 * n)
     resid = max(0, c["price"] * (1 - rate) ** n * km_adj * G.get("residK", 1))
     dep = (c["price"] - resid) / n
+    # home charger: one-off investment with the purchase (default 1200 EUR for E and P, none for the current car),
+    # financed like the car, value wearing out evenly over 10 years
+    chg_i = 0 if c.get("mine") else max(0, c.get("chg", 1200 if pt in "EP" else 0))
+    chg_resid = chg_i * max(0, 1 - n / 10)
+    chg = (chg_i - chg_resid) / n
+    buy = c["price"] + chg_i
     # current car: its own remaining loan; other cars: own money + current car's net value (trade-in)
     if c.get("mine"):
         loan, loan_years = max(0, c.get("debt", 0)), (float(c.get("debtYears") or 0) or G["loanYears"])
     else:
-        loan, loan_years = max(0, c["price"] - max(0, G["own"] + G.get("trade", 0))), G["loanYears"]
+        loan, loan_years = max(0, buy - max(0, G["own"] + G.get("trade", 0))), G["loanYears"]
     per_year, avg_bal, pay = loan_cost(loan, G["loanRate"], G["loanFee"], loan_years, n)
-    own_tied = max(0, (c["price"] + resid) / 2 - avg_bal)
+    own_tied = max(0, (buy + resid + chg_resid) / 2 - avg_bal)
     cap = per_year + own_tied * G["rate"]
     fuel_r = CITY_R["B" if pt == "E" else pt]
     litres = km / 100 * c["fuel"] * c["real"] * (1 - el) * city_mix(G["city"], fuel_r)
@@ -124,8 +130,6 @@ def compute(case, vtax, cur_year):
     # price levels from the "Other costs" settings (share of the default; 1 = default)
     serv = 0 if "s" in ex else c["serv"] * serv_factor(pt, c["odo"], c["odo"] + km * n) * G.get("servL", 1)
     tyres = 0 if "t" in ex else tyre_cost(c, km) * G.get("tyreL", 1)
-    # home charger EUR/yr: default 1200 / 10 for electric cars and plug-in hybrids (page: chgDef)
-    chg = c.get("chg", round(1200 / 10) if pt in "EP" else 0)
     other = tyres + (0 if "o" in ex else c["other"]) + chg + c["traf"] + c["kasko"] + tax + serv
     total = dep + cap + energy + other
     drive = litres * (G["eD"] if pt == "D" else G["eB"]) + kwh * G["eEl"]
